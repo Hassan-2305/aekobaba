@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Aekobaba — premium industrial commerce.
+
+   Two worlds, alternating down the page:
+     dark  — brand, editorial, trust (void → navy → surface)
+     light — product discovery, listings, filters (paper → well → card)
+   Orange is a signal, never a surface: actions, verification, active state.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Dark world */
+  --void: #080a0d; /* page-level near-black, blue cast */
+  --navy: #0d1620; /* deep industrial navy */
+  --surface: #141a20; /* raised panel on dark */
+  --surface-2: #1b232c; /* hover / input on dark */
+  --on-dark: #f4f4f0; /* warm white type */
+  --on-dark-muted: #9ba4ae;
+  --line-dark: rgba(244, 244, 240, 0.1);
+
+  /* Light world */
+  --paper: #f5f4f0; /* warm white page */
+  --well: #ecebe6; /* image well — packshots multiply into it */
+  --card: #ffffff;
+  --line: #dddbd4; /* hairline on light */
+  --ink: #0b0e12;
+  --ink-muted: #555d66;
+  --ink-faint: #858b92;
+
+  /* Signal */
+  --orange: #ff641f;
+  --orange-hi: #ff8a45;
+  --orange-ink: #c2410c; /* orange as text on light — passes AA */
+
+  /* Legacy token names kept so every existing screen inherits the system. */
+  --accent: #13263a;
+  --accent-dark: #0d1620;
+  --accent-soft: #e8ebee;
+  --steel: #5b6b7c;
+  --charcoal: var(--void);
+  --charcoal-raised: var(--surface);
+  --charcoal-edge: var(--line-dark);
+  --action: var(--orange);
+  --action-strong: var(--orange-hi);
+  --action-soft: #ffede3;
+}
+
+@theme inline {
+  --color-void: var(--void);
+  --color-navy: var(--navy);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-on-dark: var(--on-dark);
+  --color-on-dark-muted: var(--on-dark-muted);
+  --color-line-dark: var(--line-dark);
+  --color-paper: var(--paper);
+  --color-well: var(--well);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-orange: var(--orange);
+  --color-orange-hi: var(--orange-hi);
+  --color-orange-ink: var(--orange-ink);
+
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-soft: var(--accent-soft);
+  --color-steel: var(--steel);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-raised: var(--charcoal-raised);
+  --color-charcoal-edge: var(--charcoal-edge);
+  --color-action: var(--action);
+  --color-action-strong: var(--action-strong);
+  --color-action-soft: var(--action-soft);
+
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Industrial corners: tight radii everywhere, pills stay pills. */
+  --radius-sm: 1px;
+  --radius: 2px;
+  --radius-md: 2px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 6px;
+}
+
+/* Expanded Archivo carries the display voice; normal width carries reading. */
+@utility font-wide {
+  font-stretch: 125%;
+}
+@utility font-semiwide {
+  font-stretch: 112%;
+}
+@utility font-narrow {
+  font-stretch: 85%;
+}
+
+/* Marketplace metadata — MOQ, verification, certification. Real data only. */
+@utility tag {
+  font-size: 0.6875rem;
+  line-height: 1;
+  font-weight: 600;
+  font-stretch: 87.5%;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dark-zone texture: a faint grain so dark areas read as material, not CSS. */
+@utility grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+}
+
+::selection {
+  background: var(--orange);
+  color: var(--void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Hero entrance — the one orchestrated motion on the site. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hero-rise {
+  animation: rise 900ms cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+.hero-draw {
+  stroke-dasharray: 120;
+  animation: draw 700ms ease-out both;
+}
+
+/* Packshots sit on near-white studio sweeps (231–255). Lift the sweep to pure
+   white, then multiply: the backdrop disappears into whatever well holds it. */
+/* Studio packshots on light wells: lift the backdrop to white, multiply it
+   away, and feather the frame edge so no photo rectangle ever shows. */
+@utility packshot {
+  mix-blend-mode: multiply;
+  filter: brightness(1.07) contrast(1.05);
+  mask-image: radial-gradient(closest-side, #000 80%, transparent 100%);
+  mask-origin: content-box;
+  mask-clip: content-box;
+  mask-repeat: no-repeat;
+}
