@@ -5,7 +5,8 @@
 
    Two themes, switched by data-theme on <html> (light is the default):
 
-     light — Aekovera's palette: cool paper, white panels, Aekovera orange.
+     light — warm industrial off-white, charcoal ink, deep-navy bands, orange.
+             Same typography as dark: one brand, two lighting conditions.
      dark  — the editorial industrial look: near-black, deep navy, warm white.
 
    Components speak in two token families:
@@ -25,39 +26,43 @@
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Editorial (Aekovera light) */
-  --void: #fcfcfd;
-  --navy: #eaecf0;
-  --surface: #ffffff;
-  --surface-2: #f3f4f7;
-  --on-dark: #181a21;
-  --on-dark-muted: #636874;
-  --line-dark: #dcdfe5;
+  /* Editorial — warm industrial off-white, never pure white */
+  --void: #f3f2ee;
+  --navy: #e8e7e2;
+  --surface: #f8f7f3;
+  --surface-2: #eeede8;
+  --on-dark: #101318;
+  --on-dark-muted: #626a73;
+  --line-dark: #d5d3cd;
+  --rail: #e8e7e2;
 
   /* Catalog */
-  --paper: #f3f4f7;
-  --well: #eaecf0;
-  --card: #ffffff;
-  --line: #dcdfe5;
-  --ink: #181a21;
-  --ink-muted: #636874;
-  --ink-faint: #8b909a;
+  --paper: #f2f1ed;
+  --well: #e8e7e2;
+  --card: #f8f7f3;
+  --line: #d7d5cf;
+  --ink: #101318;
+  --ink-muted: #626a73;
+  --ink-faint: #8a9098;
 
-  /* Signal — Aekovera brand orange */
-  --orange: #f76808;
-  --orange-hi: #d5550b;
-  --orange-ink: #c94c0d;
-  --orange-tint: #fff1e5;
+  /* Signal */
+  --orange: #f56616;
+  --orange-hi: #ff8a45;
+  --orange-ink: #b9470c; /* orange as text on off-white — AA */
+  --orange-tint: #fbe9dc;
 
-  /* Status (Aekovera semantic inks / tints) */
+  /* Status */
   --success-ink: #177248;
-  --success-tint: #e3f7ed;
-  --warning-ink: #99620f;
-  --warning-tint: #fdf1d8;
-  --danger-ink: #ba2626;
-  --danger-tint: #ffebeb;
+  --success-tint: #e2f1e8;
+  --warning-ink: #8f5b0c;
+  --warning-tint: #f8ecd2;
+  --danger-ink: #b42424;
+  --danger-tint: #f9e3e1;
 
-  --object-shadow: rgba(24, 26, 33, 0.22);
+  /* Hero studio light: a white key behind the shelf, a faint warm fill. */
+  --studio-key: rgba(255, 255, 255, 0.95);
+  --studio-warm: rgba(245, 102, 22, 0.06);
+  --object-shadow: rgba(16, 19, 24, 0.2);
 }
 
 [data-theme="dark"] {
@@ -71,6 +76,7 @@
   --on-dark: #f4f4f0;
   --on-dark-muted: #9ba4ae;
   --line-dark: rgba(244, 244, 240, 0.1);
+  --rail: transparent;
 
   /* Catalog */
   --paper: #0c0f13;
@@ -94,6 +100,34 @@
   --danger-ink: #ff8f8f;
   --danger-tint: rgba(255, 90, 90, 0.14);
 
+  --studio-key: rgba(155, 164, 174, 0.08);
+  --studio-warm: rgba(255, 100, 31, 0.12);
+  --object-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* tone-dark: a deep-navy band inside the light theme (How it works, footer).
+   It re-declares the editorial + catalog tokens for its subtree, so every
+   component inside renders exactly as it does in the dark theme. */
+[data-theme="light"] .tone-dark {
+  color-scheme: dark;
+  --void: #101d2a;
+  --navy: #101d2a;
+  --surface: #172839;
+  --surface-2: #1e3247;
+  --on-dark: #f4f4f0;
+  --on-dark-muted: #a3adb8;
+  --line-dark: rgba(244, 244, 240, 0.12);
+  --rail: transparent;
+  --paper: #101d2a;
+  --card: #172839;
+  --line: rgba(244, 244, 240, 0.12);
+  --ink: #f4f4f0;
+  --ink-muted: #a3adb8;
+  --ink-faint: #7b8794;
+  --orange: #ff641f;
+  --orange-hi: #ff8a45;
+  --orange-ink: #ff8a45;
+  --orange-tint: rgba(255, 100, 31, 0.14);
   --object-shadow: rgba(0, 0, 0, 0.5);
 }
 
@@ -116,7 +150,7 @@
   --action-soft: var(--orange-tint);
 }
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .tone-dark, .tone-dark *));
 
 @theme inline {
   --color-void: var(--void);
@@ -126,6 +160,7 @@
   --color-on-dark: var(--on-dark);
   --color-on-dark-muted: var(--on-dark-muted);
   --color-line-dark: var(--line-dark);
+  --color-rail: var(--rail);
   --color-paper: var(--paper);
   --color-well: var(--well);
   --color-card: var(--card);
@@ -203,7 +238,9 @@ html {
 
 body {
   background: var(--paper);
-  transition: background-color 200ms ease, color 200ms ease;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
   color: var(--ink);
   font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
 }

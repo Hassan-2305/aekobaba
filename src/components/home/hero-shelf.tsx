@@ -26,14 +26,102 @@ interface ShelfObject {
 }
 
 const OBJECTS: ShelfObject[] = [
-  { slug: "mailers", src: "/hero/mailer-kraft.webp", width: 745, height: 560, alt: "Kraft paper mailer envelope", left: 0, bottom: 31, h: 38, z: 0, delay: 80 },
-  { slug: "corrugated", src: "/hero/corrugated-box.webp", width: 747, height: 599, alt: "Corrugated shipping box", left: 7, bottom: 23, h: 30, z: 1, delay: 140 },
-  { slug: "pouches-bags", src: "/hero/coffee-valve-pouch.webp", width: 476, height: 830, alt: "Black flat-bottom pouch with degassing valve", left: 30, bottom: 26, h: 56, z: 2, delay: 200 },
-  { slug: "labels", src: "/hero/label-roll.webp", width: 614, height: 538, alt: "Roll of blank product labels", left: 66, bottom: 27, h: 24, z: 1, delay: 260 },
-  { slug: "pouches-bags", src: "/hero/kraft-pouch.webp", width: 486, height: 770, alt: "Kraft stand-up pouch with window", left: 14, bottom: 8, h: 43, z: 3, delay: 320 },
-  { slug: "glass-bottles", src: "/hero/glass-bottle-amber.webp", width: 347, height: 797, alt: "Amber glass Boston round bottle", left: 47, bottom: 6, h: 63, z: 4, delay: 380 },
-  { slug: "droppers-vials", src: "/hero/dropper-vial.webp", width: 254, height: 804, alt: "Amber glass dropper bottle", left: 68.5, bottom: 4, h: 31, z: 5, delay: 440 },
-  { slug: "glass-jars", src: "/hero/glass-jar.webp", width: 444, height: 803, alt: "Clear glass mason jar", left: 77, bottom: 5, h: 37, z: 4, delay: 480 },
+  {
+    slug: "mailers",
+    src: "/hero/mailer-kraft.webp",
+    width: 745,
+    height: 560,
+    alt: "Kraft paper mailer envelope",
+    left: 0,
+    bottom: 31,
+    h: 38,
+    z: 0,
+    delay: 80,
+  },
+  {
+    slug: "corrugated",
+    src: "/hero/corrugated-box.webp",
+    width: 747,
+    height: 599,
+    alt: "Corrugated shipping box",
+    left: 7,
+    bottom: 23,
+    h: 30,
+    z: 1,
+    delay: 140,
+  },
+  {
+    slug: "pouches-bags",
+    src: "/hero/coffee-valve-pouch.webp",
+    width: 476,
+    height: 830,
+    alt: "Black flat-bottom pouch with degassing valve",
+    left: 30,
+    bottom: 26,
+    h: 56,
+    z: 2,
+    delay: 200,
+  },
+  {
+    slug: "labels",
+    src: "/hero/label-roll.webp",
+    width: 614,
+    height: 538,
+    alt: "Roll of blank product labels",
+    left: 66,
+    bottom: 27,
+    h: 24,
+    z: 1,
+    delay: 260,
+  },
+  {
+    slug: "pouches-bags",
+    src: "/hero/kraft-pouch.webp",
+    width: 486,
+    height: 770,
+    alt: "Kraft stand-up pouch with window",
+    left: 14,
+    bottom: 8,
+    h: 43,
+    z: 3,
+    delay: 320,
+  },
+  {
+    slug: "glass-bottles",
+    src: "/hero/glass-bottle-amber.webp",
+    width: 347,
+    height: 797,
+    alt: "Amber glass Boston round bottle",
+    left: 47,
+    bottom: 6,
+    h: 63,
+    z: 4,
+    delay: 380,
+  },
+  {
+    slug: "droppers-vials",
+    src: "/hero/dropper-vial.webp",
+    width: 254,
+    height: 804,
+    alt: "Amber glass dropper bottle",
+    left: 68.5,
+    bottom: 4,
+    h: 31,
+    z: 5,
+    delay: 440,
+  },
+  {
+    slug: "glass-jars",
+    src: "/hero/glass-jar.webp",
+    width: 444,
+    height: 803,
+    alt: "Clear glass mason jar",
+    left: 77,
+    bottom: 5,
+    h: 37,
+    z: 4,
+    delay: 480,
+  },
 ];
 
 interface Annotation {
@@ -69,7 +157,7 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
         className="pointer-events-none absolute -inset-[20%]"
         style={{
           background:
-            "radial-gradient(34% 32% at 52% 60%, rgba(255,100,31,.12), transparent 100%), radial-gradient(40% 34% at 52% 36%, rgba(155,164,174,.08), transparent 100%)",
+            "radial-gradient(34% 32% at 52% 60%, var(--studio-warm), transparent 100%), radial-gradient(40% 34% at 52% 36%, var(--studio-key), transparent 100%)",
         }}
       />
       {/* The plane the objects stand on — feathered on every edge — and its
@@ -77,9 +165,14 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
       <div
         aria-hidden
         className="absolute inset-x-[-12%] bottom-[-10%] h-[50%]"
-        style={{ background: "radial-gradient(closest-side, rgba(244,244,240,.07), rgba(244,244,240,0))" }}
+        style={{
+          background: "radial-gradient(closest-side, rgba(244,244,240,.07), rgba(244,244,240,0))",
+        }}
       />
-      <div aria-hidden className="absolute inset-x-0 bottom-[30%] h-px bg-gradient-to-r from-transparent via-on-dark/20 to-transparent" />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-[30%] h-px bg-gradient-to-r from-transparent via-on-dark/20 to-transparent"
+      />
 
       {OBJECTS.map((object) => {
         const category = bySlug.get(object.slug);
@@ -97,7 +190,9 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
             <span
               aria-hidden
               className="absolute -bottom-[6%] left-[-8%] h-[14%] w-[116%]"
-              style={{ background: "radial-gradient(closest-side, var(--object-shadow), transparent)" }}
+              style={{
+                background: "radial-gradient(closest-side, var(--object-shadow), transparent)",
+              }}
             />
             <Image
               src={object.src}
@@ -127,7 +222,12 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
       })}
 
       {/* Annotations — leader lines drawn in stage space, labels in HTML. */}
-      <svg aria-hidden className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full text-on-dark/45 sm:block" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full text-on-dark/45 sm:block"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+      >
         {ANNOTATIONS.filter((a) => bySlug.has(a.slug)).map((a) => {
           const elbowX = a.align === "left" ? a.lx - 1.5 : a.lx + 1.5;
           const endX = a.align === "left" ? a.lx : a.lx - 0.5;
