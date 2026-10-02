@@ -148,7 +148,7 @@ describe("HomeLanding — light-theme studio hero", () => {
     expect(html).toContain('data-testid="hero-studio"');
     expect(html).toContain('id="hero-search-studio"');
     expect(html).toContain('id="hero-search"');
-    expect(html).toContain("studio-scene.webp");
+    expect(html).toContain("studio-backdrop.webp");
   });
 
   it("shows the explore strip with live counts only", () => {
