@@ -20,18 +20,9 @@ const INITIAL_STATE: AuthFormState = {};
 
 export function SignInForm({ next }: { next: string }) {
   const [mode, setMode] = useState<"password" | "magic-link">("password");
-  const [passwordState, submitPassword] = useActionState(
-    signInWithPasswordAction,
-    INITIAL_STATE,
-  );
-  const [magicState, submitMagic] = useActionState(
-    sendMagicLinkAction,
-    INITIAL_STATE,
-  );
-  const [googleState, submitGoogle] = useActionState(
-    beginGoogleSignInAction,
-    INITIAL_STATE,
-  );
+  const [passwordState, submitPassword] = useActionState(signInWithPasswordAction, INITIAL_STATE);
+  const [magicState, submitMagic] = useActionState(sendMagicLinkAction, INITIAL_STATE);
+  const [googleState, submitGoogle] = useActionState(beginGoogleSignInAction, INITIAL_STATE);
 
   if (mode === "magic-link") {
     return (
@@ -52,14 +43,12 @@ export function SignInForm({ next }: { next: string }) {
             placeholder="you@company.com"
             error={magicState.fieldErrors?.email}
           />
-          <SubmitButton pendingLabel="Sending link…">
-            Send a sign-in link
-          </SubmitButton>
+          <SubmitButton pendingLabel="Sending link…">Send a sign-in link</SubmitButton>
         </form>
         <button
           type="button"
           onClick={() => setMode("password")}
-          className="w-full text-center text-sm text-ink-muted underline-offset-2 hover:underline"
+          className="text-sm text-ink-muted underline decoration-ink/20 underline-offset-4 hover:text-ink hover:decoration-orange"
         >
           Use a password instead
         </button>
@@ -73,9 +62,7 @@ export function SignInForm({ next }: { next: string }) {
     <div className="space-y-4">
       <form action={submitPassword} className="space-y-4" noValidate>
         <input type="hidden" name="next" value={next} />
-        {passwordState.error ? (
-          <ErrorAlert message={passwordState.error} />
-        ) : null}
+        {passwordState.error ? <ErrorAlert message={passwordState.error} /> : null}
         <FormField
           id="email"
           label="Email"
@@ -97,14 +84,15 @@ export function SignInForm({ next }: { next: string }) {
         />
         <SubmitButton pendingLabel="Signing in…">Sign in</SubmitButton>
       </form>
+      <OrDivider />
+      <GoogleButton next={next} state={googleState} onSubmit={submitGoogle} />
       <button
         type="button"
         onClick={() => setMode("magic-link")}
-        className="w-full text-center text-sm text-ink-muted underline-offset-2 hover:underline"
+        className="text-sm text-ink-muted underline decoration-ink/20 underline-offset-4 hover:text-ink hover:decoration-orange"
       >
         Email me a sign-in link instead
       </button>
-      <GoogleButton next={next} state={googleState} onSubmit={submitGoogle} />
       <SignUpLink next={next} />
     </div>
   );
@@ -132,13 +120,26 @@ function GoogleButton({
   );
 }
 
+function OrDivider() {
+  return (
+    <div
+      className="flex items-center gap-4 text-xs uppercase tracking-[0.12em] text-ink-faint"
+      aria-hidden
+    >
+      <span className="h-px flex-1 bg-line" />
+      or
+      <span className="h-px flex-1 bg-line" />
+    </div>
+  );
+}
+
 function SignUpLink({ next }: { next: string }) {
   return (
-    <p className="text-center text-sm text-ink-muted">
+    <p className="pt-2 text-sm text-ink-muted">
       New to Aekobaba?{" "}
       <Link
         href={next === "/" ? "/auth/sign-up" : `/auth/sign-up?next=${encodeURIComponent(next)}`}
-        className="font-medium text-accent underline-offset-2 hover:underline"
+        className="font-medium text-ink underline decoration-orange underline-offset-4 hover:text-orange-ink"
       >
         Create an account
       </Link>
@@ -150,7 +151,7 @@ export function ErrorAlert({ message }: { message: string }) {
   return (
     <p
       role="alert"
-      className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+      className="border-l-2 border-danger-ink bg-danger-tint px-3 py-2 text-sm text-danger-ink"
     >
       {message}
     </p>
@@ -161,7 +162,7 @@ export function SuccessAlert({ message }: { message: string }) {
   return (
     <p
       role="status"
-      className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900"
+      className="border-l-2 border-success-ink bg-success-tint px-3 py-2 text-sm text-success-ink"
     >
       {message}
     </p>

@@ -183,13 +183,19 @@ function Plinth({ p }: { p: (typeof PLINTHS)[number] }) {
   );
 }
 
-export function StudioStill({ categories }: { categories: CategoryVM[] }) {
+export function StudioStill({
+  categories,
+  className,
+}: {
+  categories: CategoryVM[];
+  className?: string;
+}) {
   const live = new Map(categories.filter((c) => c.productCount > 0).map((c) => [c.slug, c]));
 
   return (
     <div
       data-testid="studio-still"
-      className="relative h-[400px] [container-type:size] sm:h-[500px] lg:h-auto"
+      className={className ?? "relative h-[400px] [container-type:size] sm:h-[500px] lg:h-auto"}
     >
       {/* Studio light — gradients only, fading into the hero: no edge. */}
       <div

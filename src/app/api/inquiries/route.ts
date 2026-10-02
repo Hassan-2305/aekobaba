@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { newAccessToken } from "@/lib/inquiries/access";
 import {
   designFileError,
   inquiryFieldErrors,
@@ -62,9 +63,14 @@ export async function POST(request: Request) {
   });
   if (!product) return Response.json({ error: "unknown_product" }, { status: 404 });
 
+  // The requester's browser keeps the token so the Quote Basket can show
+  // this request's live status; only its hash is stored.
+  const access = newAccessToken();
+
   const inquiry = await db.inquiry.create({
     data: {
       ...parsed.data,
+      accessTokenHash: access.hash,
       ...(file
         ? {
             file: {
@@ -81,5 +87,8 @@ export async function POST(request: Request) {
     select: { id: true },
   });
 
-  return Response.json({ ok: true, reference: inquiryReference(inquiry.id) }, { status: 201 });
+  return Response.json(
+    { ok: true, id: inquiry.id, token: access.token, reference: inquiryReference(inquiry.id) },
+    { status: 201 },
+  );
 }

@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 
-import { getCurrentUserRole, getServerSessionUser } from "@/lib/auth/session";
-import { BasketView } from "@/components/quotes/basket-view";
+import { MyRequestsView } from "@/components/quotes/my-requests-view";
 
-// The Quote Basket page. Basket collection is anonymous; the signed-in role
-// is passed down so the view can explain the sign-in gate before submission.
+// The Quote Basket: the quote and sample requests this browser has sent,
+// with live status. Requests are stored in this browser (no account needed).
 
 export const metadata: Metadata = {
   title: "Quote Basket — Aekobaba",
-  description: "One quote request, sent to every supplier in your basket.",
+  description: "Your quote and sample requests, with their status.",
 };
 
-export default async function BasketPage() {
-  const session = await getServerSessionUser();
-  const role = session ? await getCurrentUserRole(session.supabaseUserId) : null;
-  return <BasketView signedInRole={role} />;
+export default function BasketPage() {
+  return <MyRequestsView />;
 }

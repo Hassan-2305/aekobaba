@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 
-import { useQuoteBasketStore } from "@/lib/basket/store";
-import { useBasketHydrated } from "@/lib/basket/use-basket";
+import { useMyRequests, useMyRequestsHydrated } from "@/lib/inquiries/my-requests";
 
-// Header basket island — the one piece of client JS the server-rendered
+// Header Quote Basket island (counts the requests this browser has sent) — the one piece of client JS the server-rendered
 // header carries. The count appears only after the persisted basket is
 // restored (never during hydration), and only when there is something in it.
 
 export function BasketBadge() {
-  const hydrated = useBasketHydrated();
-  const count = useQuoteBasketStore((state) => state.items.length);
+  const hydrated = useMyRequestsHydrated();
+  // Every request this browser has sent.
+  const count = useMyRequests((state) => state.requests.length);
 
   return (
     <Link

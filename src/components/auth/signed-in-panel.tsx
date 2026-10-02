@@ -14,20 +14,14 @@ const ROLE_LABELS = {
   ADMIN: "Admin account",
 } as const;
 
-export async function SignedInPanel({
-  sessionUser,
-}: {
-  sessionUser: ServerSessionUser;
-}) {
+export async function SignedInPanel({ sessionUser }: { sessionUser: ServerSessionUser }) {
   const role = await getCurrentUserRole(sessionUser.supabaseUserId);
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-ink-muted">
         Signed in as{" "}
-        <span className="font-medium text-ink">
-          {sessionUser.email ?? "your account"}
-        </span>
+        <span className="font-medium text-ink">{sessionUser.email ?? "your account"}</span>
         {role ? ` · ${ROLE_LABELS[role]}` : ""}
       </p>
       <div className="flex flex-col gap-2">

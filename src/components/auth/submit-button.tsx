@@ -19,15 +19,15 @@ export function SubmitButton({
 
   const styles =
     variant === "primary"
-      ? "bg-action text-on-orange hover:bg-action-strong"
-      : "border border-line bg-card text-ink hover:border-ink";
+      ? "bg-orange text-white hover:bg-orange-hi"
+      : "border border-line bg-white/50 text-ink hover:border-ink dark:bg-surface";
 
   return (
     <button
       type="submit"
       disabled={pending}
       aria-busy={pending}
-      className={`flex h-11 w-full items-center justify-center text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60 ${styles}`}
+      className={`flex h-12 w-full items-center justify-center text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60 ${styles}`}
     >
       {pending ? pendingLabel : children}
     </button>
