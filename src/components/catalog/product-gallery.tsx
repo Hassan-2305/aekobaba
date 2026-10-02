@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import { cutoutFor, ProductPicture } from "./product-picture";
 import type { ProductImageVM } from "@/lib/catalog/view-models";
 
 // Product gallery (spec art_AjaTUf9x): renders the product's actual Image
@@ -16,6 +17,10 @@ import type { ProductImageVM } from "@/lib/catalog/view-models";
 // inspect mode that magnifies 2.2x under the pointer.
 
 const isDarkView = (url: string) => /-dark\.(webp|png|jpe?g)$/.test(url);
+/** Crops of the white studio sweep (detail views) stay on a light plate in both themes. */
+const isLightPlate = (url: string) => !isDarkView(url) && !cutoutFor(url);
+const plateFor = (url: string) =>
+  isDarkView(url) ? "bg-[#080a0d]" : isLightPlate(url) ? "bg-[#ecebe6]" : "bg-well";
 
 export function ProductGallery({ images, title }: { images: ProductImageVM[]; title: string }) {
   const [index, setIndex] = useState(0);
@@ -26,7 +31,8 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
 
   const count = images.length;
   const current = images[Math.min(index, count - 1)];
-  const altFor = (image: ProductImageVM) => image.alt ?? `${title} — representative packaging image`;
+  const altFor = (image: ProductImageVM) =>
+    image.alt ?? `${title} — representative packaging image`;
   const go = (delta: number) => {
     setInspect(false);
     setIndex((i) => (i + delta + count) % count);
@@ -45,7 +51,7 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
           if (event.key === "ArrowLeft") go(-1);
           if (event.key === "Escape") setInspect(false);
         }}
-        className={`relative aspect-square overflow-hidden ${dark ? "bg-[#080a0d]" : "bg-well"}`}
+        className={`relative aspect-square overflow-hidden ${plateFor(current.url)}`}
       >
         <div
           className={`absolute inset-0 ${inspect ? "cursor-zoom-out" : "cursor-zoom-in"}`}
@@ -58,21 +64,46 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
             );
           }}
         >
-          <Image
+          <div
             key={current.url}
-            src={current.url}
-            alt={altFor(current)}
-            fill
-            priority={index === 0}
-            sizes="(min-width: 1024px) 680px, 100vw"
+            // The plate colour lives on the transformed layer too: a transform
+            // isolates blending, and the packshot must multiply into its plate.
+            className={`absolute inset-0 transition-transform duration-300 ease-out ${plateFor(current.url)} ${inspect ? "scale-[2.2]" : "scale-100"}`}
             style={{ transformOrigin: origin }}
-            className={`transition-transform duration-300 ease-out ${inspect ? "scale-[2.2]" : "scale-100"} ${
-              dark ? "object-cover" : `packshot object-contain ${index === 0 ? "p-10 sm:p-16" : "p-0"}`
-            }`}
-          />
+          >
+            {dark ? (
+              <Image
+                src={current.url}
+                alt={altFor(current)}
+                fill
+                sizes="(min-width: 1024px) 680px, 100vw"
+                className="object-cover"
+              />
+            ) : cutoutFor(current.url) ? (
+              <ProductPicture
+                src={current.url}
+                alt={altFor(current)}
+                priority={index === 0}
+                sizes="(min-width: 1024px) 680px, 100vw"
+                className="p-10 sm:p-16"
+              />
+            ) : (
+              <Image
+                src={current.url}
+                alt={altFor(current)}
+                fill
+                sizes="(min-width: 1024px) 680px, 100vw"
+                className="packshot object-contain"
+              />
+            )}
+          </div>
         </div>
 
-        <span className={`tag pointer-events-none absolute left-4 top-4 ${dark ? "text-white/70" : "text-well-ink-muted"}`}>
+        <span
+          className={`tag pointer-events-none absolute left-4 top-4 ${
+            dark ? "text-white/70" : isLightPlate(current.url) ? "text-[#555d66]" : "text-ink-muted"
+          }`}
+        >
           View {index + 1} / {count}
         </span>
 
@@ -84,7 +115,15 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
               aria-label="Previous image"
               className="flex h-10 w-10 items-center justify-center border border-black/10 bg-white/85 text-[#0b0e12] transition-colors hover:border-orange hover:bg-orange"
             >
-              <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                aria-hidden
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <path d="M20 12H5M11 6l-6 6 6 6" />
               </svg>
             </button>
@@ -94,7 +133,15 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
               aria-label="Next image"
               className="flex h-10 w-10 items-center justify-center border border-black/10 bg-white/85 text-[#0b0e12] transition-colors hover:border-orange hover:bg-orange"
             >
-              <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                aria-hidden
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <path d="M4 12h15M13 6l6 6-6 6" />
               </svg>
             </button>
@@ -127,25 +174,32 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
               }}
               aria-label={`Show image ${i + 1} of ${count}`}
               aria-current={i === index ? "true" : undefined}
-              className={`relative aspect-square overflow-hidden border-2 transition-colors ${
-                isDarkView(image.url) ? "bg-[#080a0d]" : "bg-well"
-              } ${i === index ? "border-orange" : "border-transparent hover:border-line"}`}
+              className={`relative aspect-square overflow-hidden border-2 transition-colors ${plateFor(
+                image.url,
+              )} ${i === index ? "border-orange" : "border-transparent hover:border-line"}`}
             >
-              <Image
-                src={image.url}
-                alt=""
-                fill
-                sizes="96px"
-                className={isDarkView(image.url) ? "object-cover" : "packshot object-contain"}
-              />
+              {cutoutFor(image.url) ? (
+                <ProductPicture src={image.url} alt="" sizes="96px" />
+              ) : (
+                <Image
+                  src={image.url}
+                  alt=""
+                  fill
+                  sizes="96px"
+                  className={isDarkView(image.url) ? "object-cover" : "packshot object-contain"}
+                />
+              )}
             </button>
           ))}
         </div>
       ) : null}
 
-      <figcaption data-testid="representative-image-caption" className="mt-3 text-xs text-ink-faint">
-        Representative image — generated illustration, not a photo of the supplier&rsquo;s actual stock. Ask the
-        supplier for production photos or a sample.
+      <figcaption
+        data-testid="representative-image-caption"
+        className="mt-3 text-xs text-ink-faint"
+      >
+        Representative image — generated illustration, not a photo of the supplier&rsquo;s actual
+        stock. Ask the supplier for production photos or a sample.
       </figcaption>
     </figure>
   );

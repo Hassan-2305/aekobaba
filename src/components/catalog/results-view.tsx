@@ -118,11 +118,11 @@ export function ResultsView({
               </div>
             ) : (
               <div data-testid="results-empty" className="mt-8 bg-well px-8 py-16 text-center">
-                <p className="font-semiwide text-2xl font-light text-well-ink">Nothing matches these filters yet.</p>
-                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-well-ink-muted">
+                <p className="font-semiwide text-2xl font-light text-ink">Nothing matches these filters yet.</p>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
                   We only list what we have verified — no invented filler. Clear a filter or browse
                   the{" "}
-                  <Link href="/results" className="text-well-ink underline decoration-orange underline-offset-4">
+                  <Link href="/results" className="text-ink underline decoration-orange underline-offset-4">
                     full catalog
                   </Link>
                   .

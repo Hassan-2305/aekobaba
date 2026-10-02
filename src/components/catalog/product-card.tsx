@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { ArrowCorner } from "@/components/brand/icons";
@@ -9,6 +8,7 @@ import { PriceTagInline } from "./price-display";
 import { ProvenanceLine } from "./provenance-line";
 import { ReviewScore } from "./review-score";
 import { TierBadge } from "./tier-badge";
+import { ProductPicture } from "@/components/catalog/product-picture";
 
 // Catalog object — the results-grid card. The packshot sits in a warm image
 // well (multiplied so the studio backdrop dissolves into it), labelled with
@@ -23,7 +23,9 @@ export function ProductCard({ product }: { product: ProductVM }) {
   const image = product.primaryImage;
   // The "representative" label is a hard requirement: generated packshots are
   // illustrative, never supplier photography (spec honesty rule).
-  const imageAlt = image?.alt ? `${image.alt} — representative image` : `Representative image of ${product.title}`;
+  const imageAlt = image?.alt
+    ? `${image.alt} — representative image`
+    : `Representative image of ${product.title}`;
   const tags = productTags(product, 2);
 
   return (
@@ -32,32 +34,41 @@ export function ProductCard({ product }: { product: ProductVM }) {
       data-product-id={product.id}
       className="group relative flex h-full flex-col bg-card shadow-[0_1px_0_rgba(11,14,18,.06)] transition-shadow duration-300 hover:shadow-[0_24px_48px_-28px_rgba(11,14,18,.35)]"
     >
-      <Link href={`/products/${product.id}`} aria-label={`View ${product.title}`} tabIndex={-1} className="block">
+      <Link
+        href={`/products/${product.id}`}
+        aria-label={`View ${product.title}`}
+        tabIndex={-1}
+        className="block"
+      >
         <div className="relative aspect-square overflow-hidden bg-well">
           {image ? (
-            <Image
+            <ProductPicture
               src={image.url}
               alt={imageAlt}
-              fill
               sizes="(min-width: 1280px) 340px, (min-width: 640px) 45vw, 100vw"
-              className="object-contain p-8 packshot"
+              className="p-8"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-ink-faint">
               No image available
             </div>
           )}
-          <span className="tag absolute left-4 top-4 max-w-[70%] truncate text-well-ink-muted">{product.categoryName}</span>
+          <span className="tag absolute left-4 top-4 max-w-[70%] truncate text-ink-muted">
+            {product.categoryName}
+          </span>
           <span
             aria-hidden
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center border border-well-ink/10 bg-white/60 text-well-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-on-orange"
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center border border-ink/10 bg-paper/60 text-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-on-orange"
           >
             <ArrowCorner size={15} />
           </span>
           {tags.length > 0 ? (
-            <ul className="absolute bottom-3 left-4 flex flex-wrap gap-1.5" aria-label="Product attributes">
+            <ul
+              className="absolute bottom-3 left-4 flex flex-wrap gap-1.5"
+              aria-label="Product attributes"
+            >
               {tags.map((tag) => (
-                <li key={tag} className="tag bg-white/85 px-1.5 py-1 text-well-ink">
+                <li key={tag} className="tag bg-card/85 px-1.5 py-1 text-ink">
                   {tag}
                 </li>
               ))}
@@ -98,7 +109,9 @@ export function ProductCard({ product }: { product: ProductVM }) {
         <dl className="mt-4 grid grid-cols-2 border-t border-line text-xs">
           <div className="border-r border-line py-2.5 pr-3">
             <dt className="tag text-ink-faint">Min order:</dt>
-            <dd className="mt-1.5 truncate text-ink tabular-nums">{formatMoq(product.moq, product.moqUnit)}</dd>
+            <dd className="mt-1.5 truncate text-ink tabular-nums">
+              {formatMoq(product.moq, product.moqUnit)}
+            </dd>
           </div>
           <div className="py-2.5 pl-3">
             <dt className="tag text-ink-faint">Lead time:</dt>
@@ -111,7 +124,10 @@ export function ProductCard({ product }: { product: ProductVM }) {
         </dl>
 
         <div className="relative z-20 mt-auto border-t border-line pt-3">
-          <ProvenanceLine sourceUrl={product.sourceUrl} sourceCapturedAt={product.sourceCapturedAt} />
+          <ProvenanceLine
+            sourceUrl={product.sourceUrl}
+            sourceCapturedAt={product.sourceCapturedAt}
+          />
         </div>
       </div>
     </article>

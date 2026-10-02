@@ -21,7 +21,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label="Aekobaba — home"
-          className="flex shrink-0 items-center py-4 pl-5 pr-6 lg:h-[76px] lg:w-[var(--rail-w)] lg:pl-[var(--edge)] dark:sm:border-r dark:sm:border-line-dark"
+          className="flex shrink-0 items-center py-4 pl-5 pr-6 lg:h-[76px] lg:w-[var(--rail-w)] lg:pl-[var(--edge)]"
         >
           {/* Wordmark per theme: ink on light, white on dark. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}

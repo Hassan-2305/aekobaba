@@ -35,13 +35,21 @@ const featured = [
 ];
 
 describe("HomeLanding — hero", () => {
-  it("keeps the hero question, the search form, and the packaging shelf", () => {
+  it("keeps the hero question, the search form, and the still life", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
     expect(html).toContain("What are you packaging?");
     expect(html).toContain('role="search"');
-    expect(html).toContain('data-testid="hero-shelf"');
+    expect(html).toContain('data-testid="studio-still"');
     expect(html).toContain("glass-bottle-amber.webp");
+  });
+
+  it("renders one hero for both themes (no theme-specific layouts)", () => {
+    const html = render(createElement(HomeLanding, { categories, featured }));
+
+    expect(html.match(/data-testid="hero-studio"/g)).toHaveLength(1);
+    expect(html.match(/id="hero-search"/g)).toHaveLength(1);
+    expect(html).not.toContain('dark:hidden" data-testid="hero-studio');
   });
 
   it("links and annotates shelf objects only for categories with listings", () => {
@@ -78,15 +86,15 @@ describe("HomeLanding — featured rail", () => {
     expect(html).toContain(featured[0].title);
   });
 
-  it("renders the rail between the popular tiles and the category grid", () => {
+  it("renders the rail between the explore strip and the category grid", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    const popularAt = html.indexOf('data-testid="popular-entry"');
+    const exploreAt = html.indexOf('data-testid="explore-card"');
     const railAt = html.indexOf('data-testid="featured-rail-section"');
     const gridAt = html.indexOf('data-testid="category-grid"');
 
-    expect(popularAt).toBeGreaterThan(-1);
-    expect(railAt).toBeGreaterThan(popularAt);
+    expect(exploreAt).toBeGreaterThan(-1);
+    expect(railAt).toBeGreaterThan(exploreAt);
     expect(gridAt).toBeGreaterThan(railAt);
   });
 
@@ -97,21 +105,21 @@ describe("HomeLanding — featured rail", () => {
   });
 });
 
-describe("HomeLanding — popular packaging tiles", () => {
-  it("keeps the popular-entry test ids and pre-filtered result links", () => {
+describe("HomeLanding — explore strip", () => {
+  it("shows five shelf cards with pre-filtered result links", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    expect(html.match(/data-testid="popular-entry"/g)).toHaveLength(POPULAR_CATEGORY_SLUGS.length);
-    expect(html).toContain('data-entry="mailers"');
-    expect(html).toContain('href="/results?category=mailers"');
+    expect(html.match(/data-testid="explore-card"/g)).toHaveLength(5);
+    expect(html).toContain('href="/results?category=pouches-bags"');
+    expect(html).toContain('data-entry="glass-jars"');
   });
 
-  it("renders each tile with a representative packshot and the category name", () => {
+  it("renders each card with a packshot (light) and a cut-out (dark)", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    expect(html).toContain("Mailers — representative packaging image");
-    expect(html).toContain("mailer-bag.png");
-    expect(html).toContain(">Mailers</span>");
+    expect(html).toContain("Glass Jars — representative packaging image");
+    expect(html).toContain("glass-jar.png");
+    expect(html).toContain("cutouts%2Fglass-jar.webp");
   });
 });
 
@@ -129,29 +137,22 @@ describe("HomeLanding — category grid", () => {
 });
 
 describe("HomeLanding — material-only navigation (PR #9 guard)", () => {
-  it("never surfaces use-case rows as popular entries", () => {
+  it("never surfaces use-case rows as explore entries", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    // The use-case-looking category stays out of the popular navigation row;
-    // every popular entry is a curated material slug.
+    // Every explore entry is a material category from the shelf or the
+    // curated popular list; the use-case-looking row never appears.
+    const allowed = new Set<string>([...POPULAR_CATEGORY_SLUGS, "glass-jars"]);
     const entries = [...html.matchAll(/data-entry="([^"]+)"/g)].map((match) => match[1]);
+    expect(entries.length).toBeGreaterThan(0);
     for (const entry of entries) {
-      expect(POPULAR_CATEGORY_SLUGS).toContain(entry);
+      expect(allowed.has(entry)).toBe(true);
     }
     expect(entries).not.toContain("coffee-gift-sets");
   });
 });
 
-describe("HomeLanding — light-theme studio hero", () => {
-  it("renders both theme heroes with distinct search inputs", () => {
-    const html = render(createElement(HomeLanding, { categories, featured }));
-    expect(html).toContain('data-testid="hero-studio"');
-    expect(html).toContain('id="hero-search-studio"');
-    expect(html).toContain('id="hero-search"');
-    expect(html).toContain('data-testid="studio-still"');
-    expect(html).toContain("dropper-vial.webp");
-  });
-
+describe("HomeLanding — studio hero", () => {
   it("shows the explore strip with live counts only", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
     expect(html).toContain('data-testid="explore-strip"');

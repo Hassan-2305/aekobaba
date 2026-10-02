@@ -38,7 +38,7 @@ export function SearchForm({
       <div
         className={`flex items-stretch border transition-colors ${
           studio
-            ? "h-[clamp(50px,3.2vw,60px)] border-line-dark bg-white text-[#111419] focus-within:border-[#111419]"
+            ? "h-[clamp(50px,3.2vw,60px)] border-line-dark bg-white text-ink focus-within:border-ink dark:bg-surface"
             : field
         }`}
       >
@@ -53,14 +53,14 @@ export function SearchForm({
           defaultValue={defaultValue}
           placeholder="Pouches, bottles, labels…"
           className={`w-full min-w-0 bg-transparent focus:outline-none ${
-            studio ? "px-4 text-[17px] placeholder:text-[#8a9098]" : placeholder
+            studio ? "px-4 text-[17px] placeholder:text-ink-faint" : placeholder
           } ${studio ? "" : size === "lg" ? "px-3 py-4 text-base" : "px-3 py-2.5 text-sm"}`}
         />
         <button
           type="submit"
           className={`inline-flex shrink-0 items-center justify-center bg-orange font-medium transition-colors ${
             studio
-              ? "px-5 text-[16.5px] text-white hover:bg-[#df5a10] sm:w-[190px] sm:px-0"
+              ? "px-5 text-[16.5px] text-white hover:bg-orange-hi sm:w-[190px] sm:px-0"
               : `text-on-orange hover:bg-orange-hi ${size === "lg" ? "px-6 text-sm sm:px-8" : "px-4 text-sm"}`
           }`}
         >

@@ -63,46 +63,74 @@
   --studio-key: rgba(255, 255, 255, 0.95);
   --studio-warm: rgba(245, 102, 22, 0.06);
   --object-shadow: rgba(16, 19, 24, 0.2);
+
+  /* Still life (hero): key light, floor fill, edge fall-off, cast shadows */
+  --still-key: rgba(255, 255, 255, 0.95);
+  --still-floor: rgba(226, 208, 186, 0.55);
+  --still-edge: rgba(212, 194, 170, 0.45);
+  --still-shadow: rgba(84, 64, 44, 0.26);
+  --still-contact: rgba(54, 40, 28, 0.6);
+  --still-ink: #111419;
+  --still-ink-muted: #3d434a;
+  --still-rim: 0 0 0 transparent;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
+  /* The light theme's warm off-white, re-lit as a dark studio: warm graphite
+     (never blue-black, never pure black), the same hierarchy of surfaces —
+     page, slightly raised hero, rail, raised cards — and the same orange.
+     Built as its own palette rather than an inversion: contrast steps are
+     tuned for dark (text 14.8:1, secondary 6.4:1 on the page). */
+
   /* Editorial */
-  --void: #080a0d;
-  --navy: #0d1620;
-  --surface: #141a20;
-  --surface-2: #1b232c;
-  --on-dark: #f4f4f0;
-  --on-dark-muted: #9ba4ae;
-  --line-dark: rgba(244, 244, 240, 0.1);
-  --rail: transparent;
+  --void: #151411;
+  --navy: #101820;
+  --surface: #1c1b18;
+  --surface-2: #24231f;
+  --on-dark: #ece9e3;
+  --on-dark-muted: #a39e95;
+  --line-dark: #2e2c28;
+  --rail: #1a1916;
 
   /* Catalog */
-  --paper: #0c0f13;
-  --well: #e4e3de;
-  --card: #141a20;
-  --line: #262d35;
-  --ink: #f4f4f0;
-  --ink-muted: #9ba4ae;
-  --ink-faint: #6f7882;
+  --paper: #121110;
+  --well: #1d1c19;
+  --card: #1a1916;
+  --line: #2e2c28;
+  --ink: #ece9e3;
+  --ink-muted: #a39e95;
+  --ink-faint: #736e66;
 
-  /* Signal */
-  --orange: #ff641f;
-  --orange-hi: #ff8a45;
+  /* Signal — the same orange as light, a touch brighter for hover/text */
+  --orange: #f56616;
+  --orange-hi: #ff7f3a;
   --orange-ink: #ff8a45;
-  --orange-tint: rgba(255, 100, 31, 0.12);
+  --orange-tint: rgba(245, 102, 22, 0.14);
 
-  --success-ink: #6fd3a3;
+  --success-ink: #79d1a4;
   --success-tint: rgba(55, 180, 120, 0.14);
-  --warning-ink: #f2c46b;
-  --warning-tint: rgba(240, 180, 60, 0.14);
-  --danger-ink: #ff8f8f;
-  --danger-tint: rgba(255, 90, 90, 0.14);
+  --warning-ink: #edc274;
+  --warning-tint: rgba(240, 180, 60, 0.13);
+  --danger-ink: #ff9b92;
+  --danger-tint: rgba(255, 90, 80, 0.13);
 
-  --studio-key: rgba(155, 164, 174, 0.08);
-  --studio-warm: rgba(255, 100, 31, 0.12);
-  --object-shadow: rgba(0, 0, 0, 0.5);
+  --studio-key: rgba(255, 238, 214, 0.07);
+  --studio-warm: rgba(245, 102, 22, 0.1);
+  --object-shadow: rgba(0, 0, 0, 0.55);
+
+  /* Still life: a dark studio — a warm spot from front-left, an amber floor
+     bounce, darkness at the edges; shadows go to near-black. */
+  --still-key: rgba(255, 236, 212, 0.13);
+  --still-floor: rgba(245, 120, 50, 0.1);
+  --still-edge: rgba(0, 0, 0, 0.35);
+  --still-shadow: rgba(0, 0, 0, 0.6);
+  --still-contact: rgba(0, 0, 0, 0.85);
+  --still-ink: #ece9e3;
+  --still-ink-muted: #a39e95;
+  /* A thin warm rim so dark objects (the black pouch) hold their edge. */
+  --still-rim: 0 0 1.5px rgba(255, 236, 214, 0.42);
 }
 
 /* tone-dark: a deep-navy band inside the light theme (How it works, footer).
