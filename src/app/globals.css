@@ -31,7 +31,7 @@
   --navy: #e8e7e2;
   --surface: #f8f7f3;
   --surface-2: #eeede8;
-  --on-dark: #101318;
+  --on-dark: #111419;
   --on-dark-muted: #626a73;
   --line-dark: #d5d3cd;
   --rail: #e8e7e2;
@@ -40,8 +40,8 @@
   --paper: #f2f1ed;
   --well: #e8e7e2;
   --card: #f8f7f3;
-  --line: #d7d5cf;
-  --ink: #101318;
+  --line: #d5d3cd;
+  --ink: #111419;
   --ink-muted: #626a73;
   --ink-faint: #8a9098;
 
@@ -129,6 +129,13 @@
   --orange-ink: #ff8a45;
   --orange-tint: rgba(255, 100, 31, 0.14);
   --object-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* The architectural grid (from the reference): an outer edge inset and the
+   rail column. Header logo cell, hero rail and page edges all align to it. */
+:root {
+  --edge: clamp(20px, 5.2vw, 100px);
+  --rail-w: clamp(220px, 15.8vw, 300px);
 }
 
 :root {
