@@ -33,7 +33,7 @@ export async function SignedInPanel({
       <div className="flex flex-col gap-2">
         <Link
           href="/"
-          className="flex h-10 items-center justify-center bg-accent text-sm font-medium text-white transition-colors hover:bg-accent-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="flex h-10 items-center justify-center bg-ink text-sm font-medium text-paper transition-colors hover:bg-ink/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           Continue to the marketplace
         </Link>

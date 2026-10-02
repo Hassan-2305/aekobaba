@@ -29,13 +29,13 @@ export function AuthCard({
         </p>
         <div aria-hidden className="relative mx-auto flex h-72 w-full max-w-md items-end justify-center gap-2">
           <div className="relative h-[86%] w-[36%]">
-            <Image src="/hero/coffee-valve-pouch.webp" alt="" fill sizes="180px" className="object-contain object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,.5)]" />
+            <Image src="/hero/coffee-valve-pouch.webp" alt="" fill sizes="180px" className="object-contain object-bottom drop-shadow-[0_20px_30px_var(--object-shadow)]" />
           </div>
           <div className="relative h-full w-[26%]">
-            <Image src="/hero/glass-bottle-amber.webp" alt="" fill sizes="130px" className="object-contain object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,.5)]" />
+            <Image src="/hero/glass-bottle-amber.webp" alt="" fill sizes="130px" className="object-contain object-bottom drop-shadow-[0_20px_30px_var(--object-shadow)]" />
           </div>
           <div className="relative h-[44%] w-[30%]">
-            <Image src="/hero/glass-jar.webp" alt="" fill sizes="150px" className="object-contain object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,.5)]" />
+            <Image src="/hero/glass-jar.webp" alt="" fill sizes="150px" className="object-contain object-bottom drop-shadow-[0_20px_30px_var(--object-shadow)]" />
           </div>
         </div>
         <ul className="relative space-y-3 border-t border-line-dark pt-6 text-sm text-on-dark-muted">

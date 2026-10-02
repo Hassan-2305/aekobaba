@@ -52,7 +52,7 @@ export function VerifiedMark({ className, size = 14 }: IconProps) {
   return (
     <svg aria-hidden width={size} height={size} viewBox="0 0 16 16" className={className}>
       <rect x="0.5" y="0.5" width="15" height="15" fill="currentColor" />
-      <path d="m4.2 8.2 2.5 2.4 5-5.2" fill="none" stroke="var(--void)" strokeWidth="1.8" />
+      <path d="m4.2 8.2 2.5 2.4 5-5.2" fill="none" stroke="var(--on-orange)" strokeWidth="1.8" />
     </svg>
   );
 }

@@ -27,7 +27,7 @@ export function BasketBadge() {
       {hydrated && count > 0 ? (
         <span
           data-testid="basket-count"
-          className="inline-flex h-5 min-w-5 items-center justify-center bg-orange px-1 text-xs font-semibold tabular-nums text-void"
+          className="inline-flex h-5 min-w-5 items-center justify-center bg-orange px-1 text-xs font-semibold tabular-nums text-on-orange"
         >
           {count}
         </span>

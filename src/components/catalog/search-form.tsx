@@ -38,7 +38,7 @@ export function SearchForm({
         />
         <button
           type="submit"
-          className={`shrink-0 bg-orange font-medium text-void transition-colors hover:bg-orange-hi ${
+          className={`shrink-0 bg-orange font-medium text-on-orange transition-colors hover:bg-orange-hi ${
             size === "lg" ? "px-6 text-sm sm:px-8" : "px-4 text-sm"
           }`}
         >

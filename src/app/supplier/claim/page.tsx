@@ -35,6 +35,7 @@ export default async function SupplierClaimPage() {
   return (
     <WorkspaceShell
       area="supplier"
+      active="claim"
       title="Claim a listing"
       subtitle="Verify your company's listing to receive quote leads from brands."
     >
@@ -51,22 +52,22 @@ export default async function SupplierClaimPage() {
           </p>
         </div>
       ) : owned ? (
-        <div className="rounded-lg border border-stone-200 bg-card p-6">
-          <p className="text-sm text-stone-600">You own the listing for</p>
-          <p className="mt-1 text-lg font-semibold text-stone-900">
+        <div className="rounded-lg border border-line bg-card p-6">
+          <p className="text-sm text-ink-muted">You own the listing for</p>
+          <p className="mt-1 text-lg font-semibold text-ink">
             {owned.name}
           </p>
           <div className="mt-4 flex gap-3">
             <Link
               href="/supplier/inbox"
-              className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-medium text-white hover:bg-accent-dark"
+              className="inline-flex h-10 items-center bg-orange px-4 text-sm font-medium text-on-orange hover:bg-orange-hi"
             >
               Open lead inbox
             </Link>
           </div>
         </div>
       ) : unclaimed.length === 0 ? (
-        <div className="rounded-lg border border-stone-200 bg-card p-6 text-sm text-stone-600">
+        <div className="rounded-lg border border-line bg-card p-6 text-sm text-ink-muted">
           There are no unclaimed listings right now. If your company should be
           listed, contact the Aekobaba team.
         </div>

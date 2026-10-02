@@ -39,7 +39,7 @@ export default async function QuoteRequestsPage() {
           <p className="text-sm text-ink-muted">No quote requests yet.</p>
           <Link
             href="/results"
-            className="mt-6 inline-block rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark"
+            className="mt-6 inline-block rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper hover:bg-ink/85"
           >
             Browse packaging
           </Link>

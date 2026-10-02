@@ -8,7 +8,7 @@ export function InlineErrorAlert({ message }: { message: string }) {
   return (
     <div
       role="alert"
-      className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+      className="border-l-2 border-danger-ink bg-danger-tint px-3 py-2 text-sm text-danger-ink"
     >
       {message}
     </div>
@@ -19,7 +19,7 @@ export function InlineSuccessAlert({ children }: { children: ReactNode }) {
   return (
     <div
       role="status"
-      className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800"
+      className="border-l-2 border-success-ink bg-success-tint px-3 py-2 text-sm text-success-ink"
     >
       {children}
     </div>

@@ -55,7 +55,7 @@ export function LeadItemActions({ itemId }: { itemId: string }) {
           onClick={() => act("quoted")}
           disabled={pending !== null}
           aria-busy={pending === "quoted"}
-          className="h-9 rounded-md bg-accent px-3 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 bg-orange px-4 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending === "quoted" ? "Saving…" : "Mark quoted"}
         </button>
@@ -64,7 +64,7 @@ export function LeadItemActions({ itemId }: { itemId: string }) {
           onClick={() => act("declined")}
           disabled={pending !== null}
           aria-busy={pending === "declined"}
-          className="h-9 rounded-md border border-stone-300 bg-card px-3 text-sm font-medium text-stone-800 transition-colors hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 border border-line bg-card px-4 text-sm font-medium text-ink transition-colors hover:border-ink disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending === "declined" ? "Saving…" : "Decline"}
         </button>

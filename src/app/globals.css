@@ -1,50 +1,122 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Aekobaba — premium industrial commerce.
+   Aekobaba — premium industrial commerce. An Aekovera sub-brand.
 
-   Two worlds, alternating down the page:
-     dark  — brand, editorial, trust (void → navy → surface)
-     light — product discovery, listings, filters (paper → well → card)
+   Two themes, switched by data-theme on <html> (light is the default):
+
+     light — Aekovera's palette: cool paper, white panels, Aekovera orange.
+     dark  — the editorial industrial look: near-black, deep navy, warm white.
+
+   Components speak in two token families:
+     "editorial" tokens  (void, navy, surface, on-dark…) — brand bands, hero,
+                          chrome. Dark in the dark theme, white/paper in light.
+     "catalog" tokens    (paper, card, line, ink…)      — listings, filters,
+                          forms. Light in the light theme, dark in dark.
+   Image wells stay light in both themes: packshots are studio photographs on
+   white sweeps, presented as lit specimen plates — so text placed ON a well
+   uses well-ink, which never inverts.
+
    Orange is a signal, never a surface: actions, verification, active state.
+   Text on orange is always near-black (AA contrast in both themes).
    ───────────────────────────────────────────────────────────────────────────── */
 
-:root {
-  /* Dark world */
-  --void: #080a0d; /* page-level near-black, blue cast */
-  --navy: #0d1620; /* deep industrial navy */
-  --surface: #141a20; /* raised panel on dark */
-  --surface-2: #1b232c; /* hover / input on dark */
-  --on-dark: #f4f4f0; /* warm white type */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Editorial (Aekovera light) */
+  --void: #fcfcfd;
+  --navy: #eaecf0;
+  --surface: #ffffff;
+  --surface-2: #f3f4f7;
+  --on-dark: #181a21;
+  --on-dark-muted: #636874;
+  --line-dark: #dcdfe5;
+
+  /* Catalog */
+  --paper: #f3f4f7;
+  --well: #eaecf0;
+  --card: #ffffff;
+  --line: #dcdfe5;
+  --ink: #181a21;
+  --ink-muted: #636874;
+  --ink-faint: #8b909a;
+
+  /* Signal — Aekovera brand orange */
+  --orange: #f76808;
+  --orange-hi: #d5550b;
+  --orange-ink: #c94c0d;
+  --orange-tint: #fff1e5;
+
+  /* Status (Aekovera semantic inks / tints) */
+  --success-ink: #177248;
+  --success-tint: #e3f7ed;
+  --warning-ink: #99620f;
+  --warning-tint: #fdf1d8;
+  --danger-ink: #ba2626;
+  --danger-tint: #ffebeb;
+
+  --object-shadow: rgba(24, 26, 33, 0.22);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Editorial */
+  --void: #080a0d;
+  --navy: #0d1620;
+  --surface: #141a20;
+  --surface-2: #1b232c;
+  --on-dark: #f4f4f0;
   --on-dark-muted: #9ba4ae;
   --line-dark: rgba(244, 244, 240, 0.1);
 
-  /* Light world */
-  --paper: #f5f4f0; /* warm white page */
-  --well: #ecebe6; /* image well — packshots multiply into it */
-  --card: #ffffff;
-  --line: #dddbd4; /* hairline on light */
-  --ink: #0b0e12;
-  --ink-muted: #555d66;
-  --ink-faint: #858b92;
+  /* Catalog */
+  --paper: #0c0f13;
+  --well: #e4e3de;
+  --card: #141a20;
+  --line: #262d35;
+  --ink: #f4f4f0;
+  --ink-muted: #9ba4ae;
+  --ink-faint: #6f7882;
 
   /* Signal */
   --orange: #ff641f;
   --orange-hi: #ff8a45;
-  --orange-ink: #c2410c; /* orange as text on light — passes AA */
+  --orange-ink: #ff8a45;
+  --orange-tint: rgba(255, 100, 31, 0.12);
+
+  --success-ink: #6fd3a3;
+  --success-tint: rgba(55, 180, 120, 0.14);
+  --warning-ink: #f2c46b;
+  --warning-tint: rgba(240, 180, 60, 0.14);
+  --danger-ink: #ff8f8f;
+  --danger-tint: rgba(255, 90, 90, 0.14);
+
+  --object-shadow: rgba(0, 0, 0, 0.5);
+}
+
+:root {
+  /* Never inverts — text sitting on a light image well. */
+  --well-ink: #0b0e12;
+  --well-ink-muted: #555d66;
+  --on-orange: #0b0c0f;
 
   /* Legacy token names kept so every existing screen inherits the system. */
-  --accent: #13263a;
-  --accent-dark: #0d1620;
-  --accent-soft: #e8ebee;
-  --steel: #5b6b7c;
+  --accent: var(--ink);
+  --accent-dark: var(--ink);
+  --accent-soft: var(--surface-2);
+  --steel: var(--ink-muted);
   --charcoal: var(--void);
   --charcoal-raised: var(--surface);
   --charcoal-edge: var(--line-dark);
   --action: var(--orange);
   --action-strong: var(--orange-hi);
-  --action-soft: #ffede3;
+  --action-soft: var(--orange-tint);
 }
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
   --color-void: var(--void);
@@ -64,6 +136,16 @@
   --color-orange: var(--orange);
   --color-orange-hi: var(--orange-hi);
   --color-orange-ink: var(--orange-ink);
+  --color-orange-tint: var(--orange-tint);
+  --color-on-orange: var(--on-orange);
+  --color-well-ink: var(--well-ink);
+  --color-well-ink-muted: var(--well-ink-muted);
+  --color-success-ink: var(--success-ink);
+  --color-success-tint: var(--success-tint);
+  --color-warning-ink: var(--warning-ink);
+  --color-warning-tint: var(--warning-tint);
+  --color-danger-ink: var(--danger-ink);
+  --color-danger-tint: var(--danger-tint);
 
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
@@ -121,13 +203,14 @@ html {
 
 body {
   background: var(--paper);
+  transition: background-color 200ms ease, color 200ms ease;
   color: var(--ink);
   font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
 }
 
 ::selection {
   background: var(--orange);
-  color: var(--void);
+  color: var(--on-orange);
 }
 
 :focus-visible {

@@ -118,7 +118,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
       {error ? <InlineErrorAlert message={error} /> : null}
 
       <form
-        className="flex flex-wrap items-end gap-3 rounded-lg border border-stone-200 bg-card p-4"
+        className="flex flex-wrap items-end gap-3 border border-line bg-card p-4"
         onSubmit={(e) => {
           e.preventDefault();
           void create();
@@ -127,7 +127,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
         <div className="grow">
           <label
             htmlFor="category-name"
-            className="block text-sm font-medium text-stone-800"
+            className="block text-sm font-medium text-ink"
           >
             New category
           </label>
@@ -136,13 +136,13 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Sustainable Films"
-            className="mt-1 block h-10 w-full rounded-md border border-stone-300 bg-card px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-2 focus:outline-accent"
+            className="mt-1 block h-10 w-full border border-line bg-card px-3 text-sm text-ink placeholder:text-ink-faint focus:outline-2 focus:outline-orange"
           />
         </div>
         <div>
           <label
             htmlFor="category-parent"
-            className="block text-sm font-medium text-stone-800"
+            className="block text-sm font-medium text-ink"
           >
             Parent
           </label>
@@ -150,7 +150,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
             id="category-parent"
             value={parentId}
             onChange={(e) => setParentId(e.target.value)}
-            className="mt-1 block h-10 rounded-md border border-stone-300 bg-card px-2 text-sm text-stone-900 focus:outline-2 focus:outline-accent"
+            className="mt-1 block h-10 border border-line bg-card px-2 text-sm text-ink focus:outline-2 focus:outline-orange"
           >
             <option value="">— top level —</option>
             {categories.map((c) => (
@@ -164,16 +164,16 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
           type="submit"
           disabled={creating || name.trim().length === 0}
           aria-busy={creating}
-          className="h-10 rounded-md bg-accent px-4 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-10 bg-ink px-4 text-sm font-medium text-paper transition-colors hover:bg-ink/85 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {creating ? "Creating…" : "Create"}
         </button>
       </form>
 
-      <div className="overflow-hidden rounded-lg border border-stone-200 bg-card">
+      <div className="overflow-hidden border border-line bg-card">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-stone-200 bg-stone-50 text-left text-xs font-medium uppercase tracking-wide text-stone-500">
+            <tr className="border-b border-line bg-paper text-left text-xs font-medium uppercase tracking-wide text-ink-faint">
               <th className="px-4 py-2">Category</th>
               <th className="px-4 py-2">Parent</th>
               <th className="px-4 py-2">Products</th>
@@ -181,7 +181,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
               <th className="px-4 py-2 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-200">
+          <tbody className="divide-y divide-line">
             {categories.map((c) => (
               <tr key={c.id}>
                 <td className="px-4 py-2">
@@ -189,21 +189,21 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
                     <input
                       value={renameValue}
                       onChange={(e) => setRenameValue(e.target.value)}
-                      className="h-8 w-full rounded-md border border-stone-300 px-2 text-sm focus:outline-2 focus:outline-accent"
+                      className="h-8 w-full border border-line px-2 text-sm focus:outline-2 focus:outline-orange"
                       aria-label="Category name"
                     />
                   ) : (
                     <>
-                      <span className="font-medium text-stone-900">{c.name}</span>
-                      <span className="ml-2 text-xs text-stone-400">{c.slug}</span>
+                      <span className="font-medium text-ink">{c.name}</span>
+                      <span className="ml-2 text-xs text-ink-faint">{c.slug}</span>
                     </>
                   )}
                 </td>
-                <td className="px-4 py-2 text-stone-600">
+                <td className="px-4 py-2 text-ink-muted">
                   {c.parentName ?? "—"}
                 </td>
-                <td className="px-4 py-2 text-stone-600">{c.productCount}</td>
-                <td className="px-4 py-2 text-stone-600">{c.childCount}</td>
+                <td className="px-4 py-2 text-ink-muted">{c.productCount}</td>
+                <td className="px-4 py-2 text-ink-muted">{c.childCount}</td>
                 <td className="px-4 py-2">
                   <div className="flex justify-end gap-2">
                     {renaming === c.id ? (
@@ -212,14 +212,14 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
                           type="button"
                           onClick={() => void rename(c.id)}
                           disabled={busy !== null || renameValue.trim().length === 0}
-                          className="h-8 rounded-md bg-accent px-2 text-xs font-medium text-white hover:bg-accent-dark disabled:opacity-60"
+                          className="h-8 bg-orange px-2 text-xs font-medium text-on-orange hover:bg-orange-hi disabled:opacity-60"
                         >
                           {busy === c.id ? "Saving…" : "Save"}
                         </button>
                         <button
                           type="button"
                           onClick={() => setRenaming(null)}
-                          className="h-8 rounded-md border border-stone-300 px-2 text-xs font-medium text-stone-700 hover:bg-stone-50"
+                          className="h-8 border border-line px-2 text-xs font-medium text-ink-muted hover:bg-paper"
                         >
                           Cancel
                         </button>
@@ -233,7 +233,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
                             setRenameValue(c.name);
                           }}
                           disabled={busy !== null}
-                          className="h-8 rounded-md border border-stone-300 px-2 text-xs font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-60"
+                          className="h-8 border border-line px-2 text-xs font-medium text-ink-muted hover:bg-paper disabled:opacity-60"
                         >
                           Rename
                         </button>
@@ -250,7 +250,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
                                 ? "Move or delete its subcategories first"
                                 : "Delete category"
                           }
-                          className="h-8 rounded-md border border-red-200 px-2 text-xs font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="h-8 border border-red-200 px-2 text-xs font-medium text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           {busy === c.id ? "Deleting…" : "Delete"}
                         </button>
@@ -263,7 +263,7 @@ export function CategoryManager({ categories }: { categories: CategoryRowVm[] })
           </tbody>
         </table>
         {categories.length === 0 ? (
-          <p className="px-4 py-6 text-center text-sm text-stone-500">
+          <p className="px-4 py-6 text-center text-sm text-ink-faint">
             No categories yet — create the first one above.
           </p>
         ) : null}

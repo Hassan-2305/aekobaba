@@ -98,13 +98,13 @@ export function BasketView({ signedInRole }: BasketViewProps) {
         <BasketBand title="Quote Basket" subtitle="One request, sent to every supplier you add." />
         <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-lg bg-well px-8 py-14 text-center">
-            <p className="font-semiwide text-2xl font-light text-ink">Your quote basket is empty</p>
-            <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+            <p className="font-semiwide text-2xl font-light text-well-ink">Your quote basket is empty</p>
+            <p className="mt-3 text-sm leading-relaxed text-well-ink-muted">
               Add packaging products from any supplier, then send one request to all of them.
             </p>
             <Link
               href="/results"
-              className="mt-8 inline-flex h-11 items-center bg-orange px-6 text-sm font-medium text-void transition-colors hover:bg-orange-hi"
+              className="mt-8 inline-flex h-11 items-center bg-orange px-6 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
             >
               Browse packaging
             </Link>
@@ -234,7 +234,7 @@ export function BasketView({ signedInRole }: BasketViewProps) {
             type="submit"
             data-testid="submit-quote-request"
             disabled={submitState.kind === "sending"}
-            className="mt-6 h-12 w-full bg-action px-5 text-sm font-medium text-void transition-colors hover:bg-action-strong disabled:opacity-60"
+            className="mt-6 h-12 w-full bg-action px-5 text-sm font-medium text-on-orange transition-colors hover:bg-action-strong disabled:opacity-60"
           >
             {submitState.kind === "sending" ? "Sending…" : `Send request to ${suppliersLabel}`}
           </button>

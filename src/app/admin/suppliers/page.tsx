@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { TierSelect } from "@/components/admin/tier-select";
-import { StatusChip, WorkspaceShell } from "@/components/workspace/shell";
+import { QUEUE_STATUSES, SupplierQueue, type QueueRow, type QueueStatus } from "@/components/admin/supplier-queue";
 import { assessVerificationGates, gatesPassed } from "@/lib/admin/gates";
 import type { SupplierGateFacts } from "@/lib/admin/gates";
 import { getServerSessionUser } from "@/lib/auth/session";
@@ -19,7 +18,7 @@ export const metadata: Metadata = {
 // visible next to the verdict. Tier assignment persists Supplier.status, which
 // the public supplier page badge reads.
 
-const STATUS_ORDER = ["PENDING", "QUOTE_ONLY", "LISTED", "RECOMMENDED", "DISABLED"] as const;
+const STATUS_ORDER = QUEUE_STATUSES;
 
 async function gateFactsBySupplier(): Promise<Map<string, SupplierGateFacts>> {
   // Three set-based queries instead of per-supplier rounds.
@@ -63,9 +62,19 @@ async function gateFactsBySupplier(): Promise<Map<string, SupplierGateFacts>> {
   return facts;
 }
 
-export default async function AdminSuppliersPage() {
+export default async function AdminSuppliersPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const session = await getServerSessionUser();
   if (!session) redirect("/auth/sign-in?next=%2Fadmin%2Fsuppliers");
+
+  const params = await searchParams;
+  const requested = typeof params.status === "string" ? params.status.toUpperCase() : "";
+  const filter: QueueStatus | "ALL" = (QUEUE_STATUSES as readonly string[]).includes(requested)
+    ? (requested as QueueStatus)
+    : "ALL";
 
   const [suppliers, factsBySupplier] = await Promise.all([
     db.supplier.findMany({
@@ -86,102 +95,34 @@ export default async function AdminSuppliersPage() {
     gateFactsBySupplier(),
   ]);
 
-  const pendingCount = suppliers.filter((s) => s.status === "PENDING").length;
+  const rows: QueueRow[] = [...suppliers]
+    .sort(
+      (a, b) =>
+        STATUS_ORDER.indexOf(a.status as QueueStatus) - STATUS_ORDER.indexOf(b.status as QueueStatus) ||
+        a.name.localeCompare(b.name),
+    )
+    .map((supplier) => {
+      const facts = factsBySupplier.get(supplier.id);
+      const gates = assessVerificationGates({
+        legalIdentity: supplier.legalIdentity,
+        productCount: facts?.productCount ?? 0,
+        pricedProductCount: facts?.pricedProductCount ?? 0,
+        categoryCount: facts?.categoryCount ?? 0,
+        reviewCount: supplier.reviewCount,
+        reviewScore: supplier.reviewScore,
+      });
+      return {
+        id: supplier.id,
+        slug: supplier.slug,
+        name: supplier.name,
+        location: supplier.location,
+        website: supplier.website,
+        status: supplier.status as QueueStatus,
+        lastVerifiedAt: supplier.lastVerifiedAt,
+        gates,
+        passed: gatesPassed(gates),
+      };
+    });
 
-  const rows = [...suppliers].sort(
-    (a, b) =>
-      STATUS_ORDER.indexOf(a.status as (typeof STATUS_ORDER)[number]) -
-        STATUS_ORDER.indexOf(b.status as (typeof STATUS_ORDER)[number]) ||
-      a.name.localeCompare(b.name),
-  );
-
-  return (
-    <WorkspaceShell
-      area="admin"
-      title="Supplier verification"
-      subtitle={
-        pendingCount === 0
-          ? "No suppliers are waiting for verification."
-          : `${pendingCount} supplier${pendingCount === 1 ? "" : "s"} pending verification.`
-      }
-    >
-      <div className="space-y-4">
-        {rows.map((supplier) => {
-          const facts = factsBySupplier.get(supplier.id);
-          const gates = assessVerificationGates({
-            legalIdentity: supplier.legalIdentity,
-            productCount: facts?.productCount ?? 0,
-            pricedProductCount: facts?.pricedProductCount ?? 0,
-            categoryCount: facts?.categoryCount ?? 0,
-            reviewCount: supplier.reviewCount,
-            reviewScore: supplier.reviewScore,
-          });
-          const passed = gatesPassed(gates);
-
-          return (
-            <section
-              key={supplier.id}
-              className="overflow-hidden rounded-lg border border-stone-200 bg-card"
-            >
-              <header className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-200 bg-stone-50 px-4 py-3">
-                <div>
-                  <p className="text-sm font-semibold text-stone-900">
-                    {supplier.name}
-                  </p>
-                  <p className="text-xs text-stone-500">
-                    {supplier.location} · {supplier.website}
-                    {supplier.lastVerifiedAt
-                      ? ` · verified ${supplier.lastVerifiedAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}`
-                      : ""}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <StatusChip tone={supplier.status.toLowerCase() as never}>
-                    {supplier.status}
-                  </StatusChip>
-                  <TierSelect supplierId={supplier.id} currentTier={supplier.status} />
-                </div>
-              </header>
-
-              <div className="grid gap-3 px-4 py-3 md:grid-cols-2">
-                {gates.map((gate) => (
-                  <div
-                    key={gate.number}
-                    className="rounded-md border border-stone-200 px-3 py-2"
-                  >
-                    <p className="flex items-center justify-between gap-2 text-sm">
-                      <span className="font-medium text-stone-900">
-                        Gate {gate.number}: {gate.name}
-                      </span>
-                      <span
-                        className={`text-xs font-medium ${
-                          gate.status === "pass"
-                            ? "text-green-700"
-                            : gate.status === "fail"
-                              ? "text-red-700"
-                              : "text-amber-700"
-                        }`}
-                      >
-                        {gate.status === "pass"
-                          ? "Pass"
-                          : gate.status === "fail"
-                            ? "Fail"
-                            : "Manual review"}
-                      </span>
-                    </p>
-                    <p className="mt-1 text-xs text-stone-600">{gate.evidence}</p>
-                  </div>
-                ))}
-              </div>
-
-              <footer className="border-t border-stone-200 bg-card px-4 py-2 text-xs text-stone-500">
-                {passed} of 3 assessable gates pass · tier assignment is the
-                admin&apos;s call; this scorecard is the evidence, not the decision.
-              </footer>
-            </section>
-          );
-        })}
-      </div>
-    </WorkspaceShell>
-  );
+  return <SupplierQueue rows={rows} filter={filter} />;
 }

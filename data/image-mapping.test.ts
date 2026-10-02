@@ -7,8 +7,11 @@ import {
   categoryImageAsset,
   createCategoryIndexWalker,
   CATEGORY_VARIANTS,
+  PRODUCT_VIEWS,
   productImageRow,
+  productImageRows,
   writePrimaryImage,
+  writeProductImages,
   type ProductImageRow,
 } from "./image-mapping";
 
@@ -135,5 +138,47 @@ describe("categoryImageAsset", () => {
 
   it("returns null for slugs outside the mapping table", () => {
     expect(categoryImageAsset("not-a-category")).toBeNull();
+  });
+});
+
+describe("productImageRows — the per-product gallery", () => {
+  const sample = { categorySlug: "glass-bottles", title: "8 oz Amber Boston Round", material: "Glass (amber)", subcategory: null };
+
+  it("writes studio, detail and dark views, primary first, all labelled representative", () => {
+    const rows = productImageRows(sample, 0);
+    expect(rows.map((r) => r.sortOrder)).toEqual([0, 1, 2]);
+    expect(rows[0].url).toBe("/products/glass-bottle-amber.png");
+    expect(rows[1].url).toBe("/products/views/glass-bottle-amber-detail.webp");
+    expect(rows[2].url).toBe("/products/views/glass-bottle-amber-dark.webp");
+    for (const row of rows) expect(row.alt).toContain("representative");
+  });
+
+  it("has a view file on disk for every asset in the mapping", () => {
+    for (const variants of Object.values(CATEGORY_VARIANTS)) {
+      for (const asset of variants) {
+        for (const view of PRODUCT_VIEWS) {
+          const file = view.suffix ? `public/products/views/${asset}-${view.suffix}.webp` : `public/products/${asset}.png`;
+          expect(existsSync(file), file).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("re-writing views leaves exactly the view rows (idempotent)", async () => {
+    const store: { productId: string; url: string }[] = [];
+    const fakeTx = {
+      image: {
+        deleteMany: async ({ where }: { where: { productId: string } }) => {
+          for (let i = store.length - 1; i >= 0; i--) if (store[i].productId === where.productId) store.splice(i, 1);
+        },
+        createMany: async ({ data }: { data: { productId: string; url: string }[] }) => {
+          store.push(...data);
+        },
+      },
+    };
+    const rows = productImageRows(sample, 0);
+    await writeProductImages(fakeTx, "p1", rows);
+    await writeProductImages(fakeTx, "p1", rows);
+    expect(store).toHaveLength(PRODUCT_VIEWS.length);
   });
 });
