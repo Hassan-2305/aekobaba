@@ -23,16 +23,16 @@ export function SignUpForm({ next }: { next: string }) {
       <div className="space-y-4">
         <p
           role="status"
-          className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900"
+          className="border-l-2 border-success-ink bg-success-tint px-3 py-2 text-sm text-success-ink"
         >
-          Check your inbox — we sent a confirmation link. Open it on this
-          device to finish setting up your account.
+          Check your inbox — we sent a confirmation link. Open it on this device to finish setting
+          up your account.
         </p>
         <p className="text-sm text-ink-muted">
           Didn&apos;t get it? Check spam, or{" "}
           <Link
             href="/auth/sign-in"
-            className="font-medium text-accent underline-offset-2 hover:underline"
+            className="font-medium text-ink underline decoration-orange underline-offset-4 hover:text-orange-ink"
           >
             try signing in
           </Link>
@@ -66,18 +66,12 @@ export function SignUpForm({ next }: { next: string }) {
         hint="At least 8 characters."
         error={state.fieldErrors?.password}
       />
-      <SubmitButton pendingLabel="Creating account…">
-        Create account
-      </SubmitButton>
+      <SubmitButton pendingLabel="Creating account…">Create account</SubmitButton>
       <p className="text-center text-sm text-ink-muted">
         Already have an account?{" "}
         <Link
-          href={
-            next === "/"
-              ? "/auth/sign-in"
-              : `/auth/sign-in?next=${encodeURIComponent(next)}`
-          }
-          className="font-medium text-accent underline-offset-2 hover:underline"
+          href={next === "/" ? "/auth/sign-in" : `/auth/sign-in?next=${encodeURIComponent(next)}`}
+          className="font-medium text-ink underline decoration-orange underline-offset-4 hover:text-orange-ink"
         >
           Sign in
         </Link>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 
 import {
@@ -10,6 +11,7 @@ import {
   inquiryFieldErrors,
   inquirySchema,
 } from "@/lib/inquiries/validation";
+import { useMyRequests } from "@/lib/inquiries/my-requests";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
 // "Get a quote" / "Get a sample" request form, in a native <dialog> (focus
@@ -121,6 +123,8 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
       try {
         const response = await fetch("/api/inquiries", { method: "POST", body: data });
         const body = (await response.json().catch(() => ({}))) as {
+          id?: string;
+          token?: string;
           reference?: string;
           fields?: Record<string, string>;
           error?: string;
@@ -133,11 +137,24 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
           }
           throw new Error(body.error ?? "request_failed");
         }
-        setStatus({
-          state: "sent",
-          reference: body.reference ?? "",
-          email: String(data.get("email") ?? ""),
-        });
+        const email = String(data.get("email") ?? "");
+        if (body.id && body.token) {
+          // Keep it in this browser's Quote Basket, with its private token.
+          useMyRequests.getState().add({
+            id: body.id,
+            token: body.token,
+            reference: body.reference ?? "",
+            kind,
+            productId: product.id,
+            productTitle: product.title,
+            supplierName: product.supplier.name,
+            imageUrl: product.primaryImage?.url ?? null,
+            quantity: String(data.get("quantity") ?? ""),
+            email,
+            createdAt: new Date().toISOString(),
+          });
+        }
+        setStatus({ state: "sent", reference: body.reference ?? "", email });
         form.reset();
         setFileName(null);
       } catch {
@@ -211,13 +228,21 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
               Aekobaba team will pass your {sample ? "sample" : "quote"} request to{" "}
               {product.supplier.name} and reply to <span className="text-ink">{status.email}</span>.
             </p>
-            <button
-              type="button"
-              onClick={close}
-              className="mt-8 h-11 bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink/85"
-            >
-              Done
-            </button>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link
+                href="/basket"
+                className="inline-flex h-11 items-center bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink/85"
+              >
+                View in Quote Basket
+              </Link>
+              <button
+                type="button"
+                onClick={close}
+                className="h-11 border border-line px-6 text-sm font-medium text-ink transition-colors hover:border-ink"
+              >
+                Keep browsing
+              </button>
+            </div>
           </div>
         ) : (
           <form ref={formRef} onSubmit={submit} noValidate className="px-6 pb-6 pt-5">

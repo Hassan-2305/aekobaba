@@ -15,19 +15,13 @@ export function FormField({
   error?: string;
   hint?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "className">) {
-  const describedBy = [
-    hint ? `${id}-hint` : null,
-    error ? `${id}-error` : null,
-  ]
+  const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null]
     .filter(Boolean)
     .join(" ");
 
   return (
     <div className="space-y-1.5">
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-ink"
-      >
+      <label htmlFor={id} className="block text-sm font-medium text-ink">
         {label}
       </label>
       {hint ? (
@@ -39,7 +33,7 @@ export function FormField({
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
-        className={`block h-11 w-full border bg-card px-3 text-sm text-ink placeholder:text-ink-faint transition-colors focus:border-ink focus:outline-none ${
+        className={`block h-12 w-full border bg-white px-3.5 dark:bg-surface text-sm text-ink placeholder:text-ink-faint transition-colors focus:border-ink focus:outline-none ${
           error ? "border-red-500" : "border-line"
         }`}
         {...inputProps}
