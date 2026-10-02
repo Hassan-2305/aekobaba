@@ -32,27 +32,41 @@ interface HomeLandingProps {
   supplierCount?: number;
 }
 
-const plural = (n: number, word: string) => `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
+const plural = (n: number, word: string) =>
+  `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
 
 export function HomeLanding({ categories, featured, supplierCount }: HomeLandingProps) {
   const popular = popularCategories(categories);
   const totalProducts = categories.reduce((sum, c) => sum + c.productCount, 0);
-  const specimen = featured.find((p) => p.basePrice !== null && p.primaryImage) ?? featured[0] ?? null;
-  const fanOut = [...new Map(featured.map((p) => [p.supplier.slug, p.supplier])).values()].slice(0, 3);
+  const specimen =
+    featured.find((p) => p.basePrice !== null && p.primaryImage) ?? featured[0] ?? null;
+  const fanOut = [...new Map(featured.map((p) => [p.supplier.slug, p.supplier])).values()].slice(
+    0,
+    3,
+  );
 
   return (
     <div>
       {/* ─── Dark: hero ─────────────────────────────────────────────────── */}
       <section className="grain relative overflow-hidden bg-void text-on-dark">
+        {/* Studio light: a soft white key where the shelf stands (light theme
+            only — in dark the shelf carries its own glow). */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 dark:hidden"
+          style={{
+            background: "radial-gradient(circle at 72% 48%, var(--studio-key), transparent 45%)",
+          }}
+        />
         <div className="relative mx-auto max-w-[1400px] lg:grid lg:grid-cols-[248px_1fr]">
           {/* Rail — continues the header's logo-cell hairline down the hero. */}
-          <aside className="relative hidden border-r border-line-dark lg:flex lg:flex-col lg:justify-end lg:px-8 lg:pb-14">
+          <aside className="relative hidden border-r border-line-dark bg-rail before:absolute before:inset-y-0 before:right-full before:w-[50vw] before:bg-rail lg:flex lg:flex-col lg:justify-end lg:px-8 lg:pb-14">
             <span aria-hidden className="absolute -right-[4px] top-0 h-[7px] w-[7px] bg-orange" />
             <p className="tag text-on-dark">Verified catalog</p>
             <p className="mt-3 text-sm leading-relaxed text-on-dark-muted">
               {plural(totalProducts, "product")}
-              {supplierCount ? ` from ${plural(supplierCount, "supplier")}` : ""}. Every price links to the
-              page it came from.
+              {supplierCount ? ` from ${plural(supplierCount, "supplier")}` : ""}. Every price links
+              to the page it came from.
             </p>
           </aside>
 
@@ -138,7 +152,9 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                   data-testid="popular-entry"
                   data-entry={category.slug}
                   className={`group relative flex flex-col justify-end overflow-hidden bg-well ${
-                    lead ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto" : "aspect-[4/5] sm:aspect-square"
+                    lead
+                      ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto"
+                      : "aspect-[4/5] sm:aspect-square"
                   }`}
                 >
                   {asset ? (
@@ -146,7 +162,11 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                       src={asset}
                       alt={`${category.name} — representative packaging image`}
                       fill
-                      sizes={lead ? "(min-width: 1024px) 640px, 100vw" : "(min-width: 1024px) 320px, 50vw"}
+                      sizes={
+                        lead
+                          ? "(min-width: 1024px) 640px, 100vw"
+                          : "(min-width: 1024px) 320px, 50vw"
+                      }
                       className={`object-contain packshot transition-transform duration-500 ease-out group-hover:scale-[1.03] ${
                         lead ? "p-12 pb-24 lg:p-20 lg:pb-28" : "p-6 pb-24 sm:p-8 sm:pb-24"
                       }`}
@@ -166,7 +186,9 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                     >
                       {category.name}
                     </span>
-                    <p className="mt-1.5 text-xs text-well-ink-muted tabular-nums">{plural(category.productCount, "product")}</p>
+                    <p className="mt-1.5 text-xs text-well-ink-muted tabular-nums">
+                      {plural(category.productCount, "product")}
+                    </p>
                   </div>
                 </Link>
               );
@@ -176,7 +198,7 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
       </section>
 
       {/* ─── Dark: how it works ─────────────────────────────────────────── */}
-      <section id="how-it-works" className="grain scroll-mt-4 bg-navy text-on-dark">
+      <section id="how-it-works" className="tone-dark grain scroll-mt-4 bg-navy text-on-dark">
         <div className="mx-auto grid max-w-[1400px] gap-16 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:gap-12 lg:px-12 lg:py-28">
           <div className="lg:col-span-5">
             <h2 className="font-semiwide text-4xl font-light leading-[1.02] tracking-[-0.03em] sm:text-5xl">
@@ -190,12 +212,26 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
 
             <ol className="mt-12 border-t border-line-dark">
               {[
-                ["Search by material", "Pouches, glass, corrugated, tins — the catalog is organised by what packaging is made of."],
-                ["Compare what suppliers publish", "Price, minimum order and lead time side by side, each with its capture date and source."],
-                ["Request quotes in one go", "Add products to your Quote Basket and send a single request to every supplier on it."],
+                [
+                  "Search by material",
+                  "Pouches, glass, corrugated, tins — the catalog is organised by what packaging is made of.",
+                ],
+                [
+                  "Compare what suppliers publish",
+                  "Price, minimum order and lead time side by side, each with its capture date and source.",
+                ],
+                [
+                  "Request quotes in one go",
+                  "Add products to your Quote Basket and send a single request to every supplier on it.",
+                ],
               ].map(([title, body], index) => (
-                <li key={title} className="grid grid-cols-[3rem_1fr] gap-2 border-b border-line-dark py-5">
-                  <span className="font-semiwide text-sm text-orange tabular-nums">0{index + 1}</span>
+                <li
+                  key={title}
+                  className="grid grid-cols-[3rem_1fr] gap-2 border-b border-line-dark py-5"
+                >
+                  <span className="font-semiwide text-sm text-orange tabular-nums">
+                    0{index + 1}
+                  </span>
                   <div>
                     <p className="text-base text-on-dark">{title}</p>
                     <p className="mt-1 text-sm leading-relaxed text-on-dark-muted">{body}</p>
@@ -221,13 +257,17 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                 <dt>
                   <TierBadge status="LISTED" tone="dark" />
                 </dt>
-                <dd className="mt-2 text-sm leading-relaxed text-on-dark-muted">Verified supplier with published listings.</dd>
+                <dd className="mt-2 text-sm leading-relaxed text-on-dark-muted">
+                  Verified supplier with published listings.
+                </dd>
               </div>
               <div>
                 <dt>
                   <TierBadge status="QUOTE_ONLY" tone="dark" />
                 </dt>
-                <dd className="mt-2 text-sm leading-relaxed text-on-dark-muted">Sells, but doesn&rsquo;t publish prices.</dd>
+                <dd className="mt-2 text-sm leading-relaxed text-on-dark-muted">
+                  Sells, but doesn&rsquo;t publish prices.
+                </dd>
               </div>
             </dl>
           </div>
@@ -305,7 +345,9 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                     >
                       {category.name}
                     </span>
-                    <span className="text-xs text-ink-faint tabular-nums">{plural(category.productCount, "product")}</span>
+                    <span className="text-xs text-ink-faint tabular-nums">
+                      {plural(category.productCount, "product")}
+                    </span>
                   </Link>
                 </li>
               );
@@ -319,7 +361,10 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
         <div
           aria-hidden
           className="absolute inset-0"
-          style={{ background: "radial-gradient(50% 70% at 85% 50%, rgba(255,100,31,.08), transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(50% 70% at 85% 50%, rgba(255,100,31,.08), transparent 70%)",
+          }}
         />
         <div className="relative mx-auto grid max-w-[1400px] gap-14 px-5 py-20 sm:px-8 lg:grid-cols-12 lg:items-center lg:px-12 lg:py-28">
           <div className="lg:col-span-6">
@@ -370,7 +415,9 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
               className="object-contain p-10 packshot"
             />
           ) : null}
-          <span className="tag absolute left-4 top-4 text-well-ink-muted">{product.categoryName}</span>
+          <span className="tag absolute left-4 top-4 text-well-ink-muted">
+            {product.categoryName}
+          </span>
         </div>
         <div className="flex flex-col p-6">
           <TierBadge status={product.supplier.status} tone="dark" />
@@ -379,11 +426,15 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
           <dl className="mt-auto pt-8 text-sm">
             <div className="flex justify-between gap-4 border-t border-line-dark py-2.5">
               <dt className="tag self-center text-on-dark-muted">Price</dt>
-              <dd className="text-right text-on-dark tabular-nums">{formatPriceLine(product.basePrice, product.priceBasis)}</dd>
+              <dd className="text-right text-on-dark tabular-nums">
+                {formatPriceLine(product.basePrice, product.priceBasis)}
+              </dd>
             </div>
             <div className="flex justify-between gap-4 border-t border-line-dark py-2.5">
               <dt className="tag self-center text-on-dark-muted">MOQ</dt>
-              <dd className="text-right text-on-dark tabular-nums">{formatMoq(product.moq, product.moqUnit)}</dd>
+              <dd className="text-right text-on-dark tabular-nums">
+                {formatMoq(product.moq, product.moqUnit)}
+              </dd>
             </div>
             <div className="flex justify-between gap-4 border-y border-line-dark py-2.5">
               <dt className="tag self-center text-on-dark-muted">Captured</dt>
@@ -420,7 +471,12 @@ function FanOut({ suppliers }: { suppliers: ProductVM["supplier"][] }) {
           <p className="mt-2 text-sm text-on-dark">1 basket</p>
         </div>
         <div className="relative min-w-0">
-          <svg aria-hidden className="absolute inset-0 h-full w-16 text-on-dark/35" viewBox="0 0 64 100" preserveAspectRatio="none">
+          <svg
+            aria-hidden
+            className="absolute inset-0 h-full w-16 text-on-dark/35"
+            viewBox="0 0 64 100"
+            preserveAspectRatio="none"
+          >
             {suppliers.map((s, i) => {
               const y = ((i + 0.5) / rows) * 100;
               return (
@@ -437,7 +493,10 @@ function FanOut({ suppliers }: { suppliers: ProductVM["supplier"][] }) {
           </svg>
           <ul className="ml-16 space-y-3">
             {suppliers.map((s) => (
-              <li key={s.slug} className="flex items-center justify-between gap-4 border border-line-dark px-4 py-3.5">
+              <li
+                key={s.slug}
+                className="flex items-center justify-between gap-4 border border-line-dark px-4 py-3.5"
+              >
                 <span className="min-w-0 truncate text-sm text-on-dark">{s.name}</span>
                 <TierBadge status={s.status} tone="dark" />
               </li>
@@ -445,7 +504,9 @@ function FanOut({ suppliers }: { suppliers: ProductVM["supplier"][] }) {
           </ul>
         </div>
       </div>
-      <p className="mt-4 text-xs text-on-dark-muted">Suppliers from this page&rsquo;s featured listings.</p>
+      <p className="mt-4 text-xs text-on-dark-muted">
+        Suppliers from this page&rsquo;s featured listings.
+      </p>
     </div>
   );
 }

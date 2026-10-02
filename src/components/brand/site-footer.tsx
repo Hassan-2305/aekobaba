@@ -14,16 +14,23 @@ const FOOTER_CATEGORIES = CATEGORY_MENU.filter((c) =>
 
 export function SiteFooter() {
   return (
-    <footer className="grain border-t border-line-dark bg-void text-on-dark">
+    <footer className="tone-dark grain border-t border-line-dark bg-void text-on-dark">
       <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
         <div className="max-w-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/logo.png" alt="Aekobaba" className="h-7 w-auto dark:hidden" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-white.png" alt="Aekobaba" className="hidden h-7 w-auto dark:block" />
+          <img
+            src="/brand/logo-white.png"
+            alt="Aekobaba"
+            className="hidden h-7 w-auto dark:block"
+          />
           <p className="mt-3 text-xs text-on-dark-muted">
             An{" "}
-            <a href="https://www.aekovera.com" className="text-on-dark underline decoration-on-dark/30 underline-offset-4 hover:decoration-orange">
+            <a
+              href="https://www.aekovera.com"
+              className="text-on-dark underline decoration-on-dark/30 underline-offset-4 hover:decoration-orange"
+            >
               Aekovera
             </a>{" "}
             company
@@ -54,27 +61,42 @@ export function SiteFooter() {
           <h2 className="text-sm text-on-dark">Platform</h2>
           <ul className="mt-4 space-y-2.5 text-sm">
             <li>
-              <Link href="/results" className="text-on-dark-muted transition-colors hover:text-on-dark">
+              <Link
+                href="/results"
+                className="text-on-dark-muted transition-colors hover:text-on-dark"
+              >
                 Browse all products
               </Link>
             </li>
             <li>
-              <Link href="/basket" className="text-on-dark-muted transition-colors hover:text-on-dark">
+              <Link
+                href="/basket"
+                className="text-on-dark-muted transition-colors hover:text-on-dark"
+              >
                 Quote Basket
               </Link>
             </li>
             <li>
-              <Link href="/account/requests" className="text-on-dark-muted transition-colors hover:text-on-dark">
+              <Link
+                href="/account/requests"
+                className="text-on-dark-muted transition-colors hover:text-on-dark"
+              >
                 Your quote requests
               </Link>
             </li>
             <li>
-              <Link href="/supplier/claim" className="text-on-dark-muted transition-colors hover:text-on-dark">
+              <Link
+                href="/supplier/claim"
+                className="text-on-dark-muted transition-colors hover:text-on-dark"
+              >
                 List your company
               </Link>
             </li>
             <li>
-              <Link href="/auth/sign-in" className="text-on-dark-muted transition-colors hover:text-on-dark">
+              <Link
+                href="/auth/sign-in"
+                className="text-on-dark-muted transition-colors hover:text-on-dark"
+              >
                 Sign in
               </Link>
             </li>
