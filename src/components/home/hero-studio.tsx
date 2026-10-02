@@ -16,40 +16,91 @@ import type { CategoryVM } from "@/lib/catalog/view-models";
 // Hero height 33.8vw. Rail and header logo cell share --rail-w and --edge,
 // so the grid reads as one architectural system. Every product in the set
 // links into its category; annotation counts are live. Imagery is
-// representative (generated).
+// representative (generated cut-outs on a generated backdrop).
 
-// Object boxes inside public/hero/studio-scene.webp (percent of the image),
-// written out by the scene composer — keep in sync if the scene changes.
+// The stone set is a backdrop (wall, leaf shadows, plinths — no products)
+// with each product placed on it as its own cut-out layer, so every product
+// is a showcased object: it lifts on hover, names its category, and links
+// into it. Positions are percent of the 1350×1000 stage, matched to the
+// reference composition and to where the plinth tops sit in the backdrop.
 const SCENE_ASPECT = 1350 / 1000;
 
-const SCENE_OBJECTS = [
+interface StageProduct {
+  slug: string;
+  src: string;
+  label: string;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  z: number;
+  delay: number;
+  /** Shown as a hover chip when the product has no standing annotation. */
+  chip: boolean;
+}
+
+const STAGE_PRODUCTS: StageProduct[] = [
   {
     slug: "pouches-bags",
+    src: "/hero/coffee-valve-pouch.webp",
     label: "Black stand-up pouch",
     left: 20.4,
     top: 24.2,
     width: 27.1,
     height: 64.0,
+    z: 1,
+    delay: 80,
+    chip: false,
+  },
+  {
+    slug: "labels",
+    src: "/hero/label-roll.webp",
+    label: "Roll of labels",
+    left: 77.0,
+    top: 65.4,
+    width: 17.9,
+    height: 21.2,
+    z: 1,
+    delay: 140,
+    chip: true,
   },
   {
     slug: "pouches-bags",
+    src: "/hero/kraft-pouch.webp",
     label: "Kraft stand-up pouch",
     left: 7.6,
     top: 45.2,
     width: 21.3,
     height: 45.5,
+    z: 3,
+    delay: 200,
+    chip: true,
   },
   {
     slug: "glass-bottles",
+    src: "/hero/glass-bottle-amber.webp",
     label: "Amber Boston round bottle",
     left: 43.2,
     top: 40.9,
     width: 16.2,
     height: 50.5,
+    z: 3,
+    delay: 260,
+    chip: false,
   },
-  { slug: "glass-jars", label: "Glass jar", left: 61.6, top: 55.4, width: 14.7, height: 36.0 },
-  { slug: "labels", label: "Roll of labels", left: 77.0, top: 65.4, width: 17.9, height: 21.2 },
-] as const;
+  {
+    slug: "glass-jars",
+    src: "/hero/glass-jar.webp",
+    label: "Glass jar",
+    left: 61.6,
+    top: 55.4,
+    width: 14.7,
+    height: 36.0,
+    z: 2,
+    delay: 320,
+    chip: true,
+  },
+];
 
 // Anchor on the product → label position, as measured from the reference.
 const SCENE_ANNOTATIONS = [
@@ -210,30 +261,61 @@ export function HeroStudio({
           }}
         >
           <Image
-            src="/hero/studio-scene.webp"
-            alt="Representative packaging on stone plinths: kraft and black pouches, an amber glass bottle, a glass jar and a label roll"
+            src="/hero/studio-backdrop.webp"
+            alt=""
             fill
             priority
             sizes="(min-width: 1024px) 46vw, 100vw"
             className="object-cover"
           />
-          {SCENE_OBJECTS.map((object) => {
-            const category = live.get(object.slug);
-            if (!category) return null;
-            return (
+          {STAGE_PRODUCTS.map((product) => {
+            const category = live.get(product.slug);
+            const box = {
+              left: `${product.left}%`,
+              top: `${product.top}%`,
+              width: `${product.width}%`,
+              height: `${product.height}%`,
+              zIndex: product.z,
+              animationDelay: `${product.delay}ms`,
+            };
+            const object = (
+              <>
+                {/* Contact shadow on the plinth. */}
+                <span
+                  aria-hidden
+                  className="absolute -bottom-[3%] left-[-4%] h-[8%] w-[108%] transition-opacity duration-300 group-hover:opacity-60"
+                  style={{
+                    background: "radial-gradient(closest-side, rgba(60,46,32,.55), transparent)",
+                  }}
+                />
+                <Image
+                  src={product.src}
+                  alt={`${product.label} — representative image`}
+                  fill
+                  sizes="(min-width: 1024px) 16vw, 30vw"
+                  className="object-contain object-bottom drop-shadow-[18px_10px_16px_rgba(90,70,50,.28)] transition-[transform,filter] duration-300 ease-out group-hover:-translate-y-[2.5%] group-hover:drop-shadow-[22px_22px_22px_rgba(90,70,50,.32)] group-focus-visible:-translate-y-[2.5%]"
+                />
+                {category && product.chip ? (
+                  <span className="pointer-events-none absolute -top-9 left-1/2 hidden -translate-x-1/2 translate-y-1 whitespace-nowrap bg-[#111419] px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">
+                    {category.name} · {category.productCount}
+                  </span>
+                ) : null}
+              </>
+            );
+            return category ? (
               <Link
-                key={object.label}
-                href={href(object.slug)}
+                key={product.label}
+                href={href(product.slug)}
                 aria-label={`${category.name} — ${category.productCount} products`}
-                title={object.label}
-                className="absolute z-10 outline-offset-4"
-                style={{
-                  left: `${object.left}%`,
-                  top: `${object.top}%`,
-                  width: `${object.width}%`,
-                  height: `${object.height}%`,
-                }}
-              />
+                className="hero-rise group absolute block outline-offset-4"
+                style={box}
+              >
+                {object}
+              </Link>
+            ) : (
+              <div key={product.label} className="hero-rise absolute" style={box}>
+                {object}
+              </div>
             );
           })}
           <svg
