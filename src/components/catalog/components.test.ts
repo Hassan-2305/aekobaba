@@ -1,6 +1,6 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { PriceDisplay, PriceTagInline } from "./price-display";
 import { ProductActions } from "./product-actions";
@@ -25,31 +25,39 @@ describe("PriceDisplay — the truth rule (C2)", () => {
     expect(html).not.toContain("$");
     expect(html).not.toContain("0.");
     // No published-price structure either.
-    expect(html).not.toContain("data-testid=\"published-price\"");
-    expect(html).toContain("data-testid=\"ask-supplier-price\"");
+    expect(html).not.toContain('data-testid="published-price"');
+    expect(html).toContain('data-testid="ask-supplier-price"');
   });
 
   it("renders price, basis, and the per-unit figure when published", () => {
     const product = makeProduct({ basePrice: 0.58, priceUnit: 0.47 });
     const html = render(createElement(PriceDisplay, { product }));
 
-    expect(html).toContain("data-testid=\"published-price\"");
+    expect(html).toContain('data-testid="published-price"');
     expect(html).toContain("$0.58");
     expect(html).toContain("per jar");
     expect(html).toContain("≈ $0.47 per unit");
   });
 
   it("labels non-exact price types honestly (FROM/CALCULATOR)", () => {
-    const from = render(createElement(PriceDisplay, { product: makeProduct({ priceType: "FROM", basePrice: 0.39 }) }));
+    const from = render(
+      createElement(PriceDisplay, { product: makeProduct({ priceType: "FROM", basePrice: 0.39 }) }),
+    );
     expect(from).toContain("From price");
-    const calc = render(createElement(PriceDisplay, { product: makeProduct({ priceType: "CALCULATOR", basePrice: 0.31 }) }));
+    const calc = render(
+      createElement(PriceDisplay, {
+        product: makeProduct({ priceType: "CALCULATOR", basePrice: 0.31 }),
+      }),
+    );
     expect(calc).toContain("Calculator quote");
   });
 });
 
 describe("PriceTagInline", () => {
   it("collapses to 'Ask the supplier' without a published price", () => {
-    const html = render(createElement(PriceTagInline, { product: makeProduct({ basePrice: null }) }));
+    const html = render(
+      createElement(PriceTagInline, { product: makeProduct({ basePrice: null }) }),
+    );
     expect(html).toContain("Ask the supplier");
     expect(html).not.toContain("$");
   });
@@ -70,39 +78,34 @@ describe("ProvenanceLine (C6)", () => {
   });
 });
 
-describe("ProductActions — the sample button never lies (C7)", () => {
-  it("renders the sample button only when samplePolicyVerified is true", () => {
-    const verified = render(createElement(ProductActions, { product: makeProduct({ samplePolicyVerified: true }) }));
-    expect(verified).toContain("data-testid=\"request-sample\"");
-    expect(verified).toContain("Request Sample");
-
-    const unverified = render(createElement(ProductActions, { product: makeProduct({ samplePolicyVerified: false }) }));
-    expect(unverified).not.toContain("data-testid=\"request-sample\"");
-    expect(unverified).not.toContain("Request Sample");
-  });
-
-  it("always renders quote basket, shortlist, and compare actions", () => {
+describe("ProductActions — get a quote / get a sample", () => {
+  it("renders exactly the two asks and the request form", () => {
     const html = render(createElement(ProductActions, { product: makeProduct() }));
-    expect(html).toContain("data-testid=\"add-to-quote-basket\"");
-    expect(html).toContain("data-testid=\"add-to-shortlist\"");
-    expect(html).toContain("data-testid=\"compare\"");
+    expect(html).toContain('data-testid="get-quote"');
+    expect(html).toContain('data-testid="get-sample"');
+    expect(html).toContain('data-testid="inquiry-dialog"');
+    expect(html).not.toContain("Add to Quote Basket");
+    expect(html).not.toContain('data-testid="compare"');
   });
 
-  it("invokes the injected prop handlers — the integration point is a prop", () => {
-    const onAddToQuoteBasket = vi.fn();
-    const onRequestSample = vi.fn();
-    const product = makeProduct({ samplePolicyVerified: true });
-    const html = render(
-      createElement(ProductActions, { product, onAddToQuoteBasket, onRequestSample }),
-    );
-
-    // Server-rendered markup carries no live handlers; the prop contract is
-    // that handler identity flows to the client component. Assert the wiring
-    // exists by checking the component accepts and defaults handlers via the
-    // integration module contract.
-    expect(html).toContain("Add to Quote Basket");
-    expect(onAddToQuoteBasket).not.toHaveBeenCalled();
-    expect(onRequestSample).not.toHaveBeenCalled();
+  it("the request form asks for contact details, needs, design status and a file", () => {
+    const html = render(createElement(ProductActions, { product: makeProduct() }));
+    for (const name of [
+      "name",
+      "email",
+      "company",
+      "website",
+      "phone",
+      "quantity",
+      "packagingType",
+      "format",
+      "designStatus",
+      "description",
+      "design",
+    ]) {
+      expect(html).toContain(`name="${name}"`);
+    }
+    expect(html).toContain('type="file"');
   });
 });
 
@@ -117,7 +120,11 @@ describe("TierBadge", () => {
 describe("ReviewScore", () => {
   it("renders score, count, and platform", () => {
     const html = render(
-      createElement(ReviewScore, { reviewScore: 4.5, reviewCount: 214, reviewPlatform: "Trustpilot" }),
+      createElement(ReviewScore, {
+        reviewScore: 4.5,
+        reviewCount: 214,
+        reviewPlatform: "Trustpilot",
+      }),
     );
     expect(html).toContain("4.5");
     expect(html).toContain("(214)");
@@ -125,7 +132,9 @@ describe("ReviewScore", () => {
   });
 
   it("says plainly when no reviews are published", () => {
-    const html = render(createElement(ReviewScore, { reviewScore: null, reviewCount: 0, reviewPlatform: null }));
+    const html = render(
+      createElement(ReviewScore, { reviewScore: null, reviewCount: 0, reviewPlatform: null }),
+    );
     expect(html).toContain("No published reviews");
     expect(html).not.toContain("★");
   });
@@ -170,11 +179,15 @@ describe("ProductCard — image-led results card", () => {
   it("links the card to the product page from image and title", () => {
     const product = makeProduct();
     const html = render(createElement(ProductCard, { product }));
-    expect(html.match(new RegExp(`href="/products/${product.id}"`, "g"))?.length).toBeGreaterThanOrEqual(2);
+    expect(
+      html.match(new RegExp(`href="/products/${product.id}"`, "g"))?.length,
+    ).toBeGreaterThanOrEqual(2);
   });
 
   it("renders a neutral placeholder instead of an img when a product has no image", () => {
-    const html = render(createElement(ProductCard, { product: makeProduct({ primaryImage: null }) }));
+    const html = render(
+      createElement(ProductCard, { product: makeProduct({ primaryImage: null }) }),
+    );
     expect(html).not.toContain("<img");
     expect(html).toContain("No image available");
   });
@@ -190,7 +203,7 @@ describe("QuantityBreakTable", () => {
         ],
       }),
     );
-    expect(html).toContain("data-testid=\"quantity-breaks\"");
+    expect(html).toContain('data-testid="quantity-breaks"');
     expect(html).toContain("1–249");
     expect(html).toContain("$0.58");
     expect(html).toContain("1,000+");

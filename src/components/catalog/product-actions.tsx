@@ -1,66 +1,43 @@
 "use client";
 
-// Product action buttons — prop-driven so pages and tests inject handlers.
-// Click handlers resolve through src/lib/integrations/product-actions.ts
-// (the named integration point); the Quote Basket PR wires real store calls
-// there without touching this component.
+import { useRef } from "react";
 
-import { defaultProductActionHandlers } from "@/lib/integrations/product-actions";
+import { InquiryDialog, type InquiryDialogHandle } from "./inquiry-dialog";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
-export interface ProductActionsProps {
-  product: ProductVM;
-  onAddToQuoteBasket?: (product: ProductVM) => void;
-  onAddToShortlist?: (product: ProductVM) => void;
-  onCompare?: (product: ProductVM) => void;
-  onRequestSample?: (product: ProductVM) => void;
-}
+// Product actions — two clear asks: get a quote, get a sample. Either opens
+// the request form (no account needed). The sample request is always
+// available; when the supplier has not published a sample policy the form
+// says so plainly ("we'll ask them for you") instead of promising one.
 
-export function ProductActions({
-  product,
-  onAddToQuoteBasket = defaultProductActionHandlers.onAddToQuoteBasket,
-  onAddToShortlist = defaultProductActionHandlers.onAddToShortlist,
-  onCompare = defaultProductActionHandlers.onCompare,
-  onRequestSample = defaultProductActionHandlers.onRequestSample,
-}: ProductActionsProps) {
-  const secondary =
-    "h-10 border border-line px-4 text-sm text-ink transition-colors hover:border-ink";
+export function ProductActions({ product }: { product: ProductVM }) {
+  const dialog = useRef<InquiryDialogHandle>(null);
 
   return (
-    <div className="flex flex-col gap-2">
-      <button
-        type="button"
-        data-testid="add-to-quote-basket"
-        onClick={() => onAddToQuoteBasket(product)}
-        className="h-12 w-full bg-orange px-5 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
-      >
-        Add to Quote Basket
-      </button>
-      <div className="flex flex-wrap gap-2">
+    <div>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <button
           type="button"
-          data-testid="add-to-shortlist"
-          onClick={() => onAddToShortlist(product)}
-          className={`${secondary} flex-1`}
+          data-testid="get-quote"
+          onClick={() => dialog.current?.open("QUOTE")}
+          className="h-12 bg-orange px-5 text-sm font-medium text-white transition-colors hover:bg-orange-hi"
         >
-          Add to Shortlist
+          Get a quote
         </button>
-        <button type="button" data-testid="compare" onClick={() => onCompare(product)} className={`${secondary} flex-1`}>
-          Compare
+        <button
+          type="button"
+          data-testid="get-sample"
+          onClick={() => dialog.current?.open("SAMPLE")}
+          className="h-12 border border-ink/80 px-5 text-sm font-medium text-ink transition-colors hover:border-orange hover:text-orange-ink"
+        >
+          Get a sample
         </button>
-        {/* The sample button never lies (spec C7): rendered only when the
-            supplier's sample policy is verified. */}
-        {product.samplePolicyVerified ? (
-          <button
-            type="button"
-            data-testid="request-sample"
-            onClick={() => onRequestSample(product)}
-            className={`${secondary} flex-1 border-orange/50 hover:border-orange`}
-          >
-            Request Sample
-          </button>
-        ) : null}
       </div>
+      <p className="mt-2.5 text-xs text-ink-faint">
+        Tell us what you need — quantity, format, design — and we&rsquo;ll get it to{" "}
+        {product.supplier.name}.
+      </p>
+      <InquiryDialog ref={dialog} product={product} />
     </div>
   );
 }

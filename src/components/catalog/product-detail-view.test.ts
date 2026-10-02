@@ -64,6 +64,7 @@ describe("ProductDetailView — evidence and actions survive the redesign", () =
     expect(html).toContain('data-testid="product-supplier-link"');
     expect(html).toContain('data-testid="product-specs"');
     expect(html).toContain('data-testid="product-moq"');
-    expect(html).toContain("Add to Quote Basket");
+    expect(html).toContain("Get a quote");
+    expect(html).toContain("Get a sample");
   });
 });

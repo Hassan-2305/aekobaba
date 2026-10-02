@@ -86,14 +86,14 @@ enum SampleRequestStatus {
 // ─── Identity ────────────────────────────────────────────────────────────────
 
 model User {
-  id     String @id @default(cuid())
-  email  String @unique
-  role   Role   @default(BRAND)
+  id             String   @id @default(cuid())
+  email          String   @unique
+  role           Role     @default(BRAND)
   // Supabase Auth subject (auth.users.id). Identity always comes from the
   // session — never from a client-sent ID.
-  supabaseUserId String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  supabaseUserId String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   brandProfile   BrandProfile?
   supplierOrg    Supplier?       @relation("SupplierOwner")
@@ -103,9 +103,9 @@ model User {
 }
 
 model BrandProfile {
-  id          String  @id @default(cuid())
-  userId      String  @unique
-  user        User    @relation(fields: [userId], references: [id])
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
   companyName String
   region      String?
   website     String?
@@ -116,28 +116,28 @@ model BrandProfile {
 // ─── Catalog ─────────────────────────────────────────────────────────────────
 
 model Supplier {
-  id             String         @id @default(cuid())
-  slug           String         @unique
-  name           String
-  website        String
+  id                String         @id @default(cuid())
+  slug              String         @unique
+  name              String
+  website           String
   // Country/region facet for the Results filters.
-  location       String
+  location          String
   // Registered entity, traceable — one of the four verification gates.
-  legalIdentity  String?
-  reviewScore    Float?
-  reviewCount    Int            @default(0)
+  legalIdentity     String?
+  reviewScore       Float?
+  reviewCount       Int            @default(0)
   // When the listing was last re-checked against the supplier's site.
-  lastVerifiedAt DateTime?
-  status         SupplierStatus @default(PENDING)
-  isPartner      Boolean        @default(false)
+  lastVerifiedAt    DateTime?
+  status            SupplierStatus @default(PENDING)
+  isPartner         Boolean        @default(false)
   // Shown once real data exists — never estimated.
   responseTimeHours Int?
-  logoUrl        String?
+  logoUrl           String?
   // Set when a SUPPLIER user claims the listing; null until claimed.
-  ownerUserId    String?        @unique
-  owner          User?          @relation("SupplierOwner", fields: [ownerUserId], references: [id])
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  ownerUserId       String?        @unique
+  owner             User?          @relation("SupplierOwner", fields: [ownerUserId], references: [id])
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   products             Product[]
   reviews              Review[]
@@ -153,14 +153,14 @@ model Supplier {
 // Taxonomy of packaging categories, seeded from the CPG Packaging Taxonomy
 // research. Self-relation gives the tree: "Bottles & Jars" → "Woozy Bottles".
 model Category {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String     @id @default(cuid())
+  slug        String     @unique
   name        String
   description String?
   parentId    String?
   parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
   children    Category[] @relation("CategoryTree")
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
 
   products Product[]
 
@@ -169,14 +169,14 @@ model Category {
 
 // One row = one real SKU from one supplier (never a generic category entry).
 model Product {
-  id         String   @id @default(cuid())
-  supplierId String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  title      String
+  id          String   @id @default(cuid())
+  supplierId  String
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  title       String
   description String?
-  material   String
+  material    String
   // Finer subtype label from the taxonomy (display-level); the tree link is
   // categoryId.
   subcategory String?
@@ -184,20 +184,20 @@ model Product {
   priceType PriceType
 
   // Null = the supplier does not publish it → "Ask the supplier".
-  basePrice Decimal? @db.Decimal(12, 4)
+  basePrice  Decimal? @db.Decimal(12, 4)
   // What the price buys: "per jar", "per case of 12", "per carton of 1000".
   priceBasis String?
   // Computed per-unit figure shown next to the basis.
-  priceUnit Decimal? @db.Decimal(12, 4)
+  priceUnit  Decimal? @db.Decimal(12, 4)
 
   moq          Int?
   moqUnit      String?
   leadTimeDays Int?
 
-  stockOrCustom StockOrCustom
+  stockOrCustom        StockOrCustom
   // The Request Sample action is rendered only when this is true — the
   // sample button never lies.
-  samplePolicyVerified Boolean @default(false)
+  samplePolicyVerified Boolean       @default(false)
 
   // Provenance contract: every value on this row is a snapshot of exactly
   // this page, captured at exactly this time. Rendered next to every price.
@@ -212,6 +212,9 @@ model Product {
   quoteRequestItems QuoteRequestItem[]
   sampleRequests    SampleRequest[]
   savedListItems    SavedListItem[]
+
+  // Get-a-quote / get-a-sample requests from the product page.
+  inquiries Inquiry[]
 
   // The seed importer's idempotency key (supplier slug + product title),
   // enforced at the database level.
@@ -295,16 +298,16 @@ model Certification {
 // QuoteRequestItem per selected product — items from five suppliers means
 // five rows in one request, grouped per supplier in their inboxes.
 model QuoteRequest {
-  id          String      @id @default(cuid())
-  brandUserId String
-  brand       User        @relation(fields: [brandUserId], references: [id])
-  status      QuoteStatus @default(DRAFT)
-  deadline    DateTime?
-  artworkNotes String?
+  id             String      @id @default(cuid())
+  brandUserId    String
+  brand          User        @relation(fields: [brandUserId], references: [id])
+  status         QuoteStatus @default(DRAFT)
+  deadline       DateTime?
+  artworkNotes   String?
   // Supabase Storage object URL.
   artworkFileUrl String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
   items QuoteRequestItem[]
 
@@ -365,13 +368,13 @@ model SavedList {
 }
 
 model SavedListItem {
-  id          String     @id @default(cuid())
+  id          String    @id @default(cuid())
   savedListId String
-  savedList   SavedList  @relation(fields: [savedListId], references: [id], onDelete: Cascade)
+  savedList   SavedList @relation(fields: [savedListId], references: [id], onDelete: Cascade)
   productId   String
-  product     Product    @relation(fields: [productId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id])
   note        String?
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime  @default(now())
 
   @@unique([savedListId, productId])
   @@index([productId])
@@ -406,4 +409,64 @@ model FeaturedPlacement {
   createdAt  DateTime  @default(now())
 
   @@index([supplierId])
+}
+
+// ─── Product inquiries ──────────────────────────────────────────────────────
+// "Get a quote" / "Get a sample" from a product page. Open to anyone (no
+// account needed): contact details, what they need, and an optional design
+// file. Reviewed by admins in /admin/inquiries.
+
+enum InquiryKind {
+  QUOTE
+  SAMPLE
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+enum DesignStatus {
+  READY
+  IN_PROGRESS
+  NEED_HELP
+  NONE
+}
+
+model Inquiry {
+  id            String        @id @default(cuid())
+  kind          InquiryKind
+  status        InquiryStatus @default(NEW)
+  productId     String
+  product       Product       @relation(fields: [productId], references: [id])
+  name          String
+  email         String
+  company       String?
+  website       String?
+  phone         String?
+  quantity      String
+  packagingType String?
+  format        String?
+  designStatus  DesignStatus
+  description   String
+  file          InquiryFile?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status])
+  @@index([productId])
+  @@index([createdAt])
+}
+
+// The design file, kept apart so listing inquiries never loads file bytes.
+model InquiryFile {
+  id          String   @id @default(cuid())
+  inquiryId   String   @unique
+  inquiry     Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  name        String
+  contentType String
+  size        Int
+  data        Bytes
+  createdAt   DateTime @default(now())
 }
