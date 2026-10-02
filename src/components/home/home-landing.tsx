@@ -9,7 +9,9 @@ import { categoryImageAsset } from "../../../data/image-mapping";
 import { formatCaptureDate, formatMoq, formatPriceLine } from "@/lib/catalog/format";
 import { popularCategories } from "@/lib/catalog/popular";
 import type { CategoryVM, ProductVM } from "@/lib/catalog/view-models";
+import { ExploreStrip } from "./explore-strip";
 import { HeroShelf } from "./hero-shelf";
+import { HeroStudio } from "./hero-studio";
 
 // Home (spec C4) — the page alternates between two worlds:
 //
@@ -47,17 +49,19 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
 
   return (
     <div>
+      <h1 className="sr-only">Packaging, sourced properly. What are you packaging?</h1>
+
+      {/* Light theme: the studio hero and the explore strip. */}
+      <HeroStudio
+        categories={categories}
+        totalProducts={totalProducts}
+        supplierCount={supplierCount}
+        className="dark:hidden"
+      />
+      <ExploreStrip categories={categories} className="dark:hidden" />
+
       {/* ─── Dark: hero ─────────────────────────────────────────────────── */}
-      <section className="grain relative overflow-hidden bg-void text-on-dark">
-        {/* Studio light: a soft white key where the shelf stands (light theme
-            only — in dark the shelf carries its own glow). */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 dark:hidden"
-          style={{
-            background: "radial-gradient(circle at 72% 48%, var(--studio-key), transparent 45%)",
-          }}
-        />
+      <section className="grain relative hidden overflow-hidden bg-void text-on-dark dark:block">
         <div className="relative mx-auto max-w-[1400px] lg:grid lg:grid-cols-[248px_1fr]">
           {/* Rail — continues the header's logo-cell hairline down the hero. */}
           <aside className="relative hidden border-r border-line-dark bg-rail before:absolute before:inset-y-0 before:right-full before:w-[50vw] before:bg-rail lg:flex lg:flex-col lg:justify-end lg:px-8 lg:pb-14">
@@ -71,8 +75,6 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
           </aside>
 
           <div className="relative px-5 pb-12 pt-12 sm:px-8 lg:grid lg:min-h-[760px] lg:grid-cols-12 lg:grid-rows-[auto_1fr_auto] lg:px-12 lg:pb-14 lg:pt-16">
-            <h1 className="sr-only">Packaging, sourced properly. What are you packaging?</h1>
-
             <p
               aria-hidden
               className="hero-rise font-semiwide text-[clamp(3.25rem,8vw,7.5rem)] font-light leading-[0.92] tracking-[-0.035em] lg:col-span-8 lg:col-start-1 lg:row-start-1"
@@ -120,7 +122,7 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
       </section>
 
       {/* ─── Light: explore packaging ───────────────────────────────────── */}
-      <section className="bg-paper">
+      <section className="hidden bg-paper dark:block">
         <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
           <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
             <h2 className="font-semiwide text-4xl font-light leading-[1] tracking-[-0.03em] text-ink sm:text-5xl lg:col-span-6">

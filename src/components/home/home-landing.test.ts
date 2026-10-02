@@ -45,18 +45,25 @@ describe("HomeLanding — hero", () => {
   });
 
   it("links and annotates shelf objects only for categories with listings", () => {
-    const html = render(createElement(HomeLanding, { categories, featured })).replace(/<!-- -->/g, "");
+    const html = render(createElement(HomeLanding, { categories, featured })).replace(
+      /<!-- -->/g,
+      "",
+    );
 
     // Glass Bottles has products → linked with its live count.
     expect(html).toContain('aria-label="Glass Bottles — 8 products"');
     // A category with no listings is never advertised from the shelf.
-    const empty = categories.map((c) => (c.slug === "glass-bottles" ? { ...c, productCount: 0 } : c));
+    const empty = categories.map((c) =>
+      c.slug === "glass-bottles" ? { ...c, productCount: 0 } : c,
+    );
     const emptyHtml = render(createElement(HomeLanding, { categories: empty, featured }));
     expect(emptyHtml).not.toContain('aria-label="Glass Bottles — 0 products"');
   });
 
   it("shows the supplier count in the hero rail when provided", () => {
-    const html = render(createElement(HomeLanding, { categories, featured, supplierCount: 26 })).replace(/<!-- -->/g, "");
+    const html = render(
+      createElement(HomeLanding, { categories, featured, supplierCount: 26 }),
+    ).replace(/<!-- -->/g, "");
 
     expect(html).toContain("from 26 suppliers");
   });
@@ -110,7 +117,10 @@ describe("HomeLanding — popular packaging tiles", () => {
 
 describe("HomeLanding — category grid", () => {
   it("renders every category row with a thumbnail", () => {
-    const html = render(createElement(HomeLanding, { categories, featured })).replace(/<!-- -->/g, "");
+    const html = render(createElement(HomeLanding, { categories, featured })).replace(
+      /<!-- -->/g,
+      "",
+    );
 
     expect(html).toContain('data-testid="category-grid"');
     expect(html).toContain("glass-jar.png");
@@ -129,5 +139,23 @@ describe("HomeLanding — material-only navigation (PR #9 guard)", () => {
       expect(POPULAR_CATEGORY_SLUGS).toContain(entry);
     }
     expect(entries).not.toContain("coffee-gift-sets");
+  });
+});
+
+describe("HomeLanding — light-theme studio hero", () => {
+  it("renders both theme heroes with distinct search inputs", () => {
+    const html = render(createElement(HomeLanding, { categories, featured }));
+    expect(html).toContain('data-testid="hero-studio"');
+    expect(html).toContain('id="hero-search-studio"');
+    expect(html).toContain('id="hero-search"');
+    expect(html).toContain("studio-scene.webp");
+  });
+
+  it("shows the explore strip with live counts only", () => {
+    const html = render(createElement(HomeLanding, { categories, featured }));
+    expect(html).toContain('data-testid="explore-strip"');
+    const empty = categories.map((c) => ({ ...c, productCount: 0 }));
+    const emptyHtml = render(createElement(HomeLanding, { categories: empty, featured }));
+    expect(emptyHtml).not.toContain('data-testid="explore-card"');
   });
 });
