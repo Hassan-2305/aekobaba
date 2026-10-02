@@ -19,7 +19,7 @@ export function SubmitButton({
 
   const styles =
     variant === "primary"
-      ? "bg-action text-void hover:bg-action-strong"
+      ? "bg-action text-on-orange hover:bg-action-strong"
       : "border border-line bg-card text-ink hover:border-ink";
 
   return (

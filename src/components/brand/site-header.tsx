@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CATEGORY_MENU } from "@/lib/catalog/menu";
 import { BasketBadge } from "@/components/quotes/basket-badge";
 import { ChevronDown, SearchIcon } from "./icons";
+import { ThemeToggle } from "./theme-toggle";
 
 // Global header — dark brand chrome on every page. Server-rendered with no
 // client JS: the category menu is a native <details> disclosure and search is
@@ -22,8 +23,11 @@ export function SiteHeader() {
           aria-label="Aekobaba — home"
           className="flex shrink-0 items-center py-4 pl-5 pr-6 sm:border-r sm:border-line-dark lg:w-[248px] lg:pl-8"
         >
+          {/* Wordmark per theme: ink on light, white on dark. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-white.png" alt="Aekobaba" className="h-7 w-auto" />
+          <img src="/brand/logo.png" alt="Aekobaba" className="h-7 w-auto dark:hidden" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo-white.png" alt="Aekobaba" className="hidden h-7 w-auto dark:block" />
         </Link>
 
         <nav aria-label="Primary" className="order-4 flex w-full items-center gap-6 border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8">
@@ -71,6 +75,7 @@ export function SiteHeader() {
               />
             </div>
           </form>
+          <ThemeToggle />
           <BasketBadge />
           <Link
             href="/auth/sign-in"

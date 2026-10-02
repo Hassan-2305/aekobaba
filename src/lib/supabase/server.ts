@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+import { usableSupabaseEnv } from "./env";
+
 // Supabase server clients. Two distinct construction sites:
 //
 // - Server Components / Server Actions / Route Handlers use `cookies()` from
@@ -15,12 +17,13 @@ export interface SupabaseEnv {
   anonKey: string;
 }
 
-/** Read Supabase env, or null when unset — callers fail closed on null. */
+/** Read Supabase env, or null when unset or still a placeholder — callers fail closed on null. */
 export function supabaseEnv(): SupabaseEnv | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return null;
-  return { url, anonKey };
+  // Literal process.env reads so Next.js can inline NEXT_PUBLIC_ values.
+  return usableSupabaseEnv(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
 }
 
 export async function createSupabaseServerClient(env: SupabaseEnv) {

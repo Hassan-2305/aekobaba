@@ -47,17 +47,17 @@ export function ProductCard({ product }: { product: ProductVM }) {
               No image available
             </div>
           )}
-          <span className="tag absolute left-4 top-4 max-w-[70%] truncate text-ink-muted">{product.categoryName}</span>
+          <span className="tag absolute left-4 top-4 max-w-[70%] truncate text-well-ink-muted">{product.categoryName}</span>
           <span
             aria-hidden
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center border border-ink/10 bg-paper/60 text-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-void"
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center border border-well-ink/10 bg-white/60 text-well-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-on-orange"
           >
             <ArrowCorner size={15} />
           </span>
           {tags.length > 0 ? (
             <ul className="absolute bottom-3 left-4 flex flex-wrap gap-1.5" aria-label="Product attributes">
               {tags.map((tag) => (
-                <li key={tag} className="tag bg-card/85 px-1.5 py-1 text-ink">
+                <li key={tag} className="tag bg-white/85 px-1.5 py-1 text-well-ink">
                   {tag}
                 </li>
               ))}

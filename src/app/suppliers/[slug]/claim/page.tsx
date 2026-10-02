@@ -22,7 +22,7 @@ export default function ClaimListingPage() {
       <div className="mt-6 flex justify-center gap-3">
         <Link
           href="/auth/sign-in"
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-dark"
+          className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper hover:bg-ink/85"
         >
           Sign in
         </Link>

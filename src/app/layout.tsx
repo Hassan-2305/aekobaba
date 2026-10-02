@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { DEFAULT_THEME, THEME_INIT_SCRIPT } from "@/lib/theme";
 
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
@@ -67,7 +68,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // data-theme defaults to light; the inline script swaps in a saved choice
+    // before paint, which is why hydration warnings are suppressed here.
+    <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className={`${archivo.variable} ${geistMono.variable} min-h-screen bg-paper text-ink antialiased`}>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />

@@ -49,6 +49,7 @@ export default async function AdminCategoriesPage() {
   return (
     <WorkspaceShell
       area="admin"
+      active="categories"
       title="Categories"
       subtitle="The taxonomy brands filter and browse by. Seeded from the packaging research; edit here when it needs to grow."
     >

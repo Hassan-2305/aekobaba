@@ -97,7 +97,7 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
             <span
               aria-hidden
               className="absolute -bottom-[6%] left-[-8%] h-[14%] w-[116%]"
-              style={{ background: "radial-gradient(closest-side, rgba(0,0,0,.75), transparent)" }}
+              style={{ background: "radial-gradient(closest-side, var(--object-shadow), transparent)" }}
             />
             <Image
               src={object.src}
@@ -105,7 +105,7 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
               fill
               priority
               sizes="(min-width: 1024px) 260px, 30vw"
-              className="object-contain object-bottom drop-shadow-[0_20px_30px_rgba(0,0,0,.45)] transition-[filter] duration-300"
+              className="object-contain object-bottom drop-shadow-[0_20px_30px_var(--object-shadow)] transition-[filter] duration-300"
             />
           </>
         );
@@ -127,7 +127,7 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
       })}
 
       {/* Annotations — leader lines drawn in stage space, labels in HTML. */}
-      <svg aria-hidden className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full sm:block" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg aria-hidden className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full text-on-dark/45 sm:block" viewBox="0 0 100 100" preserveAspectRatio="none">
         {ANNOTATIONS.filter((a) => bySlug.has(a.slug)).map((a) => {
           const elbowX = a.align === "left" ? a.lx - 1.5 : a.lx + 1.5;
           const endX = a.align === "left" ? a.lx : a.lx - 0.5;
@@ -136,7 +136,7 @@ export function HeroShelf({ categories }: { categories: CategoryVM[] }) {
               key={a.slug}
               points={`${a.ax},${a.ay} ${elbowX},${a.ly + 1.2} ${endX},${a.ly + 1.2}`}
               fill="none"
-              stroke="rgba(244,244,240,.45)"
+              stroke="currentColor"
               strokeWidth="1"
               vectorEffect="non-scaling-stroke"
               className="hero-draw"

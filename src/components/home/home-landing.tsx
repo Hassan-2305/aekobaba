@@ -154,19 +154,19 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                   ) : null}
                   <span
                     aria-hidden
-                    className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center border border-ink/10 text-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-void"
+                    className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center border border-well-ink/10 text-well-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-on-orange"
                   >
                     <ArrowCorner size={16} />
                   </span>
                   <div className="relative p-4 sm:p-5">
                     <span
-                      className={`font-semiwide font-normal leading-tight tracking-[-0.01em] text-ink ${
+                      className={`font-semiwide font-normal leading-tight tracking-[-0.01em] text-well-ink ${
                         lead ? "block text-2xl sm:text-3xl" : "line-clamp-2 text-sm sm:text-lg"
                       }`}
                     >
                       {category.name}
                     </span>
-                    <p className="mt-1.5 text-xs text-ink-muted tabular-nums">{plural(category.productCount, "product")}</p>
+                    <p className="mt-1.5 text-xs text-well-ink-muted tabular-nums">{plural(category.productCount, "product")}</p>
                   </div>
                 </Link>
               );
@@ -333,7 +333,7 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 href="/basket"
-                className="inline-flex h-12 items-center gap-3 bg-orange px-6 text-sm font-medium text-void transition-colors hover:bg-orange-hi"
+                className="inline-flex h-12 items-center gap-3 bg-orange px-6 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
               >
                 Open Quote Basket
                 <ArrowRight size={16} />
@@ -370,7 +370,7 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
               className="object-contain p-10 packshot"
             />
           ) : null}
-          <span className="tag absolute left-4 top-4 text-ink-muted">{product.categoryName}</span>
+          <span className="tag absolute left-4 top-4 text-well-ink-muted">{product.categoryName}</span>
         </div>
         <div className="flex flex-col p-6">
           <TierBadge status={product.supplier.status} tone="dark" />
@@ -420,7 +420,7 @@ function FanOut({ suppliers }: { suppliers: ProductVM["supplier"][] }) {
           <p className="mt-2 text-sm text-on-dark">1 basket</p>
         </div>
         <div className="relative min-w-0">
-          <svg aria-hidden className="absolute inset-0 h-full w-16" viewBox="0 0 64 100" preserveAspectRatio="none">
+          <svg aria-hidden className="absolute inset-0 h-full w-16 text-on-dark/35" viewBox="0 0 64 100" preserveAspectRatio="none">
             {suppliers.map((s, i) => {
               const y = ((i + 0.5) / rows) * 100;
               return (
@@ -428,7 +428,7 @@ function FanOut({ suppliers }: { suppliers: ProductVM["supplier"][] }) {
                   key={s.slug}
                   d={`M0 50 C 32 50, 32 ${y}, 64 ${y}`}
                   fill="none"
-                  stroke="rgba(244,244,240,.35)"
+                  stroke="currentColor"
                   strokeWidth="1"
                   vectorEffect="non-scaling-stroke"
                 />

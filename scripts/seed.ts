@@ -4,8 +4,8 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import {
   createCategoryIndexWalker,
-  productImageRow,
-  writePrimaryImage,
+  productImageRows,
+  writeProductImages,
 } from "../data/image-mapping";
 import { parseSeedFile, type SeedProduct, type SeedSupplier } from "../data/seed-schema";
 
@@ -114,16 +114,13 @@ async function upsertProduct(
     });
   }
 
-  // Exactly one primary representative image per product, assigned by the
-  // deterministic category mapping (the stable per-category index rotates
-  // variants). Replace per product like the breaks — re-runs never
-  // duplicate Image rows.
-  await writePrimaryImage(
-    tx,
-    saved.id,
-    productImageRow(product, nextImageIndex(product.categorySlug)),
-  );
-  counts.images += 1;
+  // The representative views (studio, detail, dark studio) per product,
+  // assigned by the deterministic category mapping (the stable per-category
+  // index rotates variants). Replace per product like the breaks — re-runs
+  // never duplicate Image rows.
+  const imageRows = productImageRows(product, nextImageIndex(product.categorySlug));
+  await writeProductImages(tx, saved.id, imageRows);
+  counts.images += imageRows.length;
   return product.quantityBreaks.length;
 }
 

@@ -75,8 +75,15 @@ export function TierSelect({
             setTier(e.target.value);
             setSaved(false);
           }}
-          className="h-9 rounded-md border border-stone-300 bg-card px-2 text-sm text-stone-900 focus:outline-2 focus:outline-accent"
+          className="h-9 border border-line bg-card px-2 text-sm text-ink focus:border-ink focus:outline-none"
         >
+          {/* A pending supplier has no tier yet — say so instead of showing
+              the first option as if it were already assigned. */}
+          {!TIERS.some((t) => t.value === currentTier) ? (
+            <option value={currentTier} disabled>
+              Choose tier…
+            </option>
+          ) : null}
           {TIERS.map((t) => (
             <option key={t.value} value={t.value}>
               {t.label}
@@ -88,7 +95,7 @@ export function TierSelect({
           onClick={save}
           disabled={saving || tier === currentTier}
           aria-busy={saving}
-          className="h-9 rounded-md bg-accent px-3 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-9 bg-orange px-3 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi disabled:cursor-not-allowed disabled:opacity-40"
         >
           {saving ? "Saving…" : "Save tier"}
         </button>

@@ -70,22 +70,22 @@ export function ClaimForm({
   return (
     <div className="space-y-3">
       {error ? <InlineErrorAlert message={error} /> : null}
-      <ul className="divide-y divide-stone-200 rounded-lg border border-stone-200 bg-card">
+      <ul className="divide-y divide-line border border-line bg-card">
         {suppliers.map((s) => (
           <li
             key={s.slug}
             className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
           >
             <div>
-              <p className="text-sm font-medium text-stone-900">{s.name}</p>
-              <p className="text-xs text-stone-500">{s.location}</p>
+              <p className="text-sm font-medium text-ink">{s.name}</p>
+              <p className="text-xs text-ink-faint">{s.location}</p>
             </div>
             <button
               type="button"
               onClick={() => claim(s.slug)}
               disabled={claiming !== null}
               aria-busy={claiming === s.slug}
-              className="h-9 rounded-md bg-accent px-3 text-sm font-medium text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-9 bg-ink px-3 text-sm font-medium text-paper transition-colors hover:bg-ink/85 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {claiming === s.slug ? "Claiming…" : "Claim this listing"}
             </button>

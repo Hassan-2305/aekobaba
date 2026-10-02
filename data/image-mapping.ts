@@ -131,6 +131,30 @@ export function productImageRow(product: SeedProductImageInput, indexInCategory:
 }
 
 /**
+ * The representative views written per product, in gallery order. All three
+ * derive from the same generated packshot — the studio frame, a 2x detail
+ * crop of the closure/seal, and the cut-out object on a dark studio plinth —
+ * so they add angles of inspection, never invented features. Each stays
+ * labelled representative; real supplier photography replaces them as new
+ * Image rows when it arrives.
+ */
+export const PRODUCT_VIEWS = [
+  { suffix: null, label: "studio view" },
+  { suffix: "detail", label: "detail view" },
+  { suffix: "dark", label: "dark studio view" },
+] as const;
+
+/** Every Image row the seeder writes for a product (primary first). */
+export function productImageRows(product: SeedProductImageInput, indexInCategory: number): ProductImageRow[] {
+  const asset = productImageAsset(product, indexInCategory);
+  return PRODUCT_VIEWS.map((view, sortOrder) => ({
+    url: view.suffix ? `${IMAGE_URL_PREFIX}/views/${asset}-${view.suffix}.webp` : `${IMAGE_URL_PREFIX}/${asset}.png`,
+    alt: `${product.title} — representative ${view.label}`,
+    sortOrder,
+  }));
+}
+
+/**
  * Category-level representative asset for navigation surfaces (home popular
  * tiles, category grid rows): the category's first variant — its archetypal
  * packshot. Categories outside the mapping table (or the hero composition)
@@ -157,6 +181,18 @@ export interface ImageWriteDelegate {
  * re-seeding idempotent: exactly one Image row per product, no matter how
  * many times the importer runs.
  */
+export async function writeProductImages(
+  tx: ImageWriteDelegate,
+  productId: string,
+  images: ProductImageRow[],
+): Promise<void> {
+  await tx.image.deleteMany({ where: { productId } });
+  await tx.image.createMany({
+    data: images.map((image) => ({ productId, url: image.url, alt: image.alt, sortOrder: image.sortOrder })),
+  });
+}
+
+/** Single-row variant kept for callers that only write the primary image. */
 export async function writePrimaryImage(
   tx: ImageWriteDelegate,
   productId: string,

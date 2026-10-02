@@ -18,7 +18,16 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1400px] gap-12 px-5 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
         <div className="max-w-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-white.png" alt="Aekobaba" className="h-7 w-auto" />
+          <img src="/brand/logo.png" alt="Aekobaba" className="h-7 w-auto dark:hidden" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo-white.png" alt="Aekobaba" className="hidden h-7 w-auto dark:block" />
+          <p className="mt-3 text-xs text-on-dark-muted">
+            An{" "}
+            <a href="https://www.aekovera.com" className="text-on-dark underline decoration-on-dark/30 underline-offset-4 hover:decoration-orange">
+              Aekovera
+            </a>{" "}
+            company
+          </p>
           <p className="mt-6 text-sm leading-relaxed text-on-dark-muted">
             Packaging discovery for consumer brands. Every price on Aekobaba is a dated snapshot
             taken from the supplier&rsquo;s own page — and linked back to it.
