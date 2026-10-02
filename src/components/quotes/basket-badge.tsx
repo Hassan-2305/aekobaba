@@ -17,9 +17,17 @@ export function BasketBadge() {
     <Link
       href="/basket"
       data-testid="basket-link"
-      className="relative flex h-9 items-center gap-2 whitespace-nowrap border border-line-dark px-3 text-on-dark/90 transition-colors hover:border-on-dark/40 hover:text-on-dark"
+      className="relative flex h-9 items-center gap-2 whitespace-nowrap border border-line-dark px-3 lg:h-11 lg:gap-3 lg:px-4 text-on-dark/90 transition-colors hover:border-on-dark/40 hover:text-on-dark"
     >
-      <svg aria-hidden width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg
+        aria-hidden
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
         <path d="M3.5 8.5 12 4l8.5 4.5v8L12 21l-8.5-4.5z" />
         <path d="M3.5 8.5 12 13l8.5-4.5M12 13v8" />
       </svg>

@@ -17,26 +17,26 @@ import { ThemeToggle } from "./theme-toggle";
 export function SiteHeader() {
   return (
     <header className="relative z-30 border-b border-line-dark bg-void text-on-dark">
-      <div className="mx-auto flex max-w-[1400px] flex-wrap items-stretch sm:flex-nowrap">
+      <div className="flex flex-wrap items-stretch sm:flex-nowrap">
         <Link
           href="/"
           aria-label="Aekobaba — home"
-          className="flex shrink-0 items-center py-4 pl-5 pr-6 sm:border-r sm:border-line-dark lg:w-[248px] lg:pl-8"
+          className="flex shrink-0 items-center py-4 pl-5 pr-6 lg:h-[76px] lg:w-[var(--rail-w)] lg:pl-[var(--edge)] dark:sm:border-r dark:sm:border-line-dark"
         >
           {/* Wordmark per theme: ink on light, white on dark. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.png" alt="Aekobaba" className="h-7 w-auto dark:hidden" />
+          <img src="/brand/logo.png" alt="Aekobaba" className="h-8 w-auto dark:hidden" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/logo-white.png"
             alt="Aekobaba"
-            className="hidden h-7 w-auto dark:block"
+            className="hidden h-8 w-auto dark:block"
           />
         </Link>
 
         <nav
           aria-label="Primary"
-          className="order-4 flex w-full items-center gap-6 border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8"
+          className="order-4 flex w-full items-center gap-6 border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8 lg:gap-9 lg:pl-12 lg:text-[15px]"
         >
           <Link
             href="/results"
@@ -78,12 +78,12 @@ export function SiteHeader() {
           </Link>
         </nav>
 
-        <div className="ml-auto flex items-center gap-3 py-3 pr-5 lg:pr-8">
+        <div className="ml-auto flex items-center gap-3 py-3 pr-5 lg:gap-4 lg:pr-[var(--edge)]">
           <form action="/results" role="search" className="hidden lg:block">
             <label htmlFor="site-search" className="sr-only">
               What are you packaging?
             </label>
-            <div className="flex h-9 w-72 items-center border border-line-dark bg-surface transition-colors focus-within:border-orange xl:w-80">
+            <div className="flex h-11 w-72 items-center border border-line-dark bg-surface transition-colors focus-within:border-orange xl:w-[300px]">
               <SearchIcon size={15} className="ml-3 shrink-0 text-on-dark-muted" />
               <input
                 id="site-search"

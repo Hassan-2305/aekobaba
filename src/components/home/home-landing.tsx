@@ -62,9 +62,9 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
 
       {/* ─── Dark: hero ─────────────────────────────────────────────────── */}
       <section className="grain relative hidden overflow-hidden bg-void text-on-dark dark:block">
-        <div className="relative mx-auto max-w-[1400px] lg:grid lg:grid-cols-[248px_1fr]">
+        <div className="relative lg:grid lg:grid-cols-[var(--rail-w)_minmax(0,1fr)]">
           {/* Rail — continues the header's logo-cell hairline down the hero. */}
-          <aside className="relative hidden border-r border-line-dark bg-rail before:absolute before:inset-y-0 before:right-full before:w-[50vw] before:bg-rail lg:flex lg:flex-col lg:justify-end lg:px-8 lg:pb-14">
+          <aside className="relative hidden border-r border-line-dark lg:flex lg:flex-col lg:justify-end lg:pb-14 lg:pl-[var(--edge)] lg:pr-6">
             <span aria-hidden className="absolute -right-[4px] top-0 h-[7px] w-[7px] bg-orange" />
             <p className="tag text-on-dark">Verified catalog</p>
             <p className="mt-3 text-sm leading-relaxed text-on-dark-muted">
