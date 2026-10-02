@@ -20,13 +20,17 @@ import {
 // and writing it twice leaves exactly one Image row per product.
 
 function loadSeed(): SeedFile {
-  const raw = JSON.parse(readFileSync(path.resolve(import.meta.dirname, "aekobaba-seed.json"), "utf8"));
+  const raw = JSON.parse(
+    readFileSync(path.resolve(import.meta.dirname, "aekobaba-seed.json"), "utf8"),
+  );
   return parseSeedFile(raw);
 }
 
 /** All products in seed-file order — the same walk the importer performs. */
 function seededProducts(seed: SeedFile): { supplierSlug: string; product: SeedProduct }[] {
-  return seed.suppliers.flatMap((s) => s.products.map((product) => ({ supplierSlug: s.slug, product })));
+  return seed.suppliers.flatMap((s) =>
+    s.products.map((product) => ({ supplierSlug: s.slug, product })),
+  );
 }
 
 /** Map every seeded product to its image row, exactly as the importer does. */
@@ -55,7 +59,10 @@ describe("seed image mapping", () => {
 
   it("has a mapping entry for every category in the taxonomy, including empty ones", () => {
     for (const category of seed.categories) {
-      expect(CATEGORY_VARIANTS[category.slug], `missing mapping for ${category.slug}`).toBeDefined();
+      expect(
+        CATEGORY_VARIANTS[category.slug],
+        `missing mapping for ${category.slug}`,
+      ).toBeDefined();
       expect(CATEGORY_VARIANTS[category.slug].length).toBeGreaterThan(0);
     }
   });
@@ -84,7 +91,9 @@ describe("seed image mapping", () => {
     const publicDir = path.resolve(import.meta.dirname, "../public/products");
     const referenced = new Set(mapAllProducts(seed).map(({ row }) => row.url));
     for (const url of referenced) {
-      expect(existsSync(path.join(publicDir, path.basename(url))), `missing asset ${url}`).toBe(true);
+      expect(existsSync(path.join(publicDir, path.basename(url))), `missing asset ${url}`).toBe(
+        true,
+      );
     }
   });
 
@@ -142,7 +151,12 @@ describe("categoryImageAsset", () => {
 });
 
 describe("productImageRows — the per-product gallery", () => {
-  const sample = { categorySlug: "glass-bottles", title: "8 oz Amber Boston Round", material: "Glass (amber)", subcategory: null };
+  const sample = {
+    categorySlug: "glass-bottles",
+    title: "8 oz Amber Boston Round",
+    material: "Glass (amber)",
+    subcategory: null,
+  };
 
   it("writes studio, detail and dark views, primary first, all labelled representative", () => {
     const rows = productImageRows(sample, 0);
@@ -157,7 +171,9 @@ describe("productImageRows — the per-product gallery", () => {
     for (const variants of Object.values(CATEGORY_VARIANTS)) {
       for (const asset of variants) {
         for (const view of PRODUCT_VIEWS) {
-          const file = view.suffix ? `public/products/views/${asset}-${view.suffix}.webp` : `public/products/${asset}.png`;
+          const file = view.suffix
+            ? `public/products/views/${asset}-${view.suffix}.webp`
+            : `public/products/${asset}.png`;
           expect(existsSync(file), file).toBe(true);
         }
       }
@@ -169,7 +185,8 @@ describe("productImageRows — the per-product gallery", () => {
     const fakeTx = {
       image: {
         deleteMany: async ({ where }: { where: { productId: string } }) => {
-          for (let i = store.length - 1; i >= 0; i--) if (store[i].productId === where.productId) store.splice(i, 1);
+          for (let i = store.length - 1; i >= 0; i--)
+            if (store[i].productId === where.productId) store.splice(i, 1);
         },
         createMany: async ({ data }: { data: { productId: string; url: string }[] }) => {
           store.push(...data);
@@ -180,5 +197,15 @@ describe("productImageRows — the per-product gallery", () => {
     await writeProductImages(fakeTx, "p1", rows);
     await writeProductImages(fakeTx, "p1", rows);
     expect(store).toHaveLength(PRODUCT_VIEWS.length);
+  });
+});
+
+describe("dark-theme cut-outs", () => {
+  it("has a transparent cut-out for every packshot in the mapping", () => {
+    for (const variants of Object.values(CATEGORY_VARIANTS)) {
+      for (const asset of variants) {
+        expect(existsSync(`public/products/cutouts/${asset}.webp`), asset).toBe(true);
+      }
+    }
   });
 });

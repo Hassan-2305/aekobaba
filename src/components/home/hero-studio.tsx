@@ -137,7 +137,7 @@ export function HeroStudio({
           from their own pages — then send one quote request to all of them.
         </p>
         <div className="mt-[clamp(20px,1.9vw,36px)] w-full max-w-[600px]">
-          <SearchForm tone="light" inputId="hero-search-studio" arrow variant="studio" />
+          <SearchForm tone="light" inputId="hero-search" arrow variant="studio" />
         </div>
         <div className="mt-[clamp(18px,1.5vw,28px)] flex flex-wrap items-center gap-2 text-[15px] min-[1600px]:gap-3">
           <span className="mr-1 text-on-dark">

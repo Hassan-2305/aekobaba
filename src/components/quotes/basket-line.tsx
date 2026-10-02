@@ -1,8 +1,7 @@
-import Image from "next/image";
-
 import { formatMoq, formatPerUnit, formatPriceLine } from "@/lib/catalog/format";
 import { assessMoq } from "@/lib/quotes/moq";
 import type { BasketItem } from "@/lib/basket/store";
+import { ProductPicture } from "@/components/catalog/product-picture";
 
 // One basket line — presentational, prop-driven, no store or API access so
 // tests can server-render it. The MOQ warning renders from the supplier's
@@ -22,15 +21,17 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
   const image = product.primaryImage;
 
   return (
-    <div data-testid="basket-line" className="grid grid-cols-[64px_minmax(0,1fr)] gap-4 border-b border-line py-5 sm:grid-cols-[80px_minmax(0,1fr)_auto]">
+    <div
+      data-testid="basket-line"
+      className="grid grid-cols-[64px_minmax(0,1fr)] gap-4 border-b border-line py-5 sm:grid-cols-[80px_minmax(0,1fr)_auto]"
+    >
       <div className="relative aspect-square bg-well">
         {image ? (
-          <Image
+          <ProductPicture
             src={image.url}
             alt={`${image.alt ?? product.title} — representative image`}
-            fill
             sizes="80px"
-            className="packshot object-contain p-2"
+            className="p-2"
           />
         ) : null}
       </div>
@@ -39,7 +40,9 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
         <p className="mt-1 text-xs text-ink-faint">
           {product.supplier.name} · {product.material} · {product.categoryName}
         </p>
-        <p className="mt-2 text-sm text-ink tabular-nums">{formatPriceLine(product.basePrice, product.priceBasis)}</p>
+        <p className="mt-2 text-sm text-ink tabular-nums">
+          {formatPriceLine(product.basePrice, product.priceBasis)}
+        </p>
         <p className="text-xs text-ink-muted tabular-nums">
           {formatPerUnit(product.priceUnit) ?? ""}
           {product.priceUnit !== null && product.moq !== null ? " · " : ""}
@@ -66,7 +69,9 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
             type="number"
             min={1}
             value={quantity}
-            onChange={(event) => onQuantityChange(product.id, Math.max(1, Number(event.target.value) || 1))}
+            onChange={(event) =>
+              onQuantityChange(product.id, Math.max(1, Number(event.target.value) || 1))
+            }
             className="h-9 w-24 border border-line bg-card px-2 text-right text-sm text-ink tabular-nums focus:border-ink focus:outline-none"
           />
         </div>

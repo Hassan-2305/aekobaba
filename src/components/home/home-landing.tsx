@@ -1,16 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { ArrowCorner, ArrowRight } from "@/components/brand/icons";
 import { ProductCard } from "@/components/catalog/product-card";
-import { SearchForm } from "@/components/catalog/search-form";
+import { ProductPicture } from "@/components/catalog/product-picture";
 import { TierBadge } from "@/components/catalog/tier-badge";
 import { categoryImageAsset } from "../../../data/image-mapping";
 import { formatCaptureDate, formatMoq, formatPriceLine } from "@/lib/catalog/format";
-import { popularCategories } from "@/lib/catalog/popular";
 import type { CategoryVM, ProductVM } from "@/lib/catalog/view-models";
 import { ExploreStrip } from "./explore-strip";
-import { HeroShelf } from "./hero-shelf";
 import { HeroStudio } from "./hero-studio";
 
 // Home (spec C4) — the page alternates between two worlds:
@@ -38,7 +35,6 @@ const plural = (n: number, word: string) =>
   `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
 
 export function HomeLanding({ categories, featured, supplierCount }: HomeLandingProps) {
-  const popular = popularCategories(categories);
   const totalProducts = categories.reduce((sum, c) => sum + c.productCount, 0);
   const specimen =
     featured.find((p) => p.basePrice !== null && p.primaryImage) ?? featured[0] ?? null;
@@ -51,153 +47,14 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
     <div>
       <h1 className="sr-only">Packaging, sourced properly. What are you packaging?</h1>
 
-      {/* Light theme: the studio hero and the explore strip. */}
+      {/* One composition for both themes: the studio hero and the explore
+          strip. The dark theme re-lights them; it does not re-lay them out. */}
       <HeroStudio
         categories={categories}
         totalProducts={totalProducts}
         supplierCount={supplierCount}
-        className="dark:hidden"
       />
-      <ExploreStrip categories={categories} className="dark:hidden" />
-
-      {/* ─── Dark: hero ─────────────────────────────────────────────────── */}
-      <section className="grain relative hidden overflow-hidden bg-void text-on-dark dark:block">
-        <div className="relative lg:grid lg:grid-cols-[var(--rail-w)_minmax(0,1fr)]">
-          {/* Rail — continues the header's logo-cell hairline down the hero. */}
-          <aside className="relative hidden border-r border-line-dark lg:flex lg:flex-col lg:justify-end lg:pb-14 lg:pl-[var(--edge)] lg:pr-6">
-            <span aria-hidden className="absolute -right-[4px] top-0 h-[7px] w-[7px] bg-orange" />
-            <p className="tag text-on-dark">Verified catalog</p>
-            <p className="mt-3 text-sm leading-relaxed text-on-dark-muted">
-              {plural(totalProducts, "product")}
-              {supplierCount ? ` from ${plural(supplierCount, "supplier")}` : ""}. Every price links
-              to the page it came from.
-            </p>
-          </aside>
-
-          <div className="relative px-5 pb-12 pt-12 sm:px-8 lg:grid lg:min-h-[760px] lg:grid-cols-12 lg:grid-rows-[auto_1fr_auto] lg:px-12 lg:pb-14 lg:pt-16">
-            <p
-              aria-hidden
-              className="hero-rise font-semiwide text-[clamp(3.25rem,8vw,7.5rem)] font-light leading-[0.92] tracking-[-0.035em] lg:col-span-8 lg:col-start-1 lg:row-start-1"
-            >
-              Packaging,
-            </p>
-
-            <div className="relative z-0 mt-6 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:mt-10 lg:self-start">
-              <p className="max-w-md text-base leading-relaxed text-on-dark-muted sm:text-lg">
-                Compare real packaging from verified suppliers — prices, minimums and lead times
-                captured from their own pages — then send one quote request to all of them.
-              </p>
-              <div className="mt-8 max-w-xl">
-                <SearchForm />
-              </div>
-              {popular.length > 0 ? (
-                <div className="mt-5 flex max-w-xl flex-wrap items-center gap-x-4 gap-y-2 text-[13px]">
-                  <span className="text-on-dark-muted">Popular</span>
-                  {popular.map((category) => (
-                    <Link
-                      key={category.slug}
-                      href={`/results?category=${encodeURIComponent(category.slug)}`}
-                      className="text-on-dark/85 underline decoration-on-dark/20 underline-offset-[5px] transition-colors hover:text-on-dark hover:decoration-orange"
-                    >
-                      {category.name}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-
-            <div className="relative z-10 mx-auto mt-2 max-w-[720px] sm:mt-10 lg:col-span-7 lg:col-start-6 lg:row-span-3 lg:row-start-1 lg:mt-6 lg:w-full lg:max-w-none lg:self-center lg:pl-10">
-              <HeroShelf categories={categories} />
-            </div>
-
-            <p
-              aria-hidden
-              className="hero-rise relative z-0 mt-2 font-semiwide text-[clamp(3.25rem,8vw,7.5rem)] font-light leading-[0.92] tracking-[-0.035em] text-on-dark/90 lg:col-span-12 lg:col-start-1 lg:row-start-3 lg:mt-0 lg:text-right"
-              style={{ animationDelay: "150ms" }}
-            >
-              sourced properly.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Light: explore packaging ───────────────────────────────────── */}
-      <section className="hidden bg-paper dark:block">
-        <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-          <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
-            <h2 className="font-semiwide text-4xl font-light leading-[1] tracking-[-0.03em] text-ink sm:text-5xl lg:col-span-6">
-              Explore packaging
-            </h2>
-            <div className="lg:col-span-5 lg:col-start-8">
-              <p className="text-base leading-relaxed text-ink-muted">
-                Start from the material. Each category opens a filtered catalog you can narrow by
-                minimum order, price type, location and certification.
-              </p>
-              <Link
-                href="/results"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-ink underline decoration-ink/20 underline-offset-[5px] hover:decoration-orange"
-              >
-                Browse all {plural(totalProducts, "product")}
-                <ArrowRight size={14} />
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
-            {popular.map((category, index) => {
-              const asset = categoryImageAsset(category.slug);
-              const lead = index === 0;
-              return (
-                <Link
-                  key={category.slug}
-                  href={`/results?category=${encodeURIComponent(category.slug)}`}
-                  data-testid="popular-entry"
-                  data-entry={category.slug}
-                  className={`group relative flex flex-col justify-end overflow-hidden bg-well ${
-                    lead
-                      ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto"
-                      : "aspect-[4/5] sm:aspect-square"
-                  }`}
-                >
-                  {asset ? (
-                    <Image
-                      src={asset}
-                      alt={`${category.name} — representative packaging image`}
-                      fill
-                      sizes={
-                        lead
-                          ? "(min-width: 1024px) 640px, 100vw"
-                          : "(min-width: 1024px) 320px, 50vw"
-                      }
-                      className={`object-contain packshot transition-transform duration-500 ease-out group-hover:scale-[1.03] ${
-                        lead ? "p-12 pb-24 lg:p-20 lg:pb-28" : "p-6 pb-24 sm:p-8 sm:pb-24"
-                      }`}
-                    />
-                  ) : null}
-                  <span
-                    aria-hidden
-                    className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center border border-well-ink/10 text-well-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-on-orange"
-                  >
-                    <ArrowCorner size={16} />
-                  </span>
-                  <div className="relative p-4 sm:p-5">
-                    <span
-                      className={`font-semiwide font-normal leading-tight tracking-[-0.01em] text-well-ink ${
-                        lead ? "block text-2xl sm:text-3xl" : "line-clamp-2 text-sm sm:text-lg"
-                      }`}
-                    >
-                      {category.name}
-                    </span>
-                    <p className="mt-1.5 text-xs text-well-ink-muted tabular-nums">
-                      {plural(category.productCount, "product")}
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <ExploreStrip categories={categories} />
 
       {/* ─── Dark: how it works ─────────────────────────────────────────── */}
       <section id="how-it-works" className="tone-dark grain scroll-mt-4 bg-navy text-on-dark">
@@ -331,12 +188,11 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
                   >
                     <span className="relative h-12 w-12 shrink-0 overflow-hidden bg-well">
                       {asset ? (
-                        <Image
+                        <ProductPicture
                           src={asset}
                           alt={`${category.name} — representative packaging image`}
-                          fill
                           sizes="48px"
-                          className="scale-110 object-cover"
+                          className="scale-[1.3]"
                         />
                       ) : null}
                     </span>
@@ -409,17 +265,14 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
       <div className="grid grid-cols-[1fr] border border-line-dark bg-surface sm:grid-cols-[1.05fr_1fr]">
         <div className="relative aspect-square bg-well sm:aspect-auto sm:min-h-[360px]">
           {image ? (
-            <Image
+            <ProductPicture
               src={image.url}
               alt={`${image.alt ?? product.title} — representative image`}
-              fill
               sizes="(min-width: 1024px) 360px, 100vw"
-              className="object-contain p-10 packshot"
+              className="p-10"
             />
           ) : null}
-          <span className="tag absolute left-4 top-4 text-well-ink-muted">
-            {product.categoryName}
-          </span>
+          <span className="tag absolute left-4 top-4 text-ink-muted">{product.categoryName}</span>
         </div>
         <div className="flex flex-col p-6">
           <TierBadge status={product.supplier.status} tone="dark" />

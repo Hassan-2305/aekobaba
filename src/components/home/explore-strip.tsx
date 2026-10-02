@@ -1,8 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { categoryImageAsset } from "../../../data/image-mapping";
+import { POPULAR_CATEGORY_SLUGS } from "@/lib/catalog/popular";
 import type { CategoryVM } from "@/lib/catalog/view-models";
+import { ProductPicture } from "@/components/catalog/product-picture";
 
 // Light-theme "Explore packaging" — the restrained continuation below the
 // hero, built to the reference: a heading column on the edge grid, a quiet
@@ -34,11 +35,14 @@ export function ExploreStrip({
     category: CategoryVM;
     label: string;
   }[];
+  // Top up only from the curated material categories — never a use-case
+  // category (user review, PR #9: navigation entries are materials only).
   if (picked.length < 5) {
     const taken = new Set(picked.map((p) => p.category.slug));
-    for (const c of [...categories].sort((a, b) => b.productCount - a.productCount)) {
+    for (const slug of POPULAR_CATEGORY_SLUGS) {
       if (picked.length >= 5) break;
-      if (!taken.has(c.slug) && usable(c)) picked.push({ category: c, label: c.name });
+      const c = bySlug.get(slug);
+      if (c && !taken.has(slug) && usable(c)) picked.push({ category: c, label: c.name });
     }
   }
 
@@ -83,16 +87,16 @@ export function ExploreStrip({
                 <Link
                   href={`/results?category=${encodeURIComponent(category.slug)}`}
                   data-testid="explore-card"
+                  data-entry={category.slug}
                   title={category.name}
                   className="group relative flex h-[clamp(150px,9.1vw,175px)] flex-col border border-line-dark bg-paper transition-colors hover:border-on-dark/40"
                 >
                   <span className="relative block flex-1 overflow-hidden">
-                    <Image
+                    <ProductPicture
                       src={categoryImageAsset(category.slug)!}
                       alt={`${category.name} — representative packaging image`}
-                      fill
                       sizes="(min-width: 1024px) 15vw, 45vw"
-                      className="packshot origin-[50%_55%] scale-[1.3] object-contain transition-transform duration-500 group-hover:scale-[1.36]"
+                      className="origin-[50%_55%] scale-[1.3] transition-transform duration-500 group-hover:scale-[1.36]"
                     />
                   </span>
                   <span className="flex items-end justify-between gap-3 px-[15px] pb-[13px]">

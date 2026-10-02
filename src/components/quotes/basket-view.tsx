@@ -98,8 +98,8 @@ export function BasketView({ signedInRole }: BasketViewProps) {
         <BasketBand title="Quote Basket" subtitle="One request, sent to every supplier you add." />
         <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-lg bg-well px-8 py-14 text-center">
-            <p className="font-semiwide text-2xl font-light text-well-ink">Your quote basket is empty</p>
-            <p className="mt-3 text-sm leading-relaxed text-well-ink-muted">
+            <p className="font-semiwide text-2xl font-light text-ink">Your quote basket is empty</p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-muted">
               Add packaging products from any supplier, then send one request to all of them.
             </p>
             <Link

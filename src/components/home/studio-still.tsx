@@ -137,7 +137,7 @@ function Plinth({ p }: { p: (typeof PLINTHS)[number] }) {
   return (
     <div
       aria-hidden
-      className="absolute"
+      className="absolute dark:brightness-[0.36] dark:saturate-[0.8]"
       style={{
         left: `${p.left}%`,
         width: `${p.width}%`,
@@ -197,16 +197,16 @@ export function StudioStill({ categories }: { categories: CategoryVM[] }) {
         className="pointer-events-none absolute inset-y-0 -left-[35%] right-0"
         style={{
           background: [
-            "radial-gradient(38% 58% at 64% 42%, rgba(255,255,255,.95), rgba(255,255,255,0) 72%)",
-            "radial-gradient(45% 38% at 66% 86%, rgba(226,208,186,.55), rgba(226,208,186,0) 72%)",
-            "radial-gradient(30% 75% at 100% 40%, rgba(212,194,170,.45), rgba(212,194,170,0) 70%)",
+            "radial-gradient(38% 58% at 64% 42%, var(--still-key), transparent 72%)",
+            "radial-gradient(45% 38% at 66% 86%, var(--still-floor), transparent 72%)",
+            "radial-gradient(30% 75% at 100% 40%, var(--still-edge), transparent 70%)",
           ].join(","),
         }}
       />
       {/* Window light through leaves, falling on the wall. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute right-0 top-0 aspect-[1100/800] w-[90%] opacity-75 mix-blend-multiply"
+        className="pointer-events-none absolute right-0 top-0 aspect-[1100/800] w-[90%] opacity-75 mix-blend-multiply dark:opacity-[0.14] dark:mix-blend-screen dark:[filter:brightness(4)_sepia(0.5)]"
         style={{ backgroundImage: "url(/hero/leaf-shadow.webp)", backgroundSize: "100% 100%" }}
       />
 
@@ -240,7 +240,7 @@ export function StudioStill({ categories }: { categories: CategoryVM[] }) {
                 aria-hidden
                 fill
                 sizes="(min-width: 1024px) 14vw, 30vw"
-                className="pointer-events-none object-contain object-bottom opacity-[0.17]"
+                className="pointer-events-none object-contain object-bottom opacity-[0.17] dark:opacity-[0.45]"
                 style={{
                   filter: "brightness(0) blur(5px)",
                   transform: "skewX(-40deg) scaleY(0.38)",
@@ -252,22 +252,22 @@ export function StudioStill({ categories }: { categories: CategoryVM[] }) {
                 aria-hidden
                 className="absolute -bottom-[2.5%] left-[-6%] h-[7%] w-[112%] transition-opacity duration-300 group-hover:opacity-50"
                 style={{
-                  background: "radial-gradient(closest-side, rgba(54,40,28,.6), transparent)",
+                  background: "radial-gradient(closest-side, var(--still-contact), transparent)",
                 }}
               />
-              <Image
-                src={o.src}
-                alt={`${o.label} — representative image`}
-                fill
-                sizes="(min-width: 1024px) 18vw, 40vw"
-                className={`object-contain object-bottom transition-[transform,filter] duration-300 ease-out group-hover:-translate-y-[3%] group-focus-visible:-translate-y-[3%] ${
-                  o.depth === "back"
-                    ? "brightness-[0.96] drop-shadow-[16px_6px_14px_rgba(84,64,44,.22)]"
-                    : "drop-shadow-[14px_8px_12px_rgba(84,64,44,.26)]"
-                } ${o.tone ?? ""}`}
-              />
+              <span
+                className={`absolute inset-0 ${o.depth === "back" ? "brightness-[0.96]" : ""} ${o.tone ?? ""}`}
+              >
+                <Image
+                  src={o.src}
+                  alt={`${o.label} — representative image`}
+                  fill
+                  sizes="(min-width: 1024px) 18vw, 40vw"
+                  className="object-contain object-bottom transition-transform duration-300 ease-out [filter:drop-shadow(var(--still-rim))_drop-shadow(14px_8px_12px_var(--still-shadow))] group-hover:-translate-y-[3%] group-focus-visible:-translate-y-[3%]"
+                />
+              </span>
               {category && o.chip ? (
-                <span className="pointer-events-none absolute -top-9 left-1/2 hidden -translate-x-1/2 translate-y-1 whitespace-nowrap bg-[#111419] px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">
+                <span className="pointer-events-none absolute -top-9 left-1/2 hidden -translate-x-1/2 translate-y-1 whitespace-nowrap bg-[var(--still-ink)] px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-paper opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100 sm:block">
                   {category.name} · {category.productCount}
                 </span>
               ) : null}
@@ -293,7 +293,7 @@ export function StudioStill({ categories }: { categories: CategoryVM[] }) {
         {/* Annotations — thin technical leaders to the actual objects. */}
         <svg
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full text-[#111419]/55 sm:block"
+          className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full text-[var(--still-ink)] opacity-55 sm:block"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
@@ -324,13 +324,13 @@ export function StudioStill({ categories }: { categories: CategoryVM[] }) {
                 href={href(a.slug)}
                 tabIndex={-1}
                 aria-hidden
-                className="hero-rise absolute z-20 block whitespace-nowrap text-[#111419] transition-colors hover:text-orange-ink"
+                className="hero-rise absolute z-20 block whitespace-nowrap text-[var(--still-ink)] transition-colors hover:text-orange-ink"
                 style={{ left: `${a.lx}%`, top: `${a.ly}%`, animationDelay: "800ms" }}
               >
                 <span className="block text-[13px] font-semibold uppercase leading-none tracking-[0.02em]">
                   {category.name}
                 </span>
-                <span className="mt-[7px] block text-[13px] leading-none text-[#3d434a] tabular-nums">
+                <span className="mt-[7px] block text-[13px] leading-none text-[var(--still-ink-muted)] tabular-nums">
                   {category.productCount} product{category.productCount === 1 ? "" : "s"}
                 </span>
               </Link>
