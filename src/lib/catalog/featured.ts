@@ -11,7 +11,7 @@ import type { ProductVM } from "./view-models";
 //
 // Pure function: same products, same cap, same output — no clock, no randomness.
 
-const STATUS_RANK: Record<ProductVM["supplier"]["status"], number> = {
+export const STATUS_RANK: Record<ProductVM["supplier"]["status"], number> = {
   RECOMMENDED: 0,
   LISTED: 1,
   QUOTE_ONLY: 2,

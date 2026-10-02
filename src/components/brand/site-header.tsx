@@ -27,11 +27,21 @@ export function SiteHeader() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/logo.png" alt="Aekobaba" className="h-7 w-auto dark:hidden" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo-white.png" alt="Aekobaba" className="hidden h-7 w-auto dark:block" />
+          <img
+            src="/brand/logo-white.png"
+            alt="Aekobaba"
+            className="hidden h-7 w-auto dark:block"
+          />
         </Link>
 
-        <nav aria-label="Primary" className="order-4 flex w-full items-center gap-6 border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8">
-          <Link href="/results" className="py-3 text-on-dark/80 transition-colors hover:text-on-dark">
+        <nav
+          aria-label="Primary"
+          className="order-4 flex w-full items-center gap-6 border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8"
+        >
+          <Link
+            href="/results"
+            className="py-3 text-on-dark/80 transition-colors hover:text-on-dark"
+          >
             Catalog
           </Link>
           <details className="group relative">
@@ -54,7 +64,16 @@ export function SiteHeader() {
               </ul>
             </div>
           </details>
-          <Link href="/#how-it-works" className="hidden py-3 text-on-dark/80 transition-colors hover:text-on-dark md:block">
+          <Link
+            href="/suppliers"
+            className="whitespace-nowrap py-3 text-on-dark/80 transition-colors hover:text-on-dark"
+          >
+            Suppliers
+          </Link>
+          <Link
+            href="/#how-it-works"
+            className="hidden whitespace-nowrap py-3 text-on-dark/80 transition-colors hover:text-on-dark xl:block"
+          >
             How it works
           </Link>
         </nav>

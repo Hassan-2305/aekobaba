@@ -7,17 +7,24 @@ export function SearchForm({
   size = "lg",
   tone = "dark",
   defaultValue,
+  inputId,
+  arrow = false,
 }: {
   size?: "lg" | "sm";
   tone?: "dark" | "light";
   defaultValue?: string;
+  /** Override when two forms of the same size share a page (themed heroes). */
+  inputId?: string;
+  /** Trailing arrow in the submit button. */
+  arrow?: boolean;
 }) {
-  const id = size === "lg" ? "hero-search" : "small-search";
+  const id = inputId ?? (size === "lg" ? "hero-search" : "small-search");
   const field =
     tone === "dark"
       ? "border-line-dark bg-surface/80 text-on-dark focus-within:border-orange"
       : "border-line bg-card text-ink focus-within:border-ink";
-  const placeholder = tone === "dark" ? "placeholder:text-on-dark-muted/70" : "placeholder:text-ink-faint";
+  const placeholder =
+    tone === "dark" ? "placeholder:text-on-dark-muted/70" : "placeholder:text-ink-faint";
 
   return (
     <form action="/results" role="search" className="w-full">
@@ -25,7 +32,10 @@ export function SearchForm({
         What are you packaging?
       </label>
       <div className={`flex items-stretch border transition-colors ${field}`}>
-        <SearchIcon size={size === "lg" ? 20 : 16} className="ml-4 shrink-0 self-center opacity-60" />
+        <SearchIcon
+          size={size === "lg" ? 20 : 16}
+          className="ml-4 shrink-0 self-center opacity-60"
+        />
         <input
           id={id}
           type="search"
@@ -38,12 +48,26 @@ export function SearchForm({
         />
         <button
           type="submit"
-          className={`shrink-0 bg-orange font-medium text-on-orange transition-colors hover:bg-orange-hi ${
+          className={`inline-flex shrink-0 items-center justify-center bg-orange font-medium text-on-orange transition-colors hover:bg-orange-hi ${
             size === "lg" ? "px-6 text-sm sm:px-8" : "px-4 text-sm"
           }`}
         >
           <span className="sm:hidden">Search</span>
           <span className="hidden sm:inline">Find packaging</span>
+          {arrow ? (
+            <svg
+              aria-hidden
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              className="ml-2 hidden sm:inline"
+            >
+              <path d="M4 12h15M13 6l6 6-6 6" />
+            </svg>
+          ) : null}
         </button>
       </div>
     </form>
