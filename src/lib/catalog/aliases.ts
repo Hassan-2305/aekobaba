@@ -24,6 +24,17 @@ export interface AliasEntry {
  * the food/product, not the packaging jargon.
  */
 export const ALIAS_TABLE: Record<string, AliasEntry> = {
+  // Plain packaging words (the home page's popular searches).
+  jars: { categories: ["glass-jars", "plastic-jars"], terms: ["glass jars", "plastic jars"] },
+  jar: { categories: ["glass-jars", "plastic-jars"], terms: ["glass jars", "plastic jars"] },
+  bottles: {
+    categories: ["glass-bottles", "plastic-bottles"],
+    terms: ["glass bottles", "plastic bottles"],
+  },
+  bottle: {
+    categories: ["glass-bottles", "plastic-bottles"],
+    terms: ["glass bottles", "plastic bottles"],
+  },
   coffee: {
     categories: ["pouches-bags", "labels"],
     terms: ["stand-up pouches", "valve bags", "labels"],
@@ -52,7 +63,13 @@ export const ALIAS_TABLE: Record<string, AliasEntry> = {
       "pumps-sprayers",
       "collapsible-tubes",
     ],
-    terms: ["glass jars", "plastic jars", "droppers & vials", "pumps & sprayers", "collapsible tubes"],
+    terms: [
+      "glass jars",
+      "plastic jars",
+      "droppers & vials",
+      "pumps & sprayers",
+      "collapsible tubes",
+    ],
   },
   cosmetics: {
     categories: ["glass-jars", "plastic-jars", "pumps-sprayers", "collapsible-tubes"],
@@ -267,31 +284,132 @@ interface CategoryIndexEntry {
 }
 
 const CATEGORY_INDEX: CategoryIndexEntry[] = [
-  { slug: "pouches-bags", name: "Flexible Pouches & Bags", matchKeys: ["pouch", "pouches", "bag", "bags", "pouches-bags"] },
-  { slug: "plastic-bottles", name: "Plastic Bottles", matchKeys: ["plastic bottle", "plastic bottles", "plastic-bottles"] },
-  { slug: "plastic-jars", name: "Plastic Jars & Canisters", matchKeys: ["plastic jar", "plastic jars", "canister", "canisters", "plastic-jars"] },
-  { slug: "tubs-pails", name: "Tubs, Cups & Pails", matchKeys: ["tub", "tubs", "cup", "cups", "pail", "pails", "bucket", "buckets", "tubs-pails"] },
-  { slug: "folding-cartons", name: "Folding Cartons", matchKeys: ["carton", "cartons", "box", "boxes", "folding cartons", "folding-cartons"] },
-  { slug: "labels", name: "Labels", matchKeys: ["label", "labels", "sticker", "stickers", "labels"] },
-  { slug: "closures", name: "Closures", matchKeys: ["closure", "closures", "cap", "caps", "lid", "lids", "closures"] },
-  { slug: "pumps-sprayers", name: "Pumps, Sprayers & Airless Dispensers", matchKeys: ["pump", "pumps", "sprayer", "sprayers", "pumps-sprayers"] },
-  { slug: "corrugated", name: "Corrugated Shippers & Secondary Packaging", matchKeys: ["corrugated", "shipping", "shipper", "shippers"] },
-  { slug: "glass-bottles", name: "Glass Bottles", matchKeys: ["glass bottle", "glass bottles", "woozy", "woozies", "glass-bottles"] },
+  {
+    slug: "pouches-bags",
+    name: "Flexible Pouches & Bags",
+    matchKeys: ["pouch", "pouches", "bag", "bags", "pouches-bags"],
+  },
+  {
+    slug: "plastic-bottles",
+    name: "Plastic Bottles",
+    matchKeys: ["plastic bottle", "plastic bottles", "plastic-bottles"],
+  },
+  {
+    slug: "plastic-jars",
+    name: "Plastic Jars & Canisters",
+    matchKeys: ["plastic jar", "plastic jars", "canister", "canisters", "plastic-jars"],
+  },
+  {
+    slug: "tubs-pails",
+    name: "Tubs, Cups & Pails",
+    matchKeys: ["tub", "tubs", "cup", "cups", "pail", "pails", "bucket", "buckets", "tubs-pails"],
+  },
+  {
+    slug: "folding-cartons",
+    name: "Folding Cartons",
+    matchKeys: ["carton", "cartons", "box", "boxes", "folding cartons", "folding-cartons"],
+  },
+  {
+    slug: "labels",
+    name: "Labels",
+    matchKeys: ["label", "labels", "sticker", "stickers", "labels"],
+  },
+  {
+    slug: "closures",
+    name: "Closures",
+    matchKeys: ["closure", "closures", "cap", "caps", "lid", "lids", "closures"],
+  },
+  {
+    slug: "pumps-sprayers",
+    name: "Pumps, Sprayers & Airless Dispensers",
+    matchKeys: ["pump", "pumps", "sprayer", "sprayers", "pumps-sprayers"],
+  },
+  {
+    slug: "corrugated",
+    name: "Corrugated Shippers & Secondary Packaging",
+    matchKeys: ["corrugated", "shipping", "shipper", "shippers"],
+  },
+  {
+    slug: "glass-bottles",
+    name: "Glass Bottles",
+    matchKeys: ["glass bottle", "glass bottles", "woozy", "woozies", "glass-bottles"],
+  },
   { slug: "glass-jars", name: "Glass Jars", matchKeys: ["glass jar", "glass jars", "glass-jars"] },
-  { slug: "collapsible-tubes", name: "Collapsible Tubes", matchKeys: ["tube", "tubes", "collapsible tubes", "collapsible-tubes"] },
-  { slug: "metal-cans", name: "Metal Cans — Beverage & Food", matchKeys: ["can", "cans", "metal cans", "metal-cans"] },
-  { slug: "metal-tins", name: "Metal Tins", matchKeys: ["tin", "tins", "metal tins", "metal-tins"] },
-  { slug: "sachets-stick-packs", name: "Sachets & Stick Packs", matchKeys: ["sachet", "sachets", "stick pack", "stick packs", "sachets-stick-packs"] },
-  { slug: "rollstock", name: "Flexible Film Rollstock & Flow Wrap", matchKeys: ["rollstock", "film", "roll stock"] },
-  { slug: "shrink-sleeves", name: "Shrink Sleeves", matchKeys: ["sleeve", "sleeves", "shrink sleeve", "shrink sleeves", "shrink-sleeves"] },
-  { slug: "thermoforms", name: "Blister Packs, Clamshells & Thermoform Trays", matchKeys: ["thermoform", "thermoforms", "tray", "trays", "clamshell", "clamshells"] },
-  { slug: "setup-boxes", name: "Rigid Setup Boxes", matchKeys: ["rigid box", "rigid boxes", "setup box", "setup boxes"] },
-  { slug: "droppers-vials", name: "Dropper Assemblies, Vials & Roll-Ons", matchKeys: ["dropper", "droppers", "vial", "vials", "droppers-vials"] },
+  {
+    slug: "collapsible-tubes",
+    name: "Collapsible Tubes",
+    matchKeys: ["tube", "tubes", "collapsible tubes", "collapsible-tubes"],
+  },
+  {
+    slug: "metal-cans",
+    name: "Metal Cans — Beverage & Food",
+    matchKeys: ["can", "cans", "metal cans", "metal-cans"],
+  },
+  {
+    slug: "metal-tins",
+    name: "Metal Tins",
+    matchKeys: ["tin", "tins", "metal tins", "metal-tins"],
+  },
+  {
+    slug: "sachets-stick-packs",
+    name: "Sachets & Stick Packs",
+    matchKeys: ["sachet", "sachets", "stick pack", "stick packs", "sachets-stick-packs"],
+  },
+  {
+    slug: "rollstock",
+    name: "Flexible Film Rollstock & Flow Wrap",
+    matchKeys: ["rollstock", "film", "roll stock"],
+  },
+  {
+    slug: "shrink-sleeves",
+    name: "Shrink Sleeves",
+    matchKeys: ["sleeve", "sleeves", "shrink sleeve", "shrink sleeves", "shrink-sleeves"],
+  },
+  {
+    slug: "thermoforms",
+    name: "Blister Packs, Clamshells & Thermoform Trays",
+    matchKeys: ["thermoform", "thermoforms", "tray", "trays", "clamshell", "clamshells"],
+  },
+  {
+    slug: "setup-boxes",
+    name: "Rigid Setup Boxes",
+    matchKeys: ["rigid box", "rigid boxes", "setup box", "setup boxes"],
+  },
+  {
+    slug: "droppers-vials",
+    name: "Dropper Assemblies, Vials & Roll-Ons",
+    matchKeys: ["dropper", "droppers", "vial", "vials", "droppers-vials"],
+  },
   { slug: "aerosols", name: "Aerosol Cans", matchKeys: ["aerosol", "aerosols"] },
-  { slug: "mailers", name: "Mailers & E-Commerce Shipping", matchKeys: ["mailer", "mailers", "envelope", "envelopes", "mailers"] },
-  { slug: "cr-cannabis", name: "Child-Resistant & Cannabis Specialty Packaging", matchKeys: ["cannabis", "cr-cannabis", "dispensary"] },
-  { slug: "compostables", name: "Compostables & Sustainable Structures", matchKeys: ["compostable", "compostables", "eco"] },
-  { slug: "brand-accessories", name: "Branding Accessories: Hang Tags, Stickers, Tissue & Tape", matchKeys: ["accessory", "accessories", "tissue", "tape", "ribbon", "hang tag", "hang tags", "brand-accessories"] },
+  {
+    slug: "mailers",
+    name: "Mailers & E-Commerce Shipping",
+    matchKeys: ["mailer", "mailers", "envelope", "envelopes", "mailers"],
+  },
+  {
+    slug: "cr-cannabis",
+    name: "Child-Resistant & Cannabis Specialty Packaging",
+    matchKeys: ["cannabis", "cr-cannabis", "dispensary"],
+  },
+  {
+    slug: "compostables",
+    name: "Compostables & Sustainable Structures",
+    matchKeys: ["compostable", "compostables", "eco"],
+  },
+  {
+    slug: "brand-accessories",
+    name: "Branding Accessories: Hang Tags, Stickers, Tissue & Tape",
+    matchKeys: [
+      "accessory",
+      "accessories",
+      "tissue",
+      "tape",
+      "ribbon",
+      "hang tag",
+      "hang tags",
+      "brand-accessories",
+    ],
+  },
 ];
 
 // ─── Popular entry tiles ─────────────────────────────────────────────────────

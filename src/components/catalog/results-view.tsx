@@ -4,7 +4,12 @@ import { FilterRail } from "./filter-rail";
 import { ProductCard } from "./product-card";
 import { SearchForm } from "./search-form";
 import { SortBar } from "./sort-bar";
-import { applyFilters, computeFacets, sortProducts, type ResultsFilters } from "@/lib/catalog/filters";
+import {
+  applyFilters,
+  computeFacets,
+  sortProducts,
+  type ResultsFilters,
+} from "@/lib/catalog/filters";
 import type { ResolvedQuery } from "@/lib/catalog/aliases";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -25,6 +30,22 @@ export function ResultsView({
   const filtered = applyFilters(allProducts, filters, resolved);
   const products = sortProducts(filtered, filters.sort);
   const facets = computeFacets(allProducts, filters, resolved);
+  // Featured partner band: up to three matching partner listings above the
+  // grid. The grid itself keeps the visitor's chosen sort, untouched.
+  // Varied on purpose: one per product type before repeating a type.
+  const partnerAll = products.filter((p) => p.supplier.isPartner);
+  const seenTypes = new Set<string>();
+  const partnerPicks = [
+    ...partnerAll.filter((p) => {
+      const type = p.subcategory ?? p.categorySlug;
+      if (seenTypes.has(type)) return false;
+      seenTypes.add(type);
+      return true;
+    }),
+    ...partnerAll,
+  ]
+    .filter((p, i, list) => list.findIndex((q) => q.id === p.id) === i)
+    .slice(0, 3);
   const activeCount = [
     filters.maxMoq,
     filters.priceType,
@@ -36,7 +57,7 @@ export function ResultsView({
     filters.cert,
   ].filter((value) => value !== null).length;
   const categoryName = filters.category
-    ? allProducts.find((p) => p.categorySlug === filters.category)?.categoryName ?? null
+    ? (allProducts.find((p) => p.categorySlug === filters.category)?.categoryName ?? null)
     : null;
   const heading = filters.q ? `Packaging for “${filters.q}”` : (categoryName ?? "All packaging");
 
@@ -66,7 +87,8 @@ export function ResultsView({
             </h1>
             {resolved ? (
               <p data-testid="search-mapping" className="mt-3 text-sm text-on-dark-muted">
-                Matching {resolved.categorySlugs.length} {resolved.categorySlugs.length === 1 ? "category" : "categories"}
+                Matching {resolved.categorySlugs.length}{" "}
+                {resolved.categorySlugs.length === 1 ? "category" : "categories"}
                 {resolved.matchedTerms.length > 0 ? ` — ${resolved.matchedTerms.join(", ")}` : ""}.
               </p>
             ) : null}
@@ -107,6 +129,31 @@ export function ResultsView({
               <SortBar filters={filters} />
             </div>
 
+            {partnerPicks.length > 0 ? (
+              <div
+                data-testid="partner-band"
+                className="mt-8 border border-orange/40 bg-orange-tint p-5"
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <p className="tag flex items-center gap-2 text-orange-ink">
+                    <span aria-hidden className="h-[9px] w-[9px] bg-orange" />
+                    From our featured partner · {partnerPicks[0].supplier.name}
+                  </p>
+                  <Link
+                    href={`/suppliers/${partnerPicks[0].supplier.slug}`}
+                    className="text-xs text-ink underline decoration-orange underline-offset-4 hover:text-orange-ink"
+                  >
+                    See all their packaging
+                  </Link>
+                </div>
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {partnerPicks.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             {products.length > 0 ? (
               <div
                 data-testid="results-grid"
@@ -118,11 +165,16 @@ export function ResultsView({
               </div>
             ) : (
               <div data-testid="results-empty" className="mt-8 bg-well px-8 py-16 text-center">
-                <p className="font-semiwide text-2xl font-light text-ink">Nothing matches these filters yet.</p>
+                <p className="font-semiwide text-2xl font-light text-ink">
+                  Nothing matches these filters yet.
+                </p>
                 <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
                   We only list what we have verified — no invented filler. Clear a filter or browse
                   the{" "}
-                  <Link href="/results" className="text-ink underline decoration-orange underline-offset-4">
+                  <Link
+                    href="/results"
+                    className="text-ink underline decoration-orange underline-offset-4"
+                  >
                     full catalog
                   </Link>
                   .

@@ -53,7 +53,15 @@ export function ProductCard({ product }: { product: ProductVM }) {
               No image available
             </div>
           )}
-          <span className="tag absolute left-4 top-4 max-w-[70%] truncate text-ink-muted">
+          {product.supplier.isPartner ? (
+            <span className="tag absolute left-3 top-3 z-10 flex items-center gap-1.5 bg-orange px-2 py-1.5 text-white">
+              <span aria-hidden className="h-1.5 w-1.5 bg-white" />
+              Featured partner
+            </span>
+          ) : null}
+          <span
+            className={`tag absolute left-4 max-w-[70%] truncate text-ink-muted ${product.supplier.isPartner ? "top-12" : "top-4"}`}
+          >
             {product.categoryName}
           </span>
           <span

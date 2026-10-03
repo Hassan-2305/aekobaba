@@ -29,15 +29,30 @@
       "description": null,
       "parentSlug": null
     },
-    { "slug": "tubs-pails", "name": "Tubs, Cups & Pails", "description": null, "parentSlug": null },
+    {
+      "slug": "tubs-pails",
+      "name": "Tubs, Cups & Pails",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "folding-cartons",
       "name": "Folding Cartons",
       "description": null,
       "parentSlug": null
     },
-    { "slug": "labels", "name": "Labels", "description": null, "parentSlug": null },
-    { "slug": "closures", "name": "Closures", "description": null, "parentSlug": null },
+    {
+      "slug": "labels",
+      "name": "Labels",
+      "description": null,
+      "parentSlug": null
+    },
+    {
+      "slug": "closures",
+      "name": "Closures",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "pumps-sprayers",
       "name": "Pumps, Sprayers & Airless Dispensers",
@@ -56,7 +71,12 @@
       "description": "Stock glass starts at zero MOQ from US distributors and ~5,000–10,000 units from import programs; custom glass is tooling-driven.",
       "parentSlug": null
     },
-    { "slug": "glass-jars", "name": "Glass Jars", "description": null, "parentSlug": null },
+    {
+      "slug": "glass-jars",
+      "name": "Glass Jars",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "collapsible-tubes",
       "name": "Collapsible Tubes",
@@ -69,7 +89,12 @@
       "description": null,
       "parentSlug": null
     },
-    { "slug": "metal-tins", "name": "Metal Tins", "description": null, "parentSlug": null },
+    {
+      "slug": "metal-tins",
+      "name": "Metal Tins",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "sachets-stick-packs",
       "name": "Sachets & Stick Packs",
@@ -82,21 +107,36 @@
       "description": null,
       "parentSlug": null
     },
-    { "slug": "shrink-sleeves", "name": "Shrink Sleeves", "description": null, "parentSlug": null },
+    {
+      "slug": "shrink-sleeves",
+      "name": "Shrink Sleeves",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "thermoforms",
       "name": "Blister Packs, Clamshells & Thermoform Trays",
       "description": null,
       "parentSlug": null
     },
-    { "slug": "setup-boxes", "name": "Rigid Setup Boxes", "description": null, "parentSlug": null },
+    {
+      "slug": "setup-boxes",
+      "name": "Rigid Setup Boxes",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "droppers-vials",
       "name": "Dropper Assemblies, Vials & Roll-Ons",
       "description": null,
       "parentSlug": null
     },
-    { "slug": "aerosols", "name": "Aerosol Cans", "description": null, "parentSlug": null },
+    {
+      "slug": "aerosols",
+      "name": "Aerosol Cans",
+      "description": null,
+      "parentSlug": null
+    },
     {
       "slug": "mailers",
       "name": "Mailers & E-Commerce Shipping",
@@ -123,6 +163,217 @@
     }
   ],
   "suppliers": [
+    {
+      "slug": "berlin-packaging",
+      "name": "Berlin Packaging",
+      "website": "https://www.berlinpackaging.com",
+      "location": "US (Chicago, IL); 100+ locations worldwide",
+      "legalIdentity": null,
+      "status": "LISTED",
+      "isPartner": true,
+      "sourceUrl": "https://www.berlinpackaging.com/",
+      "sourceCapturedAt": "2026-10-02",
+      "review": {
+        "score": 4.4,
+        "count": 4779,
+        "platform": "Trustpilot",
+        "sourceUrl": "https://www.trustpilot.com/review/berlinpackaging.com",
+        "sourceCapturedAt": "2026-10-02"
+      },
+      "certifications": [],
+      "products": [
+        {
+          "title": "8 oz Clear PET Plastic Honey Bear Bottles (Cap Not Included) — 3351B09-B",
+          "description": "Verbatim (2026-10-02): \"Your VIP Price: $ 0.53\" (each). \"8 oz Clear PET Plastic Honey Bear Bottles (12 oz honey weight)\"; \"Cap Size: 38-400 (sold separately)\"; \"FDA Food Contact Compliant, BPA NI*\". Front and back label panels.",
+          "material": "Clear PET plastic",
+          "categorySlug": "plastic-bottles",
+          "subcategory": "Honey bear bottle",
+          "priceType": "EXACT",
+          "basePrice": 0.53,
+          "priceBasis": "per bottle (USD), cap sold separately",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/3351b09-b-8-oz-clear-pet-plastic-honey-bear-bottles-cap-not-included/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "8 oz Clear PET Plastic Honey Bear Bottles (Yellow Flip Top Cap) — 3351B09",
+          "description": "Verbatim (2026-10-02): \"Your VIP Price: $ 1.25\" (each). \"Includes a Yellow PP Plastic Flip-Top Cap with Foam Liner\"; 8 fl oz (12 oz honey weight); front/back label panels; \"Bulk pricing is not available for this item.\"",
+          "material": "Clear PET plastic, PP flip-top cap",
+          "categorySlug": "plastic-bottles",
+          "subcategory": "Honey bear bottle",
+          "priceType": "EXACT",
+          "basePrice": 1.25,
+          "priceBasis": "per bottle with cap (USD)",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/3351b09-8-oz-clear-pet-plastic-honey-bear-bottles-yellow-flip-top-cap/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "8 oz Clear PET Plastic Honey Bear Bottles (Flip-Top Cap) — 33512",
+          "description": "Verbatim (2026-10-02): \"Your VIP Price: $ 1.37\" (each). \"Includes Yellow PP Flip-Top Cap\" with foam liner; flat label panel front and back; \"Bulk pricing available.\"",
+          "material": "Clear PET plastic, PP flip-top cap",
+          "categorySlug": "plastic-bottles",
+          "subcategory": "Honey bear bottle",
+          "priceType": "EXACT",
+          "basePrice": 1.37,
+          "priceBasis": "per bottle with cap (USD)",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/33512-8-oz-clear-pet-plastic-honey-bear-bottles-flip-top-cap/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "4 oz Clear PET Plastic Wide Mouth Packer Bottles (Cap Not Included) — 343936",
+          "description": "Verbatim (2026-10-02): listed at \"$0.42 Each\" on the PET Plastic Wide Mouth Packer Bottles page. Wide-mouth packer bottle for tablets, vitamins, powders; caps sold separately.",
+          "material": "Clear PET plastic",
+          "categorySlug": "plastic-bottles",
+          "subcategory": "Packer bottle",
+          "priceType": "EXACT",
+          "basePrice": 0.42,
+          "priceBasis": "per bottle (USD), cap sold separately",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/pet-plastic-wide-mouth-packer-bottles/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "16 oz Clear PET Plastic Spice Jars (Black Cap) — 2310B07BLK",
+          "description": "Verbatim (2026-10-02): listed at \"$2.43 Each\" on the 16 oz Clear PET Plastic Spice Jars page (2310B07WHT). Cap included; PP spice cap.",
+          "material": "Clear PET plastic, PP cap",
+          "categorySlug": "plastic-jars",
+          "subcategory": "Spice jar",
+          "priceType": "EXACT",
+          "basePrice": 2.43,
+          "priceBasis": "per jar with cap (USD)",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/2310b07wht-16-oz-clear-pet-plastic-spice-jars-white-cap/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "8 oz Clear PET Spice Jars (White Cap) — 2310B05WHT",
+          "description": "Verbatim (2026-10-02): listed at \"$1.68 Each\" on the 16 oz Clear PET Plastic Spice Jars page. Product page: \"8.4 oz. Clear PET Spice Jar\", \"Sifter Fitment\", \"White cap for spice jars\"; cap included.",
+          "material": "Clear PET plastic, PP cap with sifter",
+          "categorySlug": "plastic-jars",
+          "subcategory": "Spice jar",
+          "priceType": "EXACT",
+          "basePrice": 1.68,
+          "priceBasis": "per jar with cap (USD)",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/2310b05wht-8-4-oz-clear-pet-spice-jars-white-cap/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "4 oz Clear PET Plastic Spice Jar (Red Cap) — 322420-B",
+          "description": "Verbatim (2026-10-02): listed at \"$0.63 Each\" on the 4 oz Clear PET Plastic Spice Jar (Black Cap) page. \"Our clear PET jars have transparent convenience, with additional properties to preserve the robustness of dry spices, particularly those with high oil content.\"",
+          "material": "Clear PET plastic, PP cap",
+          "categorySlug": "plastic-jars",
+          "subcategory": "Spice jar",
+          "priceType": "EXACT",
+          "basePrice": 0.63,
+          "priceBasis": "per jar with cap (USD)",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/4-oz-clear-pet-plastic-spice-jar-black-cap-322420-k/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "16 oz Clear PET Plastic General Purpose Jars (Caps Sold Separately) — 34317-B",
+          "description": "Verbatim (2026-10-02): listed at \"$0.88 Each\" on the 128 oz Clear PET Plastic Wide Mouth Jars page. General purpose wide-mouth jar; caps sold separately.",
+          "material": "Clear PET plastic",
+          "categorySlug": "plastic-jars",
+          "subcategory": "Wide-mouth jar",
+          "priceType": "EXACT",
+          "basePrice": 0.88,
+          "priceBasis": "per jar (USD), cap sold separately",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/128-oz-clear-pet-plastic-wide-mouth-jars-cap-sold-separately-34398-b/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "8 oz White HDPE Plastic Wide Mouth Jars (Cap Not Included) — 3301B08-B",
+          "description": "Verbatim (2026-10-02): listed at \"$0.73 Each\" on the 128 oz Clear PET Plastic Wide Mouth Jars page. Caps not included.",
+          "material": "White HDPE plastic",
+          "categorySlug": "plastic-jars",
+          "subcategory": "Wide-mouth jar",
+          "priceType": "EXACT",
+          "basePrice": 0.73,
+          "priceBasis": "per jar (USD), cap sold separately",
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/128-oz-clear-pet-plastic-wide-mouth-jars-cap-sold-separately-34398-b/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        },
+        {
+          "title": "3.5 oz 100% PCR Aluminum Packer Bottle — 38-400 Cap Size — 337048",
+          "description": "Verbatim (2026-10-02): \"100% PCR (post consumer recycled) aluminum\"; \"Cap size: 38-400 (sold separately)\"; \"Developed primarily for the nutraceutical and pharmaceutical industries\"; ~1.77 in diameter x 3.74 in height. No price shown in the captured page text.",
+          "material": "Aluminum (100% post-consumer recycled)",
+          "categorySlug": "metal-cans",
+          "subcategory": "Packer bottle",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://www.berlinpackaging.com/3-5-oz-38-400-100-pct-pcr-aluminum-packer-bottle-337048/",
+          "sourceCapturedAt": "2026-10-02",
+          "quantityBreaks": []
+        }
+      ]
+    },
     {
       "slug": "epackage-supply",
       "name": "ePackageSupply",
@@ -310,11 +561,31 @@
           "sourceUrl": "https://www.specialtybottle.com/glass-bottles/amber-boston-rounds/4oz-bra4",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 1, "maxQty": 127, "unitPrice": 0.65 },
-            { "minQty": 128, "maxQty": 999, "unitPrice": 0.62 },
-            { "minQty": 1000, "maxQty": 4999, "unitPrice": 0.56 },
-            { "minQty": 5000, "maxQty": 9999, "unitPrice": 0.51 },
-            { "minQty": 10000, "maxQty": 25000, "unitPrice": 0.44 }
+            {
+              "minQty": 1,
+              "maxQty": 127,
+              "unitPrice": 0.65
+            },
+            {
+              "minQty": 128,
+              "maxQty": 999,
+              "unitPrice": 0.62
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 4999,
+              "unitPrice": 0.56
+            },
+            {
+              "minQty": 5000,
+              "maxQty": 9999,
+              "unitPrice": 0.51
+            },
+            {
+              "minQty": 10000,
+              "maxQty": 25000,
+              "unitPrice": 0.44
+            }
           ]
         },
         {
@@ -335,11 +606,31 @@
           "sourceUrl": "https://www.specialtybottle.com/glass-bottles/amber-boston-rounds/silver-caps/4oz-bra4s",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 1, "maxQty": 127, "unitPrice": 0.69 },
-            { "minQty": 128, "maxQty": 999, "unitPrice": 0.64 },
-            { "minQty": 1000, "maxQty": 4999, "unitPrice": 0.58 },
-            { "minQty": 5000, "maxQty": 9999, "unitPrice": 0.52 },
-            { "minQty": 10000, "maxQty": 25000, "unitPrice": 0.46 }
+            {
+              "minQty": 1,
+              "maxQty": 127,
+              "unitPrice": 0.69
+            },
+            {
+              "minQty": 128,
+              "maxQty": 999,
+              "unitPrice": 0.64
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 4999,
+              "unitPrice": 0.58
+            },
+            {
+              "minQty": 5000,
+              "maxQty": 9999,
+              "unitPrice": 0.52
+            },
+            {
+              "minQty": 10000,
+              "maxQty": 25000,
+              "unitPrice": 0.46
+            }
           ]
         },
         {
@@ -360,10 +651,26 @@
           "sourceUrl": "https://www.specialtybottle.com/glass-bottles/amber-boston-rounds/4oz-bra4",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 1, "maxQty": 191, "unitPrice": 1.7 },
-            { "minQty": 192, "maxQty": 999, "unitPrice": 1.47 },
-            { "minQty": 1000, "maxQty": 4999, "unitPrice": 0.98 },
-            { "minQty": 5000, "maxQty": 10000, "unitPrice": 0.87 }
+            {
+              "minQty": 1,
+              "maxQty": 191,
+              "unitPrice": 1.7
+            },
+            {
+              "minQty": 192,
+              "maxQty": 999,
+              "unitPrice": 1.47
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 4999,
+              "unitPrice": 0.98
+            },
+            {
+              "minQty": 5000,
+              "maxQty": 10000,
+              "unitPrice": 0.87
+            }
           ]
         }
       ]
@@ -952,11 +1259,31 @@
           "sourceUrl": "https://www.davpack.co.uk/cardboard-boxes/double-wall/brown-dw.htm",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 1, "maxQty": 4, "unitPrice": 12.12 },
-            { "minQty": 5, "maxQty": 9, "unitPrice": 10.91 },
-            { "minQty": 10, "maxQty": 24, "unitPrice": 10.3 },
-            { "minQty": 25, "maxQty": 49, "unitPrice": 9.09 },
-            { "minQty": 50, "maxQty": null, "unitPrice": 7.88 }
+            {
+              "minQty": 1,
+              "maxQty": 4,
+              "unitPrice": 12.12
+            },
+            {
+              "minQty": 5,
+              "maxQty": 9,
+              "unitPrice": 10.91
+            },
+            {
+              "minQty": 10,
+              "maxQty": 24,
+              "unitPrice": 10.3
+            },
+            {
+              "minQty": 25,
+              "maxQty": 49,
+              "unitPrice": 9.09
+            },
+            {
+              "minQty": 50,
+              "maxQty": null,
+              "unitPrice": 7.88
+            }
           ]
         },
         {
@@ -976,8 +1303,16 @@
           "sourceUrl": "https://www.davpack.co.uk/cardboard-boxes/double-wall/brown-dw.htm",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 1, "maxQty": 4, "unitPrice": 24.66 },
-            { "minQty": 50, "maxQty": null, "unitPrice": 16.03 }
+            {
+              "minQty": 1,
+              "maxQty": 4,
+              "unitPrice": 24.66
+            },
+            {
+              "minQty": 50,
+              "maxQty": null,
+              "unitPrice": 16.03
+            }
           ]
         }
       ]
@@ -1387,13 +1722,41 @@
           "sourceUrl": "https://www.verpacking.com/dhl-versandkarton__Maxibriefkarton_1",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 50, "maxQty": 99, "unitPrice": 0.33 },
-            { "minQty": 100, "maxQty": 399, "unitPrice": 0.19 },
-            { "minQty": 400, "maxQty": 3999, "unitPrice": 0.15 },
-            { "minQty": 4000, "maxQty": 10399, "unitPrice": 0.13 },
-            { "minQty": 10400, "maxQty": 51999, "unitPrice": 0.11 },
-            { "minQty": 52000, "maxQty": 103999, "unitPrice": 0.1 },
-            { "minQty": 104000, "maxQty": null, "unitPrice": 0.08 }
+            {
+              "minQty": 50,
+              "maxQty": 99,
+              "unitPrice": 0.33
+            },
+            {
+              "minQty": 100,
+              "maxQty": 399,
+              "unitPrice": 0.19
+            },
+            {
+              "minQty": 400,
+              "maxQty": 3999,
+              "unitPrice": 0.15
+            },
+            {
+              "minQty": 4000,
+              "maxQty": 10399,
+              "unitPrice": 0.13
+            },
+            {
+              "minQty": 10400,
+              "maxQty": 51999,
+              "unitPrice": 0.11
+            },
+            {
+              "minQty": 52000,
+              "maxQty": 103999,
+              "unitPrice": 0.1
+            },
+            {
+              "minQty": 104000,
+              "maxQty": null,
+              "unitPrice": 0.08
+            }
           ]
         },
         {
@@ -1480,10 +1843,26 @@
           "sourceUrl": "https://maruthiplastics.in/onlineproducts/brown-kraft-paper-stand-up-pouch-inner-foil-lined",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 100, "maxQty": 400, "unitPrice": 4.01 },
-            { "minQty": 500, "maxQty": 900, "unitPrice": 3.16 },
-            { "minQty": 1000, "maxQty": 4900, "unitPrice": 2.96 },
-            { "minQty": 5000, "maxQty": null, "unitPrice": 2.83 }
+            {
+              "minQty": 100,
+              "maxQty": 400,
+              "unitPrice": 4.01
+            },
+            {
+              "minQty": 500,
+              "maxQty": 900,
+              "unitPrice": 3.16
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 4900,
+              "unitPrice": 2.96
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 2.83
+            }
           ]
         },
         {
@@ -1504,10 +1883,26 @@
           "sourceUrl": "https://maruthiplastics.in/onlineproducts/matt-gold-standup-pouch-with-zipper-",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 100, "maxQty": 400, "unitPrice": 5.34 },
-            { "minQty": 500, "maxQty": 900, "unitPrice": 4.44 },
-            { "minQty": 1000, "maxQty": 4900, "unitPrice": 4.28 },
-            { "minQty": 5000, "maxQty": null, "unitPrice": 4.05 }
+            {
+              "minQty": 100,
+              "maxQty": 400,
+              "unitPrice": 5.34
+            },
+            {
+              "minQty": 500,
+              "maxQty": 900,
+              "unitPrice": 4.44
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 4900,
+              "unitPrice": 4.28
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 4.05
+            }
           ]
         },
         {
@@ -1527,10 +1922,26 @@
           "sourceUrl": "https://maruthiplastics.in/onlineproducts/all-sizes-of-corrugated-box",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 100, "maxQty": 400, "unitPrice": 6.57 },
-            { "minQty": 500, "maxQty": 900, "unitPrice": 6.53 },
-            { "minQty": 1000, "maxQty": 4900, "unitPrice": 6.24 },
-            { "minQty": 5000, "maxQty": null, "unitPrice": 6.18 }
+            {
+              "minQty": 100,
+              "maxQty": 400,
+              "unitPrice": 6.57
+            },
+            {
+              "minQty": 500,
+              "maxQty": 900,
+              "unitPrice": 6.53
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 4900,
+              "unitPrice": 6.24
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 6.18
+            }
           ]
         }
       ]
@@ -1635,8 +2046,16 @@
           "sourceUrl": "https://www.yunfengpackaging.com/custom-coffee-bag/63399169.html",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
-            { "minQty": 1000, "maxQty": 9999, "unitPrice": 0.21 },
-            { "minQty": 10000, "maxQty": null, "unitPrice": 0.05 }
+            {
+              "minQty": 1000,
+              "maxQty": 9999,
+              "unitPrice": 0.21
+            },
+            {
+              "minQty": 10000,
+              "maxQty": null,
+              "unitPrice": 0.05
+            }
           ]
         },
         {
@@ -1821,26 +2240,6 @@
           "quantityBreaks": []
         }
       ]
-    },
-    {
-      "slug": "berlin-packaging",
-      "name": "Berlin Packaging",
-      "website": "https://www.berlinpackaging.com",
-      "location": "US",
-      "legalIdentity": null,
-      "status": "QUOTE_ONLY",
-      "isPartner": false,
-      "sourceUrl": "https://www.berlinpackaging.com",
-      "sourceCapturedAt": "2026-09-18",
-      "review": {
-        "score": 4.5,
-        "count": 4401,
-        "platform": "Trustpilot",
-        "sourceUrl": "https://www.trustpilot.com/review/berlinpackaging.com",
-        "sourceCapturedAt": "2026-09-18"
-      },
-      "certifications": [],
-      "products": []
     },
     {
       "slug": "tricorbraun",
@@ -2126,7 +2525,11 @@
           "sourceUrl": "https://glorytins.com",
           "sourceCapturedAt": "2026-09-18"
         },
-        { "name": "SEDEX", "sourceUrl": "https://glorytins.com", "sourceCapturedAt": "2026-09-18" }
+        {
+          "name": "SEDEX",
+          "sourceUrl": "https://glorytins.com",
+          "sourceCapturedAt": "2026-09-18"
+        }
       ],
       "products": []
     },

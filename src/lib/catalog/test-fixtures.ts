@@ -69,6 +69,7 @@ export function makeProduct(overrides: FixtureOverrides = {}): ProductVM {
       reviewCount: overrides.reviewCount ?? 214,
       reviewPlatform: overrides.reviewScore === null ? null : "Trustpilot",
       legalIdentity: null,
+      isPartner: false,
     },
     certificationNames: overrides.cert === undefined ? ["FSC"] : overrides.cert ? [overrides.cert] : [],
   };
