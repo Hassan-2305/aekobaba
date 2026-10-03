@@ -118,7 +118,14 @@ async function upsertProduct(
   // assigned by the deterministic category mapping (the stable per-category
   // index rotates variants). Replace per product like the breaks — re-runs
   // never duplicate Image rows.
-  const imageRows = productImageRows(product, nextImageIndex(product.categorySlug));
+  // Supplier-provided photography wins; otherwise the representative views.
+  const imageRows = product.images?.length
+    ? product.images.map((image, sortOrder) => ({
+        url: image.url,
+        alt: `${image.alt} — ${image.credit}`,
+        sortOrder,
+      }))
+    : productImageRows(product, nextImageIndex(product.categorySlug));
   await writeProductImages(tx, saved.id, imageRows);
   counts.images += imageRows.length;
   return product.quantityBreaks.length;

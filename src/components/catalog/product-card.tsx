@@ -8,7 +8,7 @@ import { PriceTagInline } from "./price-display";
 import { ProvenanceLine } from "./provenance-line";
 import { ReviewScore } from "./review-score";
 import { TierBadge } from "./tier-badge";
-import { ProductPicture } from "@/components/catalog/product-picture";
+import { isRepresentativeImage, ProductPicture } from "@/components/catalog/product-picture";
 
 // Catalog object — the results-grid card. The packshot sits in a warm image
 // well (multiplied so the studio backdrop dissolves into it), labelled with
@@ -23,8 +23,10 @@ export function ProductCard({ product }: { product: ProductVM }) {
   const image = product.primaryImage;
   // The "representative" label is a hard requirement: generated packshots are
   // illustrative, never supplier photography (spec honesty rule).
-  const imageAlt = image?.alt
-    ? `${image.alt} — representative image`
+  const imageAlt = image
+    ? isRepresentativeImage(image.url)
+      ? `${image.alt ?? product.title} — representative image`
+      : (image.alt ?? product.title)
     : `Representative image of ${product.title}`;
   const tags = productTags(product, 2);
 
