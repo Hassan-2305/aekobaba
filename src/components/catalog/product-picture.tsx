@@ -10,8 +10,17 @@ import Image from "next/image";
 // Images without a cut-out (e.g. future supplier photography) render as-is.
 
 export function cutoutFor(src: string): string | null {
-  const match = /^\/products\/([a-z0-9-]+)\.png$/.exec(src);
-  return match ? `/products/cutouts/${match[1]}.webp` : null;
+  const packshot = /^\/products\/([a-z0-9-]+)\.png$/.exec(src);
+  if (packshot) return `/products/cutouts/${packshot[1]}.webp`;
+  // Partner photography keeps a cut-out beside it: /partners/<slug>/cutouts/<file>.webp
+  const partner = /^\/partners\/([a-z0-9-]+)\/([A-Za-z0-9._-]+)\.(webp|jpg|png)$/.exec(src);
+  if (partner) return `/partners/${partner[1]}/cutouts/${partner[2]}.webp`;
+  return null;
+}
+
+/** Representative (generated) imagery vs real supplier photography. */
+export function isRepresentativeImage(src: string): boolean {
+  return !src.startsWith("/partners/");
 }
 
 export function ProductPicture({

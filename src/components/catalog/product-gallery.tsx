@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { cutoutFor, ProductPicture } from "./product-picture";
+import { cutoutFor, isRepresentativeImage, ProductPicture } from "./product-picture";
 import type { ProductImageVM } from "@/lib/catalog/view-models";
 
 // Product gallery (spec art_AjaTUf9x): renders the product's actual Image
@@ -194,13 +194,20 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
         </div>
       ) : null}
 
-      <figcaption
-        data-testid="representative-image-caption"
-        className="mt-3 text-xs text-ink-faint"
-      >
-        Representative image — generated illustration, not a photo of the supplier&rsquo;s actual
-        stock. Ask the supplier for production photos or a sample.
-      </figcaption>
+      {isRepresentativeImage(current.url) ? (
+        <figcaption
+          data-testid="representative-image-caption"
+          className="mt-3 text-xs text-ink-faint"
+        >
+          Representative image — generated illustration, not a photo of the supplier&rsquo;s actual
+          stock. Ask the supplier for production photos or a sample.
+        </figcaption>
+      ) : (
+        <figcaption data-testid="supplier-photo-caption" className="mt-3 text-xs text-ink-faint">
+          Supplier product photo
+          {current.alt?.includes(" — ") ? ` · ${current.alt.split(" — ").pop()}` : ""}.
+        </figcaption>
+      )}
     </figure>
   );
 }

@@ -172,24 +172,24 @@
       "status": "LISTED",
       "isPartner": true,
       "sourceUrl": "https://www.berlinpackaging.com/",
-      "sourceCapturedAt": "2026-10-02",
+      "sourceCapturedAt": "2026-10-03",
       "review": {
         "score": 4.4,
         "count": 4779,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/berlinpackaging.com",
-        "sourceCapturedAt": "2026-10-02"
+        "sourceCapturedAt": "2026-10-03"
       },
       "certifications": [],
       "products": [
         {
           "title": "8 oz Clear PET Plastic Honey Bear Bottles (Cap Not Included) — 3351B09-B",
-          "description": "Verbatim (2026-10-02): \"Your VIP Price: $ 0.53\" (each). \"8 oz Clear PET Plastic Honey Bear Bottles (12 oz honey weight)\"; \"Cap Size: 38-400 (sold separately)\"; \"FDA Food Contact Compliant, BPA NI*\". Front and back label panels.",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 0.6\" (each). \"Cap Size: 38-400 (sold separately)\"; \"FDA Food Contact Compliant\"; \"BPA NI*\"; front and back label panels; holds 8 fl oz (12 honey-weight oz). \"Bulk pricing is not available for this item.\"",
           "material": "Clear PET plastic",
           "categorySlug": "plastic-bottles",
           "subcategory": "Honey bear bottle",
           "priceType": "EXACT",
-          "basePrice": 0.53,
+          "basePrice": 0.6,
           "priceBasis": "per bottle (USD), cap sold separately",
           "priceUnit": null,
           "moq": null,
@@ -198,17 +198,24 @@
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.berlinpackaging.com/3351b09-b-8-oz-clear-pet-plastic-honey-bear-bottles-cap-not-included/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/3351B09-B.webp",
+              "alt": "8 oz clear PET honey bear bottle, no cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
           "title": "8 oz Clear PET Plastic Honey Bear Bottles (Yellow Flip Top Cap) — 3351B09",
-          "description": "Verbatim (2026-10-02): \"Your VIP Price: $ 1.25\" (each). \"Includes a Yellow PP Plastic Flip-Top Cap with Foam Liner\"; 8 fl oz (12 oz honey weight); front/back label panels; \"Bulk pricing is not available for this item.\"",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 1.38\" (each). Includes a yellow PP flip-top cap with foam liner; 8 fl oz (12 honey-weight oz); front/back label panels.",
           "material": "Clear PET plastic, PP flip-top cap",
           "categorySlug": "plastic-bottles",
           "subcategory": "Honey bear bottle",
           "priceType": "EXACT",
-          "basePrice": 1.25,
+          "basePrice": 1.38,
           "priceBasis": "per bottle with cap (USD)",
           "priceUnit": null,
           "moq": null,
@@ -217,17 +224,24 @@
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.berlinpackaging.com/3351b09-8-oz-clear-pet-plastic-honey-bear-bottles-yellow-flip-top-cap/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/3351B09.webp",
+              "alt": "8 oz clear PET honey bear bottle with yellow flip-top cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
           "title": "8 oz Clear PET Plastic Honey Bear Bottles (Flip-Top Cap) — 33512",
-          "description": "Verbatim (2026-10-02): \"Your VIP Price: $ 1.37\" (each). \"Includes Yellow PP Flip-Top Cap\" with foam liner; flat label panel front and back; \"Bulk pricing available.\"",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 1.61\" (each). Includes yellow PP low-profile flip-top cap with foam liner; flat label panel front and back; bulk pricing available on request.",
           "material": "Clear PET plastic, PP flip-top cap",
           "categorySlug": "plastic-bottles",
           "subcategory": "Honey bear bottle",
           "priceType": "EXACT",
-          "basePrice": 1.37,
+          "basePrice": 1.61,
           "priceBasis": "per bottle with cap (USD)",
           "priceUnit": null,
           "moq": null,
@@ -236,17 +250,24 @@
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.berlinpackaging.com/33512-8-oz-clear-pet-plastic-honey-bear-bottles-flip-top-cap/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/33512.webp",
+              "alt": "8 oz clear PET honey bear bottle with flip-top cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
-          "title": "4 oz Clear PET Plastic Wide Mouth Packer Bottles (Cap Not Included) — 343936",
-          "description": "Verbatim (2026-10-02): listed at \"$0.42 Each\" on the PET Plastic Wide Mouth Packer Bottles page. Wide-mouth packer bottle for tablets, vitamins, powders; caps sold separately.",
+          "title": "8 oz Clear PET Plastic Honey Bear Bottles (Cap Not Included) — 33512-B",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 0.65\" (each). \"Cap Size: 38-400 (sold separately)\"; lightweight, shatter-resistant PET; flat label panel front and back.",
           "material": "Clear PET plastic",
           "categorySlug": "plastic-bottles",
-          "subcategory": "Packer bottle",
+          "subcategory": "Honey bear bottle",
           "priceType": "EXACT",
-          "basePrice": 0.42,
+          "basePrice": 0.65,
           "priceBasis": "per bottle (USD), cap sold separately",
           "priceUnit": null,
           "moq": null,
@@ -254,37 +275,51 @@
           "leadTimeDays": null,
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
-          "sourceUrl": "https://www.berlinpackaging.com/pet-plastic-wide-mouth-packer-bottles/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceUrl": "https://www.berlinpackaging.com/33512-b-8-oz-clear-pet-plastic-honey-bear-bottles-cap-not-included/",
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/33512-B.webp",
+              "alt": "8 oz clear PET honey bear bottle, no cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
-          "title": "16 oz Clear PET Plastic Spice Jars (Black Cap) — 2310B07BLK",
-          "description": "Verbatim (2026-10-02): listed at \"$2.43 Each\" on the 16 oz Clear PET Plastic Spice Jars page (2310B07WHT). Cap included; PP spice cap.",
-          "material": "Clear PET plastic, PP cap",
-          "categorySlug": "plastic-jars",
-          "subcategory": "Spice jar",
+          "title": "17 oz Clear PET Plastic Honey Bear Bottles (Cap Not Included) — 324050",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 0.79\" (each). 17 fl oz honey bear; caps sold separately.",
+          "material": "Clear PET plastic",
+          "categorySlug": "plastic-bottles",
+          "subcategory": "Honey bear bottle",
           "priceType": "EXACT",
-          "basePrice": 2.43,
-          "priceBasis": "per jar with cap (USD)",
+          "basePrice": 0.79,
+          "priceBasis": "per bottle (USD), cap sold separately",
           "priceUnit": null,
           "moq": null,
           "moqUnit": null,
           "leadTimeDays": null,
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
-          "sourceUrl": "https://www.berlinpackaging.com/2310b07wht-16-oz-clear-pet-plastic-spice-jars-white-cap/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceUrl": "https://www.berlinpackaging.com/17-oz-clear-pet-plastic-honey-bear-bottles-cap-not-included-324050/",
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/324050.webp",
+              "alt": "17 oz clear PET honey bear bottle, no cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
           "title": "8 oz Clear PET Spice Jars (White Cap) — 2310B05WHT",
-          "description": "Verbatim (2026-10-02): listed at \"$1.68 Each\" on the 16 oz Clear PET Plastic Spice Jars page. Product page: \"8.4 oz. Clear PET Spice Jar\", \"Sifter Fitment\", \"White cap for spice jars\"; cap included.",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 1.97\" (each). \"8.4 oz. Clear PET Spice Jar\"; \"Sifter Fitment\"; white PP spice cap included.",
           "material": "Clear PET plastic, PP cap with sifter",
           "categorySlug": "plastic-jars",
           "subcategory": "Spice jar",
           "priceType": "EXACT",
-          "basePrice": 1.68,
+          "basePrice": 1.97,
           "priceBasis": "per jar with cap (USD)",
           "priceUnit": null,
           "moq": null,
@@ -293,17 +328,24 @@
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.berlinpackaging.com/2310b05wht-8-4-oz-clear-pet-spice-jars-white-cap/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/2310B05WHT.webp",
+              "alt": "8 oz clear PET spice jar with white sifter cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
-          "title": "4 oz Clear PET Plastic Spice Jar (Red Cap) — 322420-B",
-          "description": "Verbatim (2026-10-02): listed at \"$0.63 Each\" on the 4 oz Clear PET Plastic Spice Jar (Black Cap) page. \"Our clear PET jars have transparent convenience, with additional properties to preserve the robustness of dry spices, particularly those with high oil content.\"",
+          "title": "4 oz Clear PET Plastic Spice Jar (Black Cap) — 322420-K",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 0.74\" (each). \"Includes a Black PP Plastic Cap\". \"Our clear PET jars have transparent convenience, with additional properties to preserve the robustness of dry spices, particularly those with high oil content.\"",
           "material": "Clear PET plastic, PP cap",
           "categorySlug": "plastic-jars",
           "subcategory": "Spice jar",
           "priceType": "EXACT",
-          "basePrice": 0.63,
+          "basePrice": 0.74,
           "priceBasis": "per jar with cap (USD)",
           "priceUnit": null,
           "moq": null,
@@ -312,56 +354,51 @@
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.berlinpackaging.com/4-oz-clear-pet-plastic-spice-jar-black-cap-322420-k/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/322420-K.webp",
+              "alt": "4 oz clear PET spice jar with black cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
-          "title": "16 oz Clear PET Plastic General Purpose Jars (Caps Sold Separately) — 34317-B",
-          "description": "Verbatim (2026-10-02): listed at \"$0.88 Each\" on the 128 oz Clear PET Plastic Wide Mouth Jars page. General purpose wide-mouth jar; caps sold separately.",
-          "material": "Clear PET plastic",
+          "title": "4 oz Clear PET Plastic Spice Jar (Red Cap) — 322420-B",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 0.74\" (each). Includes a red PP plastic cap and a sifter fitment with 1/8\" holes; \"FDA Food Contact Compliant\".",
+          "material": "Clear PET plastic, PP cap with sifter",
           "categorySlug": "plastic-jars",
-          "subcategory": "Wide-mouth jar",
+          "subcategory": "Spice jar",
           "priceType": "EXACT",
-          "basePrice": 0.88,
-          "priceBasis": "per jar (USD), cap sold separately",
+          "basePrice": 0.74,
+          "priceBasis": "per jar with cap (USD)",
           "priceUnit": null,
           "moq": null,
           "moqUnit": null,
           "leadTimeDays": null,
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
-          "sourceUrl": "https://www.berlinpackaging.com/128-oz-clear-pet-plastic-wide-mouth-jars-cap-sold-separately-34398-b/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
-        },
-        {
-          "title": "8 oz White HDPE Plastic Wide Mouth Jars (Cap Not Included) — 3301B08-B",
-          "description": "Verbatim (2026-10-02): listed at \"$0.73 Each\" on the 128 oz Clear PET Plastic Wide Mouth Jars page. Caps not included.",
-          "material": "White HDPE plastic",
-          "categorySlug": "plastic-jars",
-          "subcategory": "Wide-mouth jar",
-          "priceType": "EXACT",
-          "basePrice": 0.73,
-          "priceBasis": "per jar (USD), cap sold separately",
-          "priceUnit": null,
-          "moq": null,
-          "moqUnit": null,
-          "leadTimeDays": null,
-          "stockOrCustom": "STOCK",
-          "samplePolicyVerified": false,
-          "sourceUrl": "https://www.berlinpackaging.com/128-oz-clear-pet-plastic-wide-mouth-jars-cap-sold-separately-34398-b/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceUrl": "https://www.berlinpackaging.com/4-oz-clear-pet-plastic-spice-jar-red-cap-322420-b/",
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/322420-B.webp",
+              "alt": "4 oz clear PET spice jar with red sifter cap",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         },
         {
           "title": "3.5 oz 100% PCR Aluminum Packer Bottle — 38-400 Cap Size — 337048",
-          "description": "Verbatim (2026-10-02): \"100% PCR (post consumer recycled) aluminum\"; \"Cap size: 38-400 (sold separately)\"; \"Developed primarily for the nutraceutical and pharmaceutical industries\"; ~1.77 in diameter x 3.74 in height. No price shown in the captured page text.",
+          "description": "Verbatim (2026-10-03): \"Your VIP Price: $ 0.97\" (each). \"100% PCR (post consumer recycled) aluminum\"; \"Cap size: 38-400 (sold separately)\"; \"Developed primarily for the nutraceutical and pharmaceutical industries\"; ~1.77 in diameter x 3.74 in height.",
           "material": "Aluminum (100% post-consumer recycled)",
           "categorySlug": "metal-cans",
-          "subcategory": "Packer bottle",
-          "priceType": "QUOTE_ONLY",
-          "basePrice": null,
-          "priceBasis": null,
+          "subcategory": "Aluminum packer bottle",
+          "priceType": "EXACT",
+          "basePrice": 0.97,
+          "priceBasis": "per bottle (USD), cap sold separately",
           "priceUnit": null,
           "moq": null,
           "moqUnit": null,
@@ -369,8 +406,15 @@
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.berlinpackaging.com/3-5-oz-38-400-100-pct-pcr-aluminum-packer-bottle-337048/",
-          "sourceCapturedAt": "2026-10-02",
-          "quantityBreaks": []
+          "sourceCapturedAt": "2026-10-03",
+          "quantityBreaks": [],
+          "images": [
+            {
+              "url": "/partners/berlin-packaging/337048.webp",
+              "alt": "3.5 oz 100% PCR aluminum packer bottle",
+              "credit": "Berlin Packaging product photo"
+            }
+          ]
         }
       ]
     },

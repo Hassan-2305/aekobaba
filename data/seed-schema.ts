@@ -94,6 +94,22 @@ export const productSchema = z
     samplePolicyVerified: z.boolean(),
     ...provenance,
     quantityBreaks: z.array(quantityBreakSchema),
+    /**
+     * Real product photography supplied by (or licensed from) the supplier,
+     * hosted under /partners/<slug>/. When present these are the product's
+     * Image rows and no representative packshot is written for it.
+     */
+    images: z
+      .array(
+        z.strictObject({
+          url: z
+            .string()
+            .regex(/^\/partners\/[a-z0-9-]+\/[A-Za-z0-9._-]+$/, "hosted partner image path"),
+          alt: z.string().min(1),
+          credit: z.string().min(1),
+        }),
+      )
+      .optional(),
   })
   .superRefine((product, ctx) => {
     if (product.priceType === "EXACT" && product.basePrice === null) {
