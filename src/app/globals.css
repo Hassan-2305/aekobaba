@@ -342,3 +342,43 @@ body {
   mask-clip: content-box;
   mask-repeat: no-repeat;
 }
+
+/* Packaging Stage — blueprint annotations draw in once the hero settles. */
+@keyframes stage-draw {
+  from {
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+@keyframes stage-pop {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes stage-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.stage-draw {
+  stroke-dasharray: 200;
+  animation: stage-draw 700ms ease-out both;
+}
+.stage-pop {
+  animation: stage-pop 400ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+.stage-fade {
+  animation: stage-fade 600ms ease-out both;
+}
