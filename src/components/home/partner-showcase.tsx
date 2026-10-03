@@ -400,13 +400,43 @@ export function PartnerShowcase({
               <span aria-hidden className="h-[9px] w-[9px] bg-orange" />
               Supplier spotlight
             </p>
-            <h2
-              id="partner-showcase-title"
-              className="mt-3 text-3xl font-extrabold tracking-[-0.04em] text-on-dark"
-            >
-              {profile.name}
-            </h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-on-dark-muted">{profile.tagline}</p>
+            <div className="mt-4 flex items-center gap-4">
+              {/* Partner's own mark (supplied with their photography). */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/partners/${profile.slug}/logo.svg`}
+                alt={`${profile.name} logo`}
+                width={72}
+                height={58}
+                className="h-[58px] w-auto shrink-0 shadow-[0_10px_24px_-10px_rgba(0,0,0,.6)]"
+              />
+              <div className="min-w-0">
+                <h2
+                  id="partner-showcase-title"
+                  className="text-3xl font-extrabold leading-none tracking-[-0.04em] text-on-dark"
+                >
+                  {profile.name}
+                </h2>
+                <p className="mt-2 text-xs leading-relaxed text-on-dark-muted">{profile.tagline}</p>
+              </div>
+            </div>
+            <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-on-dark-muted">
+              <span className="inline-flex items-center gap-1.5 border border-on-dark/20 px-2 py-1 text-on-dark">
+                <svg
+                  aria-hidden
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="m5 12.5 4.5 4.5L19 7.5" />
+                </svg>
+                Official Aekobaba partner
+              </span>
+              <span>Photos and prices from {profile.name}</span>
+            </p>
           </div>
 
           <div
