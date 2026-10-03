@@ -26,6 +26,9 @@ export const STATUS_RANK: Record<ProductVM["supplier"]["status"], number> = {
  */
 export function selectFeaturedProducts(products: ProductVM[], cap: number): ProductVM[] {
   const ranked = [...products].sort((a, b) => {
+    // Featured partners lead the rail (signed-up suppliers get first placement).
+    const byPartner = Number(b.supplier.isPartner) - Number(a.supplier.isPartner);
+    if (byPartner !== 0) return byPartner;
     const byStatus = STATUS_RANK[a.supplier.status] - STATUS_RANK[b.supplier.status];
     if (byStatus !== 0) return byStatus;
     const byScore = (b.supplier.reviewScore ?? -1) - (a.supplier.reviewScore ?? -1);

@@ -19,6 +19,8 @@ export interface SupplierSummaryVM {
   /** Platform the aggregate review was read from, e.g. "Trustpilot". */
   reviewPlatform: string | null;
   legalIdentity: string | null;
+  /** Featured partner (signed-up supplier): shown first and badged. */
+  isPartner: boolean;
 }
 
 export interface QuantityBreakVM {
@@ -119,6 +121,7 @@ export interface ProductWithRelations {
     reviewScore: number | null;
     reviewCount: number;
     legalIdentity: string | null;
+    isPartner?: boolean;
     reviews: { sourcePlatform: string }[];
     certifications: { name: string }[];
   };
@@ -157,10 +160,21 @@ export function materialFamily(material: string): string {
   ) {
     return "Paper & Board";
   }
-  if (m.includes("aluminum") || m.includes("aluminium") || m.includes("tin") || m.includes("steel") || m.includes("metal")) {
+  if (
+    m.includes("aluminum") ||
+    m.includes("aluminium") ||
+    m.includes("tin") ||
+    m.includes("steel") ||
+    m.includes("metal")
+  ) {
     return "Metal";
   }
-  if (m.includes("compostable") || m.includes("biodegradable") || m.includes("bagasse") || m.includes("pla")) {
+  if (
+    m.includes("compostable") ||
+    m.includes("biodegradable") ||
+    m.includes("bagasse") ||
+    m.includes("pla")
+  ) {
     return "Compostable";
   }
   // Unrecognized: the first word before any parenthetical, as published.
@@ -211,6 +225,7 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
       reviewCount: row.supplier.reviewCount,
       reviewPlatform: row.supplier.reviews[0]?.sourcePlatform ?? null,
       legalIdentity: row.supplier.legalIdentity,
+      isPartner: row.supplier.isPartner ?? false,
     },
     certificationNames: row.supplier.certifications.map((c) => c.name),
   };

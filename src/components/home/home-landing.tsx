@@ -8,6 +8,8 @@ import { categoryImageAsset } from "../../../data/image-mapping";
 import { formatCaptureDate, formatMoq, formatPriceLine } from "@/lib/catalog/format";
 import type { CategoryVM, ProductVM } from "@/lib/catalog/view-models";
 import { ExploreStrip } from "./explore-strip";
+import { PartnerShowcase } from "./partner-showcase";
+import type { PartnerProfile } from "@/lib/catalog/partners";
 import { HeroStudio } from "./hero-studio";
 
 // Home (spec C4) — the page alternates between two worlds:
@@ -26,6 +28,8 @@ import { HeroStudio } from "./hero-studio";
 
 interface HomeLandingProps {
   categories: CategoryVM[];
+  /** Lead featured partner: its profile and its listings, shown right after the hero. */
+  partner?: { profile: PartnerProfile; products: ProductVM[] } | null;
   featured: ProductVM[];
   /** Distinct suppliers with at least one listed product. */
   supplierCount?: number;
@@ -34,7 +38,7 @@ interface HomeLandingProps {
 const plural = (n: number, word: string) =>
   `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
 
-export function HomeLanding({ categories, featured, supplierCount }: HomeLandingProps) {
+export function HomeLanding({ categories, featured, supplierCount, partner }: HomeLandingProps) {
   const totalProducts = categories.reduce((sum, c) => sum + c.productCount, 0);
   const specimen =
     featured.find((p) => p.basePrice !== null && p.primaryImage) ?? featured[0] ?? null;
@@ -54,6 +58,9 @@ export function HomeLanding({ categories, featured, supplierCount }: HomeLanding
         totalProducts={totalProducts}
         supplierCount={supplierCount}
       />
+      {partner && partner.products.length > 0 ? (
+        <PartnerShowcase profile={partner.profile} products={partner.products} />
+      ) : null}
       <ExploreStrip categories={categories} />
 
       {/* ─── Dark: how it works ─────────────────────────────────────────── */}

@@ -65,6 +65,7 @@ function productVM(overrides: Partial<ProductVM> = {}): ProductVM {
       reviewCount: 214,
       reviewPlatform: "Trustpilot",
       legalIdentity: null,
+      isPartner: false,
     },
     certificationNames: ["FDA"],
     ...overrides,
@@ -103,15 +104,13 @@ describe("quote basket store", () => {
 
   it("collects products from different suppliers as separate lines", () => {
     useQuoteBasketStore.getState().addProduct(productVM());
-    useQuoteBasketStore
-      .getState()
-      .addProduct(
-        productVM({
-          id: "p_2",
-          title: "Mailer Box",
-          supplier: { ...productVM().supplier, slug: "packlane", name: "Packlane" },
-        }),
-      );
+    useQuoteBasketStore.getState().addProduct(
+      productVM({
+        id: "p_2",
+        title: "Mailer Box",
+        supplier: { ...productVM().supplier, slug: "packlane", name: "Packlane" },
+      }),
+    );
     expect(useQuoteBasketStore.getState().items).toHaveLength(2);
   });
 
@@ -133,7 +132,15 @@ describe("quote basket store", () => {
   it("persists to localStorage and a fresh store restores it (reload survival)", async () => {
     const first = useQuoteBasketStore;
     first.getState().addProduct(productVM(), 250);
-    first.getState().addProduct(productVM({ id: "p_2", moq: null, supplier: { ...productVM().supplier, slug: "packlane", name: "Packlane" } }));
+    first
+      .getState()
+      .addProduct(
+        productVM({
+          id: "p_2",
+          moq: null,
+          supplier: { ...productVM().supplier, slug: "packlane", name: "Packlane" },
+        }),
+      );
 
     const raw = localStorageStub.get(BASKET_STORAGE_KEY);
     expect(raw).toBeTruthy();

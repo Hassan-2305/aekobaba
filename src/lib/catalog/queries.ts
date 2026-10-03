@@ -1,12 +1,7 @@
 import { Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import type {
-  CategoryVM,
-  ProductVM,
-  ReviewVM,
-  SupplierDetailVM,
-} from "./view-models";
+import type { CategoryVM, ProductVM, ReviewVM, SupplierDetailVM } from "./view-models";
 import { toProductVM } from "./view-models";
 import { selectFeaturedProducts } from "./featured";
 
@@ -67,7 +62,9 @@ export const FEATURED_PRODUCT_CAP = 10;
  * Featured products for the home rail: one pass over the catalog, then the
  * pure verified-first / category-spread selection — no extra round-trips.
  */
-export async function getFeaturedProducts(cap: number = FEATURED_PRODUCT_CAP): Promise<ProductVM[]> {
+export async function getFeaturedProducts(
+  cap: number = FEATURED_PRODUCT_CAP,
+): Promise<ProductVM[]> {
   const products = await getAllProducts();
   return selectFeaturedProducts(products, cap);
 }
@@ -112,6 +109,7 @@ export async function getSupplier(slug: string): Promise<SupplierWithCatalog | n
     reviewScore: row.reviewScore,
     reviewCount: row.reviewCount,
     legalIdentity: row.legalIdentity,
+    isPartner: row.isPartner,
     reviews: row.reviews.map((r) => ({ sourcePlatform: r.sourcePlatform })),
     certifications: row.certifications.map((c) => ({ name: c.name })),
   };
@@ -126,6 +124,7 @@ export async function getSupplier(slug: string): Promise<SupplierWithCatalog | n
     reviewCount: row.reviewCount,
     reviewPlatform: row.reviews[0]?.sourcePlatform ?? null,
     legalIdentity: row.legalIdentity,
+    isPartner: row.isPartner,
     lastVerifiedAt: row.lastVerifiedAt ? row.lastVerifiedAt.toISOString() : null,
     reviews,
     certifications: row.certifications.map((c) => ({
