@@ -61,11 +61,14 @@ export function HeroStudio({
   return (
     <section
       data-testid="hero-studio"
-      className={`relative overflow-hidden border-b border-line-dark bg-void text-on-dark lg:grid lg:min-h-[clamp(560px,33.8vw,720px)] lg:grid-cols-[var(--rail-w)_minmax(0,max(38.6vw,500px))_minmax(0,1fr)] ${className}`}
+      // One composition at every width (grid areas, not stacked sections):
+      //   mobile   headline → still life → paragraph, search, popular
+      //   desktop  rail | headline over paragraph | still life
+      className={`relative grid grid-cols-1 overflow-hidden border-b border-line-dark bg-void text-on-dark [grid-template-areas:'top'_'art'_'rest'] lg:min-h-[clamp(560px,33.8vw,720px)] lg:grid-cols-[var(--rail-w)_minmax(0,max(38.6vw,500px))_minmax(0,1fr)] lg:grid-rows-[1fr_auto_auto_1fr] lg:[grid-template-areas:'rail_._art'_'rail_top_art'_'rail_rest_art'_'rail_._art'] ${className}`}
     >
       {/* Rail — part of the grid, not a menu. Signal square marks where the
           rail meets the header rule. */}
-      <aside className="relative hidden border-r border-line-dark bg-rail lg:block">
+      <aside className="relative hidden border-r border-line-dark bg-rail [grid-area:rail] lg:block">
         <span
           aria-hidden
           className="absolute -right-[5px] -top-[5px] z-10 h-[9px] w-[9px] bg-orange"
@@ -114,8 +117,8 @@ export function HeroStudio({
         </div>
       </aside>
 
-      {/* Editorial column. */}
-      <div className="flex flex-col justify-center px-5 pb-12 pt-12 sm:px-8 lg:pb-[3.1vw] lg:pl-[max(32px,3.4vw)] lg:pr-[2vw] lg:pt-[3.2vw]">
+      {/* Editorial column, part 1: the promise. */}
+      <div className="relative z-10 min-w-0 px-5 pt-9 [grid-area:top] sm:px-8 lg:pl-[max(32px,3.4vw)] lg:pr-[2vw] lg:pt-[3.2vw]">
         <p className="tag flex items-center gap-[18px] text-[12.5px] tracking-[0.12em] text-on-dark-muted">
           <span aria-hidden className="h-[1.5px] w-[30px] bg-orange" />
           Real suppliers · Verified prices · Global packaging
@@ -132,6 +135,10 @@ export function HeroStudio({
         >
           sourced properly.
         </p>
+      </div>
+
+      {/* Editorial column, part 2: what you can do. */}
+      <div className="relative z-10 min-w-0 px-5 pb-10 [grid-area:rest] sm:px-8 lg:pb-[3.1vw] lg:pl-[max(32px,3.4vw)] lg:pr-[2vw]">
         <p className="mt-[clamp(12px,1.05vw,22px)] max-w-[min(560px,100%)] text-[clamp(1rem,1.1vw,1.25rem)] leading-[1.48] text-on-dark-muted">
           Compare real packaging from verified suppliers — prices, minimums and lead times captured
           from their own pages — then send one quote request to all of them.
@@ -157,7 +164,10 @@ export function HeroStudio({
       </div>
 
       {/* The still life — separate objects, composed in place. */}
-      <StudioStill categories={categories} />
+      <StudioStill
+        categories={categories}
+        className="relative -mt-4 h-[300px] min-w-0 [container-type:size] [grid-area:art] [mask-image:linear-gradient(to_bottom,black_78%,transparent)] sm:h-[420px] lg:mt-0 lg:h-auto lg:[mask-image:none]"
+      />
     </section>
   );
 }

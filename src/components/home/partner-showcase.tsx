@@ -163,9 +163,9 @@ export function PartnerShowcase({
         }}
       />
 
-      <div className="relative mx-auto grid max-w-[1400px] grid-cols-1 gap-8 px-5 py-10 sm:px-8 lg:h-[clamp(600px,calc(100vh-77px),760px)] lg:grid-cols-[88px_minmax(0,1fr)_minmax(340px,420px)] lg:gap-10 lg:px-[var(--edge)] lg:py-12">
+      <div className="relative mx-auto grid max-w-[1400px] grid-cols-1 gap-x-10 gap-y-5 px-5 py-9 [grid-template-areas:'brand'_'stage'_'runway'_'product'] sm:px-8 lg:h-[clamp(600px,calc(100vh-77px),760px)] lg:grid-cols-[88px_minmax(0,1fr)_minmax(340px,420px)] lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-y-0 lg:px-[var(--edge)] lg:py-12 lg:[grid-template-areas:'runway_stage_brand'_'runway_stage_product']">
         {/* Runway — the collection as real photo tiles. */}
-        <div className="order-3 flex min-w-0 flex-col lg:order-none lg:min-h-0">
+        <div className="flex min-w-0 flex-col [grid-area:runway] lg:min-h-0">
           <p className="tag hidden text-on-dark-muted lg:block">
             {String(cur + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
           </p>
@@ -217,7 +217,7 @@ export function PartnerShowcase({
           role="group"
           aria-roledescription="product stage"
           aria-label={`${profile.name} products`}
-          className="relative h-[420px] min-w-0 touch-pan-x select-none [container-type:size] lg:h-auto lg:min-h-0"
+          className="relative h-[340px] min-w-0 touch-pan-x select-none [container-type:size] [grid-area:stage] sm:h-[420px] lg:h-auto lg:min-h-0"
           style={{ ["--hero" as string]: "min(70cqh, 56cqw)" }}
           onPointerDown={(e) => {
             drag.current = { y: e.clientY, moved: false };
@@ -394,7 +394,8 @@ export function PartnerShowcase({
         </div>
 
         {/* Details — always in view. */}
-        <div className="flex min-w-0 flex-col lg:min-h-0 lg:border-l lg:border-line-dark lg:pl-10">
+        {/* Details, part 1: who — always first on small screens. */}
+        <div className="min-w-0 [grid-area:brand] lg:border-l lg:border-line-dark lg:pl-10">
           <div>
             <p className="tag flex items-center gap-2 text-[12px] tracking-[0.12em] text-on-dark-muted">
               <span aria-hidden className="h-[9px] w-[9px] bg-orange" />
@@ -438,10 +439,13 @@ export function PartnerShowcase({
               <span>Photos and prices from {profile.name}</span>
             </p>
           </div>
+        </div>
 
+        {/* Details, part 2: the product on stage — right under it on small screens. */}
+        <div className="flex min-w-0 flex-col [grid-area:product] lg:min-h-0 lg:border-l lg:border-line-dark lg:pl-10">
           <div
             key={current.id}
-            className="mt-6 flex flex-1 flex-col border-t border-line-dark pt-6"
+            className="flex flex-1 flex-col pt-1 lg:mt-6 lg:border-t lg:border-line-dark lg:pt-6"
             aria-live="polite"
           >
             <p className="stage-fade tag text-on-dark-muted">
