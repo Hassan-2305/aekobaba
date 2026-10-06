@@ -4,6 +4,8 @@
 // components take them as props and never touch the database. Every field is
 // JSON-serializable so the same objects can cross into client components.
 
+import { partnerFactsFor, type PartnerFactsVM } from "./partner-facts";
+
 export type SupplierStatusValue = "PENDING" | "LISTED" | "RECOMMENDED" | "QUOTE_ONLY" | "DISABLED";
 export type PriceTypeValue = "EXACT" | "CALCULATOR" | "FROM" | "QUOTE_ONLY";
 export type StockOrCustomValue = "STOCK" | "CUSTOM";
@@ -66,6 +68,11 @@ export interface ProductVM {
   supplier: SupplierSummaryVM;
   /** Supplier-level certification names (certs attach to companies, not SKUs). */
   certificationNames: string[];
+  /**
+   * Values the partner supplied directly (not captured from their page),
+   * labelled as such wherever they render. Null when none apply.
+   */
+  partnerFacts?: PartnerFactsVM | null;
 }
 
 export interface CategoryVM {
@@ -188,6 +195,13 @@ function toNumber(value: { toNumber(): number } | number | null): number | null 
 }
 
 export function toProductVM(row: ProductWithRelations): ProductVM {
+  const supplied = partnerFactsFor({
+    sourceUrl: row.sourceUrl,
+    moq: row.moq,
+    moqUnit: row.moqUnit,
+    leadTimeDays: row.leadTimeDays,
+    supplier: { slug: row.supplier.slug, name: row.supplier.name },
+  });
   return {
     id: row.id,
     title: row.title,
@@ -201,9 +215,9 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
     basePrice: toNumber(row.basePrice),
     priceBasis: row.priceBasis,
     priceUnit: toNumber(row.priceUnit),
-    moq: row.moq,
-    moqUnit: row.moqUnit,
-    leadTimeDays: row.leadTimeDays,
+    moq: supplied.moq,
+    moqUnit: supplied.moqUnit,
+    leadTimeDays: supplied.leadTimeDays,
     stockOrCustom: row.stockOrCustom as StockOrCustomValue,
     samplePolicyVerified: row.samplePolicyVerified,
     sourceUrl: row.sourceUrl,
@@ -228,5 +242,6 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
       isPartner: row.supplier.isPartner ?? false,
     },
     certificationNames: row.supplier.certifications.map((c) => c.name),
+    partnerFacts: supplied.facts,
   };
 }

@@ -6,14 +6,16 @@
 // functions; when the catalog grows this is where SQL aggregation replaces
 // the in-memory pass.
 //
-// Filter priority order is a spec decision (Packaging Hub plan, week of
-// 23 Sept 2026): minimum order → price type → stock/custom → material &
-// category → location → lead time → certifications. FILTER_GROUP_ORDER pins
-// it, and a test asserts the rail renders in exactly this order.
+// Filter priority order: the buyer's first questions lead (Berlin demo
+// review, Oct 2026) — minimum order → food grade → material & category →
+// supplier region → price type → stock/custom → lead time → certifications.
+// FILTER_GROUP_ORDER pins it, and a test asserts the rail renders in exactly
+// this order.
 
 import type { ProductVM } from "./view-models";
 import { effectiveUnitPrice } from "./format";
 import type { ResolvedQuery } from "./aliases";
+import { isFoodGrade } from "./tags";
 
 export const SORTS = ["price", "moq", "lead", "reviews"] as const;
 export type SortKey = (typeof SORTS)[number];
@@ -23,10 +25,11 @@ export const DEFAULT_SORT: SortKey = "reviews";
 /** Spec priority order for the left rail, top to bottom. */
 export const FILTER_GROUP_ORDER = [
   "min-order",
-  "price-type",
-  "stock-custom",
+  "food-grade",
   "material-category",
   "location",
+  "price-type",
+  "stock-custom",
   "lead-time",
   "certifications",
 ] as const;
@@ -44,7 +47,10 @@ export interface ResultsFilters {
   material: string | null;
   /** Explicit category slug from the menu/tree. */
   category: string | null;
+  /** Supplier region code ("US", "UK", "EU", "IN", "CN") — see supplierRegion. */
   location: string | null;
+  /** Only products whose supplier says food grade / food contact. */
+  foodGrade: boolean;
   /** "Lead time up to N days" — published lead times at or below this. */
   maxLeadDays: number | null;
   /** Certification name (supplier-level). */
@@ -89,6 +95,7 @@ export function parseFilters(searchParams: ResultsSearchParams): ResultsFilters 
     material: firstValue(searchParams.material) || null,
     category: firstValue(searchParams.category) || null,
     location: firstValue(searchParams.location) || null,
+    foodGrade: firstValue(searchParams.food) === "1",
     maxLeadDays: parseNonNegativeInt(firstValue(searchParams.maxLead)),
     cert: firstValue(searchParams.cert) || null,
     sort: parseSort(firstValue(searchParams.sort)),
@@ -108,6 +115,7 @@ export function filtersToQueryString(filters: ResultsFilters): string {
   if (filters.material) params.set("material", filters.material);
   if (filters.category) params.set("category", filters.category);
   if (filters.location) params.set("location", filters.location);
+  if (filters.foodGrade) params.set("food", "1");
   if (filters.maxLeadDays !== null) params.set("maxLead", String(filters.maxLeadDays));
   if (filters.cert) params.set("cert", filters.cert);
   if (filters.sort !== DEFAULT_SORT) params.set("sort", filters.sort);
@@ -144,7 +152,8 @@ export function applyFilters(products: ProductVM[], filters: ResultsFilters, res
     if (filters.priceType && p.priceType !== filters.priceType) return false;
     if (filters.stockOrCustom && p.stockOrCustom !== filters.stockOrCustom) return false;
     if (filters.material && p.materialFamily !== filters.material) return false;
-    if (filters.location && p.supplier.location !== filters.location) return false;
+    if (filters.location && supplierRegion(p.supplier.location) !== filters.location) return false;
+    if (filters.foodGrade && !isFoodGrade(p)) return false;
     if (filters.maxLeadDays !== null && (p.leadTimeDays === null || p.leadTimeDays > filters.maxLeadDays)) return false;
     if (filters.cert && !p.certificationNames.includes(filters.cert)) return false;
     return true;
@@ -152,6 +161,28 @@ export function applyFilters(products: ProductVM[], filters: ResultsFilters, res
 }
 
 // ─── Facets ──────────────────────────────────────────────────────────────────
+
+// ─── Supplier region ─────────────────────────────────────────────────────────
+
+/** Region code for a supplier's published location ("US (Chicago, IL); …" → "US"). */
+export function supplierRegion(location: string): string {
+  const l = location.trim();
+  if (/^US\b/i.test(l) || /United States/i.test(l)) return "US";
+  if (/^UK\b/i.test(l) || /United Kingdom/i.test(l)) return "UK";
+  if (/^EU\b/i.test(l)) return "EU";
+  if (/India|^IN\b/i.test(l)) return "IN";
+  if (/China|^CN\b/i.test(l)) return "CN";
+  return "Other";
+}
+
+export const REGION_LABELS: Record<string, string> = {
+  US: "United States",
+  UK: "United Kingdom",
+  EU: "European Union",
+  IN: "India",
+  CN: "China",
+  Other: "Other",
+};
 
 export interface FacetOption {
   value: string;
@@ -166,6 +197,7 @@ export interface Facets {
   material: FacetOption[];
   category: FacetOption[];
   location: FacetOption[];
+  foodGrade: FacetOption[];
   leadTime: FacetOption[];
   certifications: FacetOption[];
 }
@@ -214,7 +246,11 @@ function toOptions(counts: Map<string, number>, label: (value: string) => string
  */
 export function computeFacets(products: ProductVM[], filters: ResultsFilters, resolved: ResolvedQuery | null): Facets {
   const except = (omit: keyof ResultsFilters): ProductVM[] =>
-    applyFilters(products, { ...filters, [omit]: null }, resolved);
+    applyFilters(
+      products,
+      { ...filters, [omit]: omit === "foodGrade" ? false : null },
+      resolved,
+    );
 
   const moqCandidates = except("maxMoq");
   const priceCandidates = except("priceType");
@@ -224,6 +260,7 @@ export function computeFacets(products: ProductVM[], filters: ResultsFilters, re
   const locationCandidates = except("location");
   const leadCandidates = except("maxLeadDays");
   const certCandidates = except("cert");
+  const foodCandidates = except("foodGrade");
 
   const minOrder = MOQ_BUCKETS.map((bucket) => ({
     value: String(bucket.value),
@@ -249,7 +286,14 @@ export function computeFacets(products: ProductVM[], filters: ResultsFilters, re
     .map(([slug, count]) => ({ value: slug, label: categoryNames.get(slug) ?? slug, count }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 
-  const location = toOptions(countBy(locationCandidates, (p) => p.supplier.location), (v) => v);
+  const location = toOptions(
+    countBy(locationCandidates, (p) => supplierRegion(p.supplier.location)),
+    (v) => REGION_LABELS[v] ?? v,
+  );
+
+  const foodGrade = [
+    { value: "1", label: "Food grade / food contact", count: foodCandidates.filter(isFoodGrade).length },
+  ];
 
   const leadTime = LEAD_BUCKETS.map((bucket) => ({
     value: String(bucket.value),
@@ -259,7 +303,17 @@ export function computeFacets(products: ProductVM[], filters: ResultsFilters, re
 
   const certifications = toOptions(countBy(certCandidates, (p) => p.certificationNames[0] ?? null), (v) => v);
 
-  return { minOrder, priceType, stockCustom, material, category, location, leadTime, certifications };
+  return {
+    minOrder,
+    priceType,
+    stockCustom,
+    material,
+    category,
+    location,
+    foodGrade,
+    leadTime,
+    certifications,
+  };
 }
 
 /** True when any product in scope publishes a lead time — drives the honest note. */

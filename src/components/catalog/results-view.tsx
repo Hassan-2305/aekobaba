@@ -11,7 +11,10 @@ import {
   type ResultsFilters,
 } from "@/lib/catalog/filters";
 import type { ResolvedQuery } from "@/lib/catalog/aliases";
+import { CATEGORY_MENU, requestSupplierHref } from "@/lib/catalog/menu";
+import { partnerFirst } from "@/lib/catalog/partners";
 import type { ProductVM } from "@/lib/catalog/view-models";
+import { PartnerBadge, SponsoredTag } from "./tier-badge";
 
 // Results view (spec C5) — presentational. A dark band states where you are
 // and lets you search again; below it, the light catalog: filter rail in the
@@ -28,24 +31,20 @@ export function ResultsView({
   allProducts: ProductVM[];
 }) {
   const filtered = applyFilters(allProducts, filters, resolved);
-  const products = sortProducts(filtered, filters.sort);
+  // Partner listings lead every result set (a paid, labelled placement —
+  // each card wears the partner ribbon). Within each part the visitor's
+  // chosen sort is kept, so the ranking below the partner block is untouched.
+  const products = partnerFirst(sortProducts(filtered, filters.sort));
   const facets = computeFacets(allProducts, filters, resolved);
-  // Featured partner band: up to three matching partner listings above the
-  // grid. The grid itself keeps the visitor's chosen sort, untouched.
-  // Varied on purpose: one per product type before repeating a type.
-  const partnerAll = products.filter((p) => p.supplier.isPartner);
-  const seenTypes = new Set<string>();
-  const partnerPicks = [
-    ...partnerAll.filter((p) => {
-      const type = p.subcategory ?? p.categorySlug;
-      if (seenTypes.has(type)) return false;
-      seenTypes.add(type);
-      return true;
-    }),
-    ...partnerAll,
-  ]
-    .filter((p, i, list) => list.findIndex((q) => q.id === p.id) === i)
-    .slice(0, 3);
+  const partnerListings = products.filter((p) => p.supplier.isPartner);
+  const partnerName = partnerListings[0]?.supplier.name ?? null;
+  const partnerSlug = partnerListings[0]?.supplier.slug ?? null;
+  // The sponsored slot is named for what the buyer is browsing.
+  const featuredIn =
+    partnerListings.length > 0 &&
+    partnerListings.every((p) => p.categorySlug === partnerListings[0].categorySlug)
+      ? partnerListings[0].categoryName
+      : null;
   const activeCount = [
     filters.maxMoq,
     filters.priceType,
@@ -55,10 +54,19 @@ export function ResultsView({
     filters.location,
     filters.maxLeadDays,
     filters.cert,
+    filters.foodGrade ? true : null,
   ].filter((value) => value !== null).length;
   const categoryName = filters.category
-    ? (allProducts.find((p) => p.categorySlug === filters.category)?.categoryName ?? null)
+    ? (allProducts.find((p) => p.categorySlug === filters.category)?.categoryName ??
+      CATEGORY_MENU.find((c) => c.slug === filters.category)?.name ??
+      null)
     : null;
+  // A category in the taxonomy with no listings yet: say so, and let the
+  // buyer ask for a supplier instead of showing a dead end.
+  const comingSoon =
+    filters.category !== null &&
+    !allProducts.some((p) => p.categorySlug === filters.category) &&
+    CATEGORY_MENU.some((c) => c.slug === filters.category);
   const heading = filters.q ? `Packaging for “${filters.q}”` : (categoryName ?? "All packaging");
 
   return (
@@ -129,28 +137,26 @@ export function ResultsView({
               <SortBar filters={filters} />
             </div>
 
-            {partnerPicks.length > 0 ? (
+            {partnerName ? (
               <div
                 data-testid="partner-band"
-                className="mt-8 border border-orange/40 bg-orange-tint p-5"
+                className="mt-6 flex flex-wrap items-center justify-between gap-3 border-l-2 border-partner-accent bg-partner-tint px-4 py-3"
               >
-                <div className="flex flex-wrap items-baseline justify-between gap-3">
-                  <p className="tag flex items-center gap-2 text-orange-ink">
-                    <span aria-hidden className="h-[9px] w-[9px] bg-orange" />
-                    From our featured partner · {partnerPicks[0].supplier.name}
-                  </p>
-                  <Link
-                    href={`/suppliers/${partnerPicks[0].supplier.slug}`}
-                    className="text-xs text-ink underline decoration-orange underline-offset-4 hover:text-orange-ink"
-                  >
-                    See all their packaging
-                  </Link>
-                </div>
-                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {partnerPicks.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
+                <p className="flex flex-wrap items-center gap-2 text-sm text-ink">
+                  <PartnerBadge />
+                  <span>
+                    {featuredIn ? `Featured in ${featuredIn}: ` : ""}
+                    {partnerListings.length} {partnerName} listing
+                    {partnerListings.length === 1 ? "" : "s"} shown first
+                  </span>
+                  <SponsoredTag />
+                </p>
+                <Link
+                  href={`/suppliers/${partnerSlug}`}
+                  className="text-xs text-ink underline decoration-partner-accent underline-offset-4 hover:text-partner-accent-ink"
+                >
+                  Visit {partnerName}&rsquo;s storefront
+                </Link>
               </div>
             ) : null}
 
@@ -162,6 +168,23 @@ export function ResultsView({
                 {products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
+              </div>
+            ) : comingSoon ? (
+              <div data-testid="results-coming-soon" className="mt-8 bg-well px-8 py-16 text-center">
+                <p className="tag text-ink-faint">Coming soon</p>
+                <p className="mt-3 font-semiwide text-2xl font-light text-ink">
+                  No verified {categoryName ?? "suppliers"} listings yet.
+                </p>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
+                  We only list suppliers whose prices we can check. Tell us what you need and
+                  we&rsquo;ll prioritise finding one.
+                </p>
+                <a
+                  href={requestSupplierHref(categoryName ?? filters.category ?? "")}
+                  className="mt-6 inline-flex h-11 items-center bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink/85"
+                >
+                  Request a supplier
+                </a>
               </div>
             ) : (
               <div data-testid="results-empty" className="mt-8 bg-well px-8 py-16 text-center">

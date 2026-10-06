@@ -6,6 +6,7 @@ import {
   type CategoryFailureReason,
 } from "@/lib/admin/categories";
 import { categoryUpdateSchema } from "@/lib/admin/validation";
+import { revalidateCatalog } from "@/lib/catalog/cache";
 
 // PATCH /api/admin/categories/[id] — rename / re-parent / re-describe.
 // DELETE /api/admin/categories/[id] — delete an empty, childless category.
@@ -49,6 +50,7 @@ export async function PATCH(
     return jsonError(FAILURE_STATUS[result.reason], result.reason);
   }
 
+  revalidateCatalog();
   return Response.json({ category: result.category });
 }
 
@@ -67,5 +69,6 @@ export async function DELETE(
     return jsonError(FAILURE_STATUS[result.reason], result.reason);
   }
 
+  revalidateCatalog();
   return Response.json({ ok: true });
 }

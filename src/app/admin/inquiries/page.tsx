@@ -162,7 +162,9 @@ export default async function AdminInquiriesPage({
                       </>
                     ) : null}
                     <dt className="tag self-center text-ink-faint">Design</dt>
-                    <dd className="text-ink">{DESIGN_STATUS_LABEL[q.designStatus]}</dd>
+                    <dd className={q.designStatus ? "text-ink" : "text-ink-faint"}>
+                      {q.designStatus ? DESIGN_STATUS_LABEL[q.designStatus] : "Not answered"}
+                    </dd>
                   </dl>
                   <p className="mt-3 whitespace-pre-line border-l-2 border-line pl-3 text-sm leading-relaxed text-ink-muted">
                     {q.description}

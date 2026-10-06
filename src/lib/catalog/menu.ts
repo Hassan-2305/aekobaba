@@ -40,3 +40,73 @@ export const CATEGORY_MENU: CategoryMenuEntry[] = [
   { slug: "compostables", name: "Compostables & Sustainable Structures" },
   { slug: "brand-accessories", name: "Branding Accessories: Hang Tags, Stickers, Tissue & Tape" },
 ];
+
+// ─── Groups ──────────────────────────────────────────────────────────────────
+//
+// 25 flat categories is too many to scan, so navigation and the home index
+// group them by what the buyer is shopping for. Every menu slug belongs to
+// exactly one group (menu.test.ts enforces it).
+
+export interface CategoryGroup {
+  id: string;
+  name: string;
+  slugs: string[];
+}
+
+export const CATEGORY_GROUPS: CategoryGroup[] = [
+  {
+    id: "containers",
+    name: "Containers",
+    slugs: [
+      "plastic-bottles",
+      "plastic-jars",
+      "glass-bottles",
+      "glass-jars",
+      "tubs-pails",
+      "metal-cans",
+      "metal-tins",
+      "collapsible-tubes",
+      "aerosols",
+    ],
+  },
+  {
+    id: "closures",
+    name: "Closures & dispensing",
+    slugs: ["closures", "pumps-sprayers", "droppers-vials"],
+  },
+  { id: "flexible", name: "Flexible", slugs: ["pouches-bags", "sachets-stick-packs", "rollstock"] },
+  { id: "paper", name: "Paper & cartons", slugs: ["folding-cartons", "setup-boxes"] },
+  {
+    id: "labels",
+    name: "Labels & decoration",
+    slugs: ["labels", "shrink-sleeves", "brand-accessories"],
+  },
+  { id: "shipping", name: "Shipping", slugs: ["corrugated", "mailers"] },
+  { id: "specialty", name: "Specialty", slugs: ["thermoforms", "cr-cannabis", "compostables"] },
+];
+
+/** Menu entries per group, in group order. */
+export function groupedMenu(): { group: CategoryGroup; entries: CategoryMenuEntry[] }[] {
+  const bySlug = new Map(CATEGORY_MENU.map((entry) => [entry.slug, entry]));
+  return CATEGORY_GROUPS.map((group) => ({
+    group,
+    entries: group.slugs
+      .map((slug) => bySlug.get(slug))
+      .filter((entry): entry is CategoryMenuEntry => entry !== undefined),
+  }));
+}
+
+/**
+ * "Request a supplier" for a category with no listings yet. Opens an email
+ * to NEXT_PUBLIC_CONTACT_EMAIL; without one configured it falls back to the
+ * company site rather than inventing an address.
+ */
+export function requestSupplierHref(categoryName: string): string {
+  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+  if (!email) return "https://www.aekovera.com";
+  const subject = encodeURIComponent(`Supplier request: ${categoryName}`);
+  const body = encodeURIComponent(
+    `I'm looking for a supplier for ${categoryName}.\n\nWhat I need (format, quantity, timing):\n`,
+  );
+  return `mailto:${email}?subject=${subject}&body=${body}`;
+}

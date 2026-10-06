@@ -86,6 +86,7 @@ export function baseFilters() {
     location: null,
     maxLeadDays: null,
     cert: null,
+    foodGrade: false,
     sort: "reviews" as const,
   };
 }

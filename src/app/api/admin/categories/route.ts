@@ -2,6 +2,7 @@ import { jsonError, requireApiRole } from "@/lib/auth/api";
 import { db } from "@/lib/db";
 import { createCategory } from "@/lib/admin/categories";
 import { categoryCreateSchema } from "@/lib/admin/validation";
+import { revalidateCatalog } from "@/lib/catalog/cache";
 
 // POST /api/admin/categories — create a category (admin CRUD).
 //
@@ -35,5 +36,6 @@ export async function POST(request: Request) {
     return jsonError(CREATE_FAILURE_STATUS[result.reason] ?? 400, result.reason);
   }
 
+  revalidateCatalog();
   return Response.json({ category: result.category }, { status: 201 });
 }

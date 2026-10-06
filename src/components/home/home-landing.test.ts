@@ -35,11 +35,17 @@ const featured = [
 ];
 
 describe("HomeLanding — hero", () => {
-  it("keeps the hero question, the search form, and the still life", () => {
+  it("has one visible headline, the search form, quick filters, and the still life", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    expect(html).toContain("What are you packaging?");
+    expect(html.match(/<h1/g)).toHaveLength(1);
+    expect(html).toContain("sourced properly.");
+    // The old question is not repeated as a second headline.
+    expect(html).not.toContain("What are you packaging?");
     expect(html).toContain('role="search"');
+    expect(html).toContain('data-testid="quick-filters"');
+    expect(html).toContain('href="/results?maxMoq=100"');
+    expect(html).toContain('href="/results?food=1"');
     expect(html).toContain('data-testid="studio-still"');
     expect(html).toContain("glass-bottle-amber.webp");
   });
@@ -86,16 +92,16 @@ describe("HomeLanding — featured rail", () => {
     expect(html).toContain(featured[0].title);
   });
 
-  it("renders the rail between the explore strip and the category grid", () => {
+  it("renders the rail after the category index, with no second category list", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
     const exploreAt = html.indexOf('data-testid="explore-card"');
     const railAt = html.indexOf('data-testid="featured-rail-section"');
-    const gridAt = html.indexOf('data-testid="category-grid"');
 
     expect(exploreAt).toBeGreaterThan(-1);
     expect(railAt).toBeGreaterThan(exploreAt);
-    expect(gridAt).toBeGreaterThan(railAt);
+    expect(html).not.toContain('data-testid="category-grid"');
+    expect(html).not.toContain("Every category");
   });
 
   it("renders no rail section when there are no featured products", () => {
@@ -105,34 +111,37 @@ describe("HomeLanding — featured rail", () => {
   });
 });
 
-describe("HomeLanding — explore strip", () => {
-  it("shows five shelf cards with pre-filtered result links", () => {
+describe("HomeLanding — grouped category index", () => {
+  it("groups live categories under buyer-facing groups with pre-filtered links", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    expect(html.match(/data-testid="explore-card"/g)).toHaveLength(5);
+    const groups = [...html.matchAll(/data-group="([^"]+)"/g)].map((m) => m[1]);
+    expect(groups).toEqual(["containers", "flexible", "labels", "shipping"]);
+    // Every live grouped category is listed once.
+    expect(html.match(/data-testid="explore-card"/g)).toHaveLength(6);
     expect(html).toContain('href="/results?category=pouches-bags"');
     expect(html).toContain('data-entry="glass-jars"');
   });
 
-  it("renders each card with a packshot (light) and a cut-out (dark)", () => {
+  it("shows each group with a packshot (light) and a cut-out (dark)", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    expect(html).toContain("Glass Jars — representative packaging image");
-    expect(html).toContain("glass-jar.png");
-    expect(html).toContain("cutouts%2Fglass-jar.webp");
+    expect(html).toContain("glass-bottle.png");
+    expect(html).toContain("cutouts%2Fglass-bottle.webp");
   });
-});
 
-describe("HomeLanding — category grid", () => {
-  it("renders every category row with a thumbnail", () => {
-    const html = render(createElement(HomeLanding, { categories, featured })).replace(
+  it("hides empty categories behind 'Coming soon' with a supplier request", () => {
+    const withEmpty = [...categories, makeCategory("aerosols", "Aerosol Cans", 0)];
+    const html = render(createElement(HomeLanding, { categories: withEmpty, featured })).replace(
       /<!-- -->/g,
       "",
     );
 
-    expect(html).toContain('data-testid="category-grid"');
-    expect(html).toContain("glass-jar.png");
-    expect(html).toContain("4 products");
+    expect(html).not.toContain('data-entry="aerosols"');
+    expect(html).toContain('data-testid="coming-soon"');
+    expect(html).toContain("Aerosol Cans");
+    expect(html).toContain("Request a supplier");
+    expect(html).not.toContain("0 products");
   });
 });
 
@@ -140,8 +149,8 @@ describe("HomeLanding — material-only navigation (PR #9 guard)", () => {
   it("never surfaces use-case rows as explore entries", () => {
     const html = render(createElement(HomeLanding, { categories, featured }));
 
-    // Every explore entry is a material category from the shelf or the
-    // curated popular list; the use-case-looking row never appears.
+    // Every explore entry is a grouped material category; the use-case-looking
+    // row (in no group) never appears.
     const allowed = new Set<string>([...POPULAR_CATEGORY_SLUGS, "glass-jars"]);
     const entries = [...html.matchAll(/data-entry="([^"]+)"/g)].map((match) => match[1]);
     expect(entries.length).toBeGreaterThan(0);

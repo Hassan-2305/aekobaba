@@ -28,6 +28,9 @@ export interface PartnerProfile {
   services: PartnerService[];
   perks: { text: string; sourceUrl: string }[];
   capturedAt: string;
+  /** Storefront branding: the partner's own mark and brand colour. */
+  logoUrl: string;
+  brandColor: string;
 }
 
 export const PARTNER_PROFILES: Record<string, PartnerProfile> = {
@@ -52,7 +55,7 @@ export const PARTNER_PROFILES: Record<string, PartnerProfile> = {
       },
       {
         value: "4.4★",
-        label: "Trustpilot, 4,779 reviews",
+        label: "supplier rating, Trustpilot (4,779 reviews)",
         sourceUrl: "https://www.trustpilot.com/review/berlinpackaging.com",
         sourceName: "Trustpilot",
       },
@@ -76,6 +79,9 @@ export const PARTNER_PROFILES: Record<string, PartnerProfile> = {
       },
     ],
     capturedAt: "2026-10-02",
+    logoUrl: "/partners/berlin-packaging/logo.svg",
+    // Berlin's red, taken from the logo file they supplied.
+    brandColor: "#E21A22",
   },
 };
 

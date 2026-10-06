@@ -2,9 +2,9 @@ import Link from "next/link";
 
 // Left-rail filters (spec C5) — server-rendered links, no client JS. Each
 // option toggles its filter on the current query; clicking the active option
-// clears it. Groups render in the spec's priority order: min order → price
-// type → stock/custom → material & category → location → lead time →
-// certifications. Facet counts update with the query (computeFacets).
+// clears it. Groups render in FILTER_GROUP_ORDER: min order → food grade →
+// material & category → supplier region → price type → stock/custom → lead
+// time → certifications. Facet counts update with the query (computeFacets).
 
 import {
   buildResultsUrl,
@@ -84,7 +84,8 @@ export function FilterRail({
     filters.category !== null ||
     filters.location !== null ||
     filters.maxLeadDays !== null ||
-    filters.cert !== null;
+    filters.cert !== null ||
+    filters.foodGrade;
 
   return (
     <nav data-testid="filter-rail" aria-label="Filters">
@@ -92,7 +93,7 @@ export function FilterRail({
         <h2 className="font-semiwide text-lg text-ink">Filters</h2>
         {anyActive ? (
           <Link
-            href={buildResultsUrl(filters, { maxMoq: null, priceType: null, stockOrCustom: null, material: null, category: null, location: null, maxLeadDays: null, cert: null })}
+            href={buildResultsUrl(filters, { maxMoq: null, priceType: null, stockOrCustom: null, material: null, category: null, location: null, maxLeadDays: null, cert: null, foodGrade: false })}
             className="text-xs text-orange-ink underline underline-offset-4 hover:text-ink"
           >
             Clear all
@@ -115,30 +116,19 @@ export function FilterRail({
         </p>
       </FilterGroup>
 
-      <FilterGroup id="price-type" title="Price type">
-        {facets.priceType.map((option) => (
+      <FilterGroup id="food-grade" title="Food grade">
+        {facets.foodGrade.map((option) => (
           <OptionLink
             key={option.value}
-            href={buildResultsUrl(filters, { priceType: filters.priceType === option.value ? null : option.value })}
-            active={filters.priceType === option.value}
+            href={buildResultsUrl(filters, { foodGrade: !filters.foodGrade })}
+            active={filters.foodGrade}
             label={option.label}
             count={option.count}
           />
         ))}
-      </FilterGroup>
-
-      <FilterGroup id="stock-custom" title="Stock or custom">
-        {facets.stockCustom.map((option) => (
-          <OptionLink
-            key={option.value}
-            href={buildResultsUrl(filters, {
-              stockOrCustom: filters.stockOrCustom === option.value ? null : (option.value as "STOCK" | "CUSTOM"),
-            })}
-            active={filters.stockOrCustom === option.value}
-            label={option.label}
-            count={option.count}
-          />
-        ))}
+        <p className="mt-2 text-xs leading-relaxed text-ink-faint">
+          Only where the supplier&rsquo;s own page says food grade or food contact.
+        </p>
       </FilterGroup>
 
       <FilterGroup id="material-category" title="Material &amp; category">
@@ -166,12 +156,38 @@ export function FilterRail({
         </div>
       </FilterGroup>
 
-      <FilterGroup id="location" title="Location">
+      <FilterGroup id="location" title="Supplier region">
         {facets.location.map((option) => (
           <OptionLink
             key={option.value}
             href={buildResultsUrl(filters, { location: filters.location === option.value ? null : option.value })}
             active={filters.location === option.value}
+            label={option.label}
+            count={option.count}
+          />
+        ))}
+      </FilterGroup>
+
+      <FilterGroup id="price-type" title="Price type">
+        {facets.priceType.map((option) => (
+          <OptionLink
+            key={option.value}
+            href={buildResultsUrl(filters, { priceType: filters.priceType === option.value ? null : option.value })}
+            active={filters.priceType === option.value}
+            label={option.label}
+            count={option.count}
+          />
+        ))}
+      </FilterGroup>
+
+      <FilterGroup id="stock-custom" title="Stock or custom">
+        {facets.stockCustom.map((option) => (
+          <OptionLink
+            key={option.value}
+            href={buildResultsUrl(filters, {
+              stockOrCustom: filters.stockOrCustom === option.value ? null : (option.value as "STOCK" | "CUSTOM"),
+            })}
+            active={filters.stockOrCustom === option.value}
             label={option.label}
             count={option.count}
           />

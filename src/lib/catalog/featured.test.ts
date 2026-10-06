@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { makeProduct } from "./test-fixtures";
-import { selectFeaturedProducts } from "./featured";
+import { distinctImages, selectFeaturedProducts, selectSpecimen } from "./featured";
 
 // Featured rail rules: verified (RECOMMENDED) suppliers first, then LISTED;
 // categories interleave so the rail shows catalog breadth; deterministic.
@@ -84,5 +84,27 @@ describe("selectFeaturedProducts", () => {
 
     expect(selectFeaturedProducts(products, 10)).toHaveLength(1);
     expect(selectFeaturedProducts([], 10)).toEqual([]);
+  });
+});
+
+describe("distinctImages", () => {
+  it("keeps the first listing per picture so placeholders never repeat", () => {
+    const jar = { url: "/products/plastic-jar.png", alt: null };
+    const a = makeProduct({ primaryImage: jar });
+    const b = makeProduct({ primaryImage: jar });
+    const c = makeProduct({ primaryImage: { url: "/products/tub-cup.png", alt: null } });
+    expect(distinctImages([a, b, c]).map((p) => p.id)).toEqual([a.id, c.id]);
+  });
+});
+
+describe("selectSpecimen", () => {
+  it("prefers a complete listing (price + MOQ) over a price-only one", () => {
+    const priceOnly = makeProduct({ moq: null, status: "RECOMMENDED" });
+    const complete = makeProduct({ moq: 24, status: "LISTED" });
+    expect(selectSpecimen([priceOnly, complete])?.id).toBe(complete.id);
+  });
+
+  it("never picks an unpriced listing", () => {
+    expect(selectSpecimen([makeProduct({ basePrice: null })])).toBeNull();
   });
 });

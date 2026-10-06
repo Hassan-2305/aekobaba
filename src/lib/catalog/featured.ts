@@ -24,6 +24,47 @@ export const STATUS_RANK: Record<ProductVM["supplier"]["status"], number> = {
  * categories, capped. Deterministic — ties break on review count, then id —
  * so the rail is stable across renders and runs.
  */
+/**
+ * One card per picture: generated packshots are per-category archetypes, so
+ * two listings in the same category can share an image. A rail where the
+ * same placeholder repeats makes the catalog look thinner than it is — keep
+ * the first listing per image URL (listings without an image pass through).
+ */
+export function distinctImages(products: ProductVM[]): ProductVM[] {
+  const seen = new Set<string>();
+  return products.filter((p) => {
+    const url = p.primaryImage?.url;
+    if (!url) return true;
+    if (seen.has(url)) return false;
+    seen.add(url);
+    return true;
+  });
+}
+
+/**
+ * The "live listing" example on Home: the listing that best proves the
+ * receipt claim — a published price AND minimum order, an image, from a
+ * verified (non-partner, so it is not a third appearance of the spotlight)
+ * supplier, freshest capture first. Falls back to any priced listing.
+ */
+export function selectSpecimen(products: ProductVM[], excludeSupplier?: string): ProductVM | null {
+  const pool = products.filter(
+    (p) => p.supplier.slug !== excludeSupplier && p.basePrice !== null && p.primaryImage !== null,
+  );
+  const ranked = [...pool].sort((a, b) => {
+    const complete = (p: ProductVM) =>
+      Number(p.moq !== null) + Number(p.leadTimeDays !== null) + Number(p.quantityBreaks.length > 0);
+    const byComplete = complete(b) - complete(a);
+    if (byComplete !== 0) return byComplete;
+    const byStatus = STATUS_RANK[a.supplier.status] - STATUS_RANK[b.supplier.status];
+    if (byStatus !== 0) return byStatus;
+    const byFresh = b.sourceCapturedAt.localeCompare(a.sourceCapturedAt);
+    if (byFresh !== 0) return byFresh;
+    return a.id.localeCompare(b.id);
+  });
+  return ranked[0] ?? null;
+}
+
 export function selectFeaturedProducts(products: ProductVM[], cap: number): ProductVM[] {
   const ranked = [...products].sort((a, b) => {
     // Featured partners lead the rail (signed-up suppliers get first placement).

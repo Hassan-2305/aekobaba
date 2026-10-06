@@ -18,7 +18,16 @@ import { StudioStill } from "./studio-still";
 // links into its category; annotation counts are live. Imagery is
 // representative (generated cut-outs on a generated backdrop).
 
-const POPULAR_SEARCHES = ["Pouches", "Bottles", "Labels", "Boxes", "Jars"];
+// Quick filters: the questions B2B buyers ask first (minimum order, food
+// grade, where the supplier is), one click from the hero.
+const QUICK_FILTERS = [
+  { label: "Low MOQ (≤ 100)", href: "/results?maxMoq=100" },
+  { label: "Food grade", href: "/results?food=1" },
+  { label: "Glass", href: "/results?material=Glass" },
+  { label: "US suppliers", href: "/results?location=US" },
+  { label: "UK suppliers", href: "/results?location=UK" },
+  { label: "EU suppliers", href: "/results?location=EU" },
+];
 
 const BENEFITS = [
   {
@@ -76,7 +85,7 @@ export function HeroStudio({
         <div className="flex flex-col pl-[var(--edge)] pr-3 pt-[30px]">
           <span aria-hidden className="block h-10 w-px bg-on-dark/50" />
           <p className="tag mt-[31px] max-w-[9rem] text-[12.5px] leading-[1.5] tracking-[0.12em] text-on-dark">
-            Global packaging catalog
+            Packaging catalog
           </p>
           <span aria-hidden className="mt-[33px] block h-px w-[45px] bg-line-dark" />
           <p className="mt-[33px] font-sans text-[clamp(2.75rem,3.5vw,3.9rem)] font-semibold leading-none tracking-[-0.04em] text-orange tabular-nums">
@@ -117,50 +126,44 @@ export function HeroStudio({
         </div>
       </aside>
 
-      {/* Editorial column, part 1: the promise. */}
+      {/* Editorial column, part 1: the promise — the page's one headline. */}
       <div className="relative z-10 min-w-0 px-5 pt-9 [grid-area:top] sm:px-8 lg:pl-[max(32px,3.4vw)] lg:pr-[2vw] lg:pt-[3.2vw]">
-        <p className="tag flex items-center gap-[18px] text-[12.5px] tracking-[0.12em] text-on-dark-muted">
-          <span aria-hidden className="h-[1.5px] w-[30px] bg-orange" />
-          Real suppliers · Verified prices · Global packaging
-        </p>
-        <p
-          aria-hidden
-          className="mt-[clamp(18px,1.7vw,32px)] font-sans text-[clamp(3.2rem,6.5vw,8rem)] font-extrabold leading-[0.92] tracking-[-0.05em] text-on-dark"
-        >
-          Packaging,
-        </p>
-        <p
-          aria-hidden
-          className="whitespace-nowrap font-sans text-[clamp(2.4rem,4.55vw,5.6rem)] font-normal leading-[1.05] tracking-[-0.035em] text-on-dark"
-        >
-          sourced properly.
-        </p>
+        <span aria-hidden className="block h-[1.5px] w-[30px] bg-orange" />
+        <h1 className="mt-[clamp(18px,1.7vw,32px)] text-on-dark">
+          <span className="block font-sans text-[clamp(3.2rem,6.5vw,8rem)] font-extrabold leading-[0.92] tracking-[-0.05em]">
+            Packaging,
+          </span>
+          <span className="block whitespace-nowrap font-sans text-[clamp(2.4rem,4.55vw,5.6rem)] font-normal leading-[1.05] tracking-[-0.035em]">
+            sourced properly.
+          </span>
+        </h1>
       </div>
 
       {/* Editorial column, part 2: what you can do. */}
       <div className="relative z-10 min-w-0 px-5 pb-10 [grid-area:rest] sm:px-8 lg:pb-[3.1vw] lg:pl-[max(32px,3.4vw)] lg:pr-[2vw]">
         <p className="mt-[clamp(12px,1.05vw,22px)] max-w-[min(560px,100%)] text-[clamp(1rem,1.1vw,1.25rem)] leading-[1.48] text-on-dark-muted">
-          Compare real packaging from verified suppliers — prices, minimums and lead times captured
-          from their own pages — then send one quote request to all of them.
+          Compare published prices and minimums from verified suppliers, each linked to the
+          supplier&rsquo;s own page, then send one quote request to all of them.
         </p>
         <div className="mt-[clamp(20px,1.9vw,36px)] w-full max-w-[600px]">
           <SearchForm tone="light" inputId="hero-search" arrow variant="studio" />
         </div>
-        <div className="mt-[clamp(18px,1.5vw,28px)] flex flex-wrap items-center gap-2 text-[15px] min-[1600px]:gap-3">
-          <span className="mr-1 text-on-dark">
-            <span className="hidden min-[1600px]:inline">Popular searches:</span>
-            <span className="min-[1600px]:hidden">Popular:</span>
-          </span>
-          {POPULAR_SEARCHES.map((term) => (
+        <nav
+          aria-label="Quick filters"
+          data-testid="quick-filters"
+          className="mt-[clamp(18px,1.5vw,28px)] flex flex-wrap items-center gap-2 text-[15px]"
+        >
+          <span className="mr-1 text-on-dark">Filter by:</span>
+          {QUICK_FILTERS.map((filter) => (
             <Link
-              key={term}
-              href={`/results?q=${encodeURIComponent(term.toLowerCase())}`}
-              className="inline-flex h-9 items-center rounded-full border border-line-dark px-3.5 text-[14px] min-[1600px]:px-4 min-[1600px]:text-[14.5px] text-on-dark transition-colors hover:border-orange hover:text-orange-ink"
+              key={filter.label}
+              href={filter.href}
+              className="inline-flex h-9 items-center rounded-full border border-line-dark px-3.5 text-[14px] text-on-dark transition-colors hover:border-orange hover:text-orange-ink"
             >
-              {term}
+              {filter.label}
             </Link>
           ))}
-        </div>
+        </nav>
       </div>
 
       {/* The still life — separate objects, composed in place. */}

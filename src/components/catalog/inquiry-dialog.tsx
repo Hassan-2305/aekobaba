@@ -273,9 +273,11 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
               </p>
             ) : null}
 
-            {/* Honeypot — hidden from people, tempting to bots. */}
+            {/* Honeypot — hidden from people, tempting to bots. If assistive
+                tech or a text-only browser ever surfaces it, the label says
+                what to do. */}
             <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-              <label htmlFor="inq-fax">Fax</label>
+              <label htmlFor="inq-fax">Spam check — leave this field empty</label>
               <input id="inq-fax" name="fax" tabIndex={-1} autoComplete="off" />
             </div>
 
@@ -377,7 +379,8 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
 
               <div className="mt-5">
                 <p className={labelClass} id="inq-design-label">
-                  Do you have a design?<span className="text-orange-ink"> *</span>
+                  Do you have a design?
+                  <span className="font-normal text-ink-faint"> (optional)</span>
                 </p>
                 <div
                   role="radiogroup"
@@ -407,8 +410,7 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
               <div className="mt-5">
                 <Field
                   id="inq-description"
-                  label="Describe what you need"
-                  required
+                  label="Anything else the supplier should know"
                   hint="Printing, colours, finish, target date, budget — anything that helps the supplier quote accurately."
                   error={err("description")}
                 >
@@ -436,7 +438,7 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
                   className="mt-1.5 flex cursor-pointer items-center justify-between gap-4 border border-dashed border-line bg-card px-4 py-4 text-sm transition-colors hover:border-ink"
                 >
                   <span className="min-w-0 truncate text-ink-muted">
-                    {fileName ?? "PDF, AI, EPS, SVG, PNG, JPG, PSD or ZIP — up to 4 MB"}
+                    {fileName ?? "PDF, AI, EPS, SVG, PNG, JPG, PSD or ZIP — attach up to 4 MB"}
                   </span>
                   <span className="shrink-0 border border-line px-3 py-1.5 text-xs font-medium text-ink">
                     Choose file
@@ -453,6 +455,25 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
                 {err("design") ? (
                   <p className="mt-1 text-xs text-danger-ink">{err("design")}</p>
                 ) : null}
+              </div>
+
+              <div className="mt-4">
+                <Field
+                  id="inq-fileLink"
+                  label="Or link to large print files"
+                  hint="Print-ready AI, PSD or PDF over 4 MB? Paste a WeTransfer, Google Drive or Dropbox link."
+                  error={err("fileLink")}
+                >
+                  <input
+                    id="inq-fileLink"
+                    name="fileLink"
+                    type="url"
+                    inputMode="url"
+                    placeholder="https://wetransfer.com/…"
+                    className={inputClass}
+                    {...aria("fileLink")}
+                  />
+                </Field>
               </div>
             </fieldset>
 

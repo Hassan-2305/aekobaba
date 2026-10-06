@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { newAccessToken } from "@/lib/inquiries/access";
 import {
   designFileError,
+  inquiryDescription,
   inquiryFieldErrors,
   inquiryReference,
   inquirySchema,
@@ -10,7 +11,9 @@ import {
 // POST /api/inquiries — "Get a quote" / "Get a sample" from a product page.
 // Public (no account needed). multipart/form-data: the form fields plus an
 // optional `design` file, stored with the inquiry for admins to download.
-// A hidden honeypot field (`fax`) silently drops naive bots.
+// A hidden honeypot field (`fax`, labelled "leave this field empty") silently
+// drops naive bots. Artwork too large to attach arrives as `fileLink` and is
+// stored with the description.
 
 export async function POST(request: Request) {
   let form: FormData;
@@ -43,6 +46,7 @@ export async function POST(request: Request) {
     format: text("format"),
     designStatus: text("designStatus"),
     description: text("description"),
+    fileLink: text("fileLink"),
   });
   if (!parsed.success) {
     return Response.json(
@@ -67,9 +71,11 @@ export async function POST(request: Request) {
   // this request's live status; only its hash is stored.
   const access = newAccessToken();
 
+  const { fileLink, ...fields } = parsed.data;
   const inquiry = await db.inquiry.create({
     data: {
-      ...parsed.data,
+      ...fields,
+      description: inquiryDescription({ description: fields.description, fileLink }),
       accessTokenHash: access.hash,
       ...(file
         ? {

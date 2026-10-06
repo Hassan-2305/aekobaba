@@ -6,7 +6,14 @@ import { useEffect, useRef, useState } from "react";
 
 import { InquiryDialog, type InquiryDialogHandle } from "@/components/catalog/inquiry-dialog";
 import { cutoutFor, isRepresentativeImage } from "@/components/catalog/product-picture";
-import { formatCaptureDate, formatMoney, formatMoq } from "@/lib/catalog/format";
+import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
+import {
+  formatCaptureDate,
+  formatMoney,
+  formatMoq,
+  isStaleCapture,
+  priceCurrency,
+} from "@/lib/catalog/format";
 import type { PartnerProfile } from "@/lib/catalog/partners";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -51,7 +58,7 @@ function closureNote(product: ProductVM): string {
   if (/cap not included|sold separately/i.test(text))
     return finish ? `${finish} · sold separately` : "Sold separately";
   if (/includes .*cap|cap\)|\(.*cap\)/i.test(text)) return "Included";
-  return "Ask the supplier";
+  return "Not stated";
 }
 
 function capacity(product: ProductVM): string | null {
@@ -399,7 +406,7 @@ export function PartnerShowcase({
           <div>
             <p className="tag flex items-center gap-2 text-[12px] tracking-[0.12em] text-on-dark-muted">
               <span aria-hidden className="h-[9px] w-[9px] bg-orange" />
-              Supplier spotlight
+              Partner spotlight · Sponsored
             </p>
             <div className="mt-4 flex items-center gap-4">
               {/* Partner's own mark (supplied with their photography). */}
@@ -421,22 +428,16 @@ export function PartnerShowcase({
                 <p className="mt-2 text-xs leading-relaxed text-on-dark-muted">{profile.tagline}</p>
               </div>
             </div>
-            <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-on-dark-muted">
-              <span className="inline-flex items-center gap-1.5 border border-on-dark/20 px-2 py-1 text-on-dark">
-                <svg
-                  aria-hidden
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="m5 12.5 4.5 4.5L19 7.5" />
-                </svg>
-                Official Aekobaba partner
-              </span>
+            <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] text-on-dark-muted">
+              <PartnerBadge />
+              {current ? <TierBadge status={current.supplier.status} tone="dark" /> : null}
               <span>Photos and prices from {profile.name}</span>
+            </p>
+            <p data-testid="partner-disclosure" className="mt-2 text-[11px] leading-relaxed text-on-dark-muted">
+              {PARTNER_DISCLOSURE}{" "}
+              <Link href="/#how-it-works" className="text-on-dark underline decoration-on-dark/30 underline-offset-2">
+                How tiers work
+              </Link>
             </p>
           </div>
         </div>
@@ -469,7 +470,9 @@ export function PartnerShowcase({
               style={{ animationDelay: "160ms" }}
             >
               <p className="text-[2.6rem] font-semibold leading-none tracking-tight text-on-dark tabular-nums">
-                {shownPrice === null ? "Ask" : formatMoney(shownPrice)}
+                {shownPrice === null
+                  ? "Ask"
+                  : formatMoney(shownPrice, priceCurrency(current.priceBasis))}
               </p>
               <p className="text-xs leading-snug text-on-dark-muted">
                 {current.basePrice === null
@@ -484,13 +487,17 @@ export function PartnerShowcase({
             >
               <div className="py-3 pr-3">
                 <dt className="tag text-on-dark-muted">MOQ</dt>
-                <dd className="mt-1 text-on-dark tabular-nums">
+                <dd
+                  className={`mt-1 tabular-nums ${current.moq === null ? "text-on-dark-muted" : "text-on-dark"}`}
+                >
                   {formatMoq(current.moq, current.moqUnit)}
                 </dd>
               </div>
               <div className="border-l border-line-dark py-3 pl-3">
                 <dt className="tag text-on-dark-muted">Cap</dt>
-                <dd className="mt-1 text-on-dark">{closure}</dd>
+                <dd className={`mt-1 ${closure === "Not stated" ? "text-on-dark-muted" : "text-on-dark"}`}>
+                  {closure}
+                </dd>
               </div>
               <div className="border-t border-line-dark py-3 pr-3">
                 <dt className="tag text-on-dark-muted">Material</dt>
@@ -542,7 +549,8 @@ export function PartnerShowcase({
               >
                 {profile.name}&rsquo;s page
               </a>{" "}
-              on {formatCaptureDate(current.sourceCapturedAt)} ·{" "}
+              on {formatCaptureDate(current.sourceCapturedAt)}
+              {isStaleCapture(current.sourceCapturedAt) ? " (older capture)" : ""} ·{" "}
               {real ? "Supplier photo" : "Representative image"}
             </p>
 
@@ -567,7 +575,7 @@ export function PartnerShowcase({
                 href={`/suppliers/${profile.slug}`}
                 className="mt-3 inline-block text-xs text-on-dark underline decoration-orange underline-offset-4 hover:text-orange-ink"
               >
-                All {profile.name} listings →
+                Visit the {profile.name} storefront →
               </Link>
             </div>
           </div>

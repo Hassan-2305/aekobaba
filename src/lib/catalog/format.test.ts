@@ -9,10 +9,16 @@ import {
   formatMoq,
   formatPerUnit,
   formatPriceLine,
+  formatUnitMoney,
+  captureAgeDays,
+  isStaleCapture,
+  priceCurrency,
+  unitPrice,
 } from "./format";
 
-// The truth rule lives in formatting: unpublished values format as
-// "Ask the supplier", never a default or estimate (spec C2).
+// The truth rule lives in formatting: an unpublished price formats as "Ask
+// the supplier", an unpublished MOQ / lead time as "Not published" — never a
+// default or estimate (spec C2).
 
 describe("formatMoney", () => {
   it("renders dollars with two decimals", () => {
@@ -58,8 +64,8 @@ describe("formatPerUnit", () => {
 });
 
 describe("formatMoq", () => {
-  it("renders 'Ask the supplier' when no MOQ is published", () => {
-    expect(formatMoq(null, null)).toBe("Ask the supplier");
+  it("renders a muted 'Not published' when no MOQ is published — never a default", () => {
+    expect(formatMoq(null, null)).toBe("Not published");
   });
 
   it("formats published minimums with thousands separators", () => {
@@ -70,8 +76,8 @@ describe("formatMoq", () => {
 });
 
 describe("formatLeadTime", () => {
-  it("renders 'Ask the supplier' when lead time is unpublished", () => {
-    expect(formatLeadTime(null)).toBe("Ask the supplier");
+  it("renders 'Not published' when lead time is unpublished", () => {
+    expect(formatLeadTime(null)).toBe("Not published");
   });
 
   it("formats days", () => {
@@ -84,5 +90,62 @@ describe("formatBreakRange", () => {
   it("formats closed and open tiers", () => {
     expect(formatBreakRange(1, 249)).toBe("1–249");
     expect(formatBreakRange(1000, null)).toBe("1,000+");
+  });
+});
+
+describe("currency", () => {
+  it("reads the published currency from the basis and never shows £ as $", () => {
+    expect(priceCurrency("per pack of 10 boxes (GBP, inc. VAT)")).toBe("GBP");
+    expect(priceCurrency("per box, from-price (EUR, HT)")).toBe("EUR");
+    expect(priceCurrency("per piece (INR, excluding GST)")).toBe("INR");
+    expect(priceCurrency("per bottle (USD)")).toBe("USD");
+    expect(priceCurrency(null)).toBe("USD");
+    expect(formatPriceLine(8.52, "per pack of 10 boxes (GBP, inc. VAT)")).toBe(
+      "£8.52 per pack of 10 boxes (GBP, inc. VAT)",
+    );
+  });
+});
+
+describe("unitPrice — comparable per-unit figure", () => {
+  it("divides a pack price by the pack size the supplier states", () => {
+    const polybags = unitPrice({ basePrice: 73.72, priceBasis: "per 1000 bags, ex. VAT (GBP)", priceUnit: null });
+    expect(polybags).toMatchObject({ currency: "GBP", unit: "bag", packSize: 1000 });
+    expect(formatUnitMoney(polybags!.amount, polybags!.currency)).toBe("£0.074");
+
+    const burch = unitPrice({ basePrice: 9.15, priceBasis: "per case of 24 jars (USD)", priceUnit: null });
+    expect(burch).toMatchObject({ unit: "jar", packSize: 24 });
+    expect(burch!.amount).toBeCloseTo(0.38125);
+
+    const mule = unitPrice({
+      basePrice: 60,
+      priceBasis: "configurator default quantity (USD; 50 stickers at $1.20 each)",
+      priceUnit: 1.2,
+    });
+    expect(mule).toMatchObject({ amount: 1.2, unit: "sticker", packSize: 50 });
+  });
+
+  it("keeps a per-item price as is, and never guesses an unknown pack size", () => {
+    expect(unitPrice({ basePrice: 0.6, priceBasis: "per bottle (USD), cap sold separately", priceUnit: null }))
+      .toMatchObject({ amount: 0.6, unit: "bottle", packSize: 1 });
+    expect(unitPrice({ basePrice: 9.87, priceBasis: "per pack, from-price (USD; pack size varies)", priceUnit: null }))
+      .toBeNull();
+    expect(unitPrice({ basePrice: null, priceBasis: "per case of 24 jars", priceUnit: null })).toBeNull();
+  });
+
+  it("orders mixed currencies by indicative USD value for the price sort", () => {
+    const gbp = effectiveUnitPrice({ basePrice: 1, priceUnit: null, priceBasis: "per box (GBP)" })!;
+    const inr = effectiveUnitPrice({ basePrice: 1, priceUnit: null, priceBasis: "per piece (INR)" })!;
+    expect(gbp).toBeGreaterThan(1);
+    expect(inr).toBeLessThan(0.1);
+  });
+});
+
+describe("capture age", () => {
+  const now = new Date("2026-10-06T12:00:00Z");
+  it("counts whole UTC days and flags captures older than two weeks", () => {
+    expect(captureAgeDays("2026-10-03T00:00:00Z", now)).toBe(3);
+    expect(captureAgeDays("2026-09-21T00:00:00Z", now)).toBe(15);
+    expect(isStaleCapture("2026-10-03T00:00:00Z", now)).toBe(false);
+    expect(isStaleCapture("2026-09-21T00:00:00Z", now)).toBe(true);
   });
 });

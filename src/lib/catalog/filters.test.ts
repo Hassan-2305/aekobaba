@@ -9,6 +9,7 @@ import {
   hasAnyLeadTimeData,
   parseFilters,
   sortProducts,
+  supplierRegion,
 } from "./filters";
 import { baseFilters, makeProduct } from "./test-fixtures";
 
@@ -48,13 +49,14 @@ describe("URL state roundtrip", () => {
       material: "Glass",
       category: "glass-bottles",
       location: "US",
+      food: "1",
       maxLead: "14",
       cert: "FSC",
       sort: "moq",
     });
     const qs = filtersToQueryString(filters);
     expect(qs).toBe(
-      "q=hot+sauce&maxMoq=500&priceType=CALCULATOR&stock=CUSTOM&material=Glass&category=glass-bottles&location=US&maxLead=14&cert=FSC&sort=moq",
+      "q=hot+sauce&maxMoq=500&priceType=CALCULATOR&stock=CUSTOM&material=Glass&category=glass-bottles&location=US&food=1&maxLead=14&cert=FSC&sort=moq",
     );
     expect(parseFilters(Object.fromEntries(new URLSearchParams(qs)))).toEqual(filters);
   });
@@ -176,13 +178,36 @@ describe("spec priority order", () => {
   it("pins the left-rail group order", () => {
     expect(FILTER_GROUP_ORDER).toEqual([
       "min-order",
-      "price-type",
-      "stock-custom",
+      "food-grade",
       "material-category",
       "location",
+      "price-type",
+      "stock-custom",
       "lead-time",
       "certifications",
     ]);
+  });
+});
+
+describe("supplier region and food grade", () => {
+  it("maps published locations to regions", () => {
+    expect(supplierRegion("US (Chicago, IL); 100+ locations worldwide")).toBe("US");
+    expect(supplierRegion("US / EU (Sweden)")).toBe("US");
+    expect(supplierRegion("UK")).toBe("UK");
+    expect(supplierRegion("EU (Germany)")).toBe("EU");
+    expect(supplierRegion("India")).toBe("IN");
+    expect(supplierRegion("China")).toBe("CN");
+  });
+
+  it("filters by region and by the supplier's own food-grade wording", () => {
+    const usFood = makeProduct({ location: "US (Chicago, IL)", material: "PET, FDA food contact" });
+    const ukPlain = makeProduct({ location: "UK" });
+    const products = [usFood, ukPlain];
+    expect(applyFilters(products, { ...baseFilters(), location: "US" }, null)).toEqual([usFood]);
+    expect(applyFilters(products, { ...baseFilters(), foodGrade: true }, null)).toEqual([usFood]);
+    const facets = computeFacets(products, baseFilters(), null);
+    expect(facets.location.map((o) => o.label).sort()).toEqual(["United Kingdom", "United States"]);
+    expect(facets.foodGrade[0].count).toBe(1);
   });
 });
 
