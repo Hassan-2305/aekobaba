@@ -6,8 +6,18 @@ import { ProductGallery } from "./product-gallery";
 import { ProvenanceLine } from "./provenance-line";
 import { QuantityBreakTable } from "./quantity-break-table";
 import { ReviewScore } from "./review-score";
-import { TierBadge } from "./tier-badge";
-import { formatLeadTime, formatMoq } from "@/lib/catalog/format";
+import { PartnerRibbon, TierBadge } from "./tier-badge";
+import { formatCaptureDate, formatLeadTime, formatMoq } from "@/lib/catalog/format";
+import type { PartnerFactsVM } from "@/lib/catalog/partner-facts";
+
+/** Label for a value the partner sent us directly, not captured from their page. */
+function SuppliedBy({ facts }: { facts: PartnerFactsVM }) {
+  return (
+    <span className="ml-2 text-xs text-ink-faint">
+      supplied by {facts.supplierName}, {formatCaptureDate(facts.suppliedAt)}
+    </span>
+  );
+}
 import { productTags } from "@/lib/catalog/tags";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -42,6 +52,7 @@ export function ProductDetailView({ product }: { product: ProductVM }) {
         </div>
 
         <div>
+          {product.supplier.isPartner ? <PartnerRibbon className="mb-4" /> : null}
           <p className="tag text-ink-faint">
             {product.categoryName}
             {product.subcategory ? ` / ${product.subcategory}` : ""}
@@ -102,16 +113,33 @@ export function ProductDetailView({ product }: { product: ProductVM }) {
             </div>
             <div className="grid grid-cols-[9rem_1fr] gap-4 border-b border-line py-3">
               <dt className="tag self-center text-ink-faint">Min order:</dt>
-              <dd data-testid="product-moq" className="text-ink tabular-nums">
+              <dd
+                data-testid="product-moq"
+                className={`tabular-nums ${product.moq === null ? "text-ink-faint" : "text-ink"}`}
+              >
                 {formatMoq(product.moq, product.moqUnit)}
+                {product.partnerFacts?.moq ? <SuppliedBy facts={product.partnerFacts} /> : null}
               </dd>
             </div>
             <div className="grid grid-cols-[9rem_1fr] gap-4 border-b border-line py-3">
               <dt className="tag self-center text-ink-faint">Lead time:</dt>
-              <dd data-testid="product-lead-time" className="text-ink tabular-nums">
+              <dd
+                data-testid="product-lead-time"
+                className={`tabular-nums ${product.leadTimeDays === null ? "text-ink-faint" : "text-ink"}`}
+              >
                 {formatLeadTime(product.leadTimeDays)}
+                {product.partnerFacts?.leadTime ? <SuppliedBy facts={product.partnerFacts} /> : null}
               </dd>
             </div>
+            {product.partnerFacts?.casePack != null ? (
+              <div className="grid grid-cols-[9rem_1fr] gap-4 border-b border-line py-3">
+                <dt className="tag self-center text-ink-faint">Case pack:</dt>
+                <dd data-testid="product-case-pack" className="text-ink tabular-nums">
+                  {product.partnerFacts.casePack.toLocaleString("en-US")} units
+                  <SuppliedBy facts={product.partnerFacts} />
+                </dd>
+              </div>
+            ) : null}
             <div className="grid grid-cols-[9rem_1fr] gap-4 border-b border-line py-3">
               <dt className="tag self-center text-ink-faint">Type:</dt>
               <dd className="text-ink">{product.stockOrCustom === "STOCK" ? "Stock" : "Custom"}</dd>

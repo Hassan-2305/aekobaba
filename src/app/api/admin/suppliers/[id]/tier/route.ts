@@ -2,6 +2,7 @@ import { jsonError, requireApiRole } from "@/lib/auth/api";
 import { db } from "@/lib/db";
 import { parseSupplierTier } from "@/lib/admin/tiers";
 import { tierSchema } from "@/lib/admin/validation";
+import { revalidateCatalog } from "@/lib/catalog/cache";
 
 // PATCH /api/admin/suppliers/[id]/tier — assign a verification tier.
 //
@@ -39,5 +40,6 @@ export async function PATCH(
     select: { id: true, slug: true, name: true, status: true },
   });
 
+  revalidateCatalog();
   return Response.json({ supplier });
 }

@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProductCard } from "@/components/catalog/product-card";
-import { TierBadge } from "@/components/catalog/tier-badge";
+import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
 import { formatCaptureDate } from "@/lib/catalog/format";
-import { partnerProfile } from "@/lib/catalog/partners";
+import { partnerProfile, varietyOrder } from "@/lib/catalog/partners";
+import { ProductPicture, isRepresentativeImage } from "@/components/catalog/product-picture";
+import { formatMoney, priceCurrency } from "@/lib/catalog/format";
+import Link from "next/link";
 import { getSupplier } from "@/lib/catalog/queries";
 
 // Supplier profile (spec): legal identity, review evidence with source
@@ -30,27 +33,55 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
   const supplier = await getSupplier(slug);
   if (!supplier) notFound();
   const profile = supplier.isPartner ? partnerProfile(supplier.slug) : null;
+  // Branded storefront: the partner's best photography, one per product type.
+  const showcase = profile
+    ? varietyOrder(supplier.products.filter((p) => p.primaryImage)).slice(0, 4)
+    : [];
+  const missingFacts = [
+    supplier.products.length > 0 && supplier.products.every((p) => p.moq === null)
+      ? "minimum order quantities"
+      : null,
+    supplier.products.length > 0 && supplier.products.every((p) => p.leadTimeDays === null)
+      ? "lead times"
+      : null,
+  ].filter((fact): fact is string => fact !== null);
 
   return (
     <div>
-      <section className="grain border-b border-line-dark bg-void text-on-dark">
+      <section
+        className="grain border-b border-line-dark bg-void text-on-dark"
+        style={profile ? { borderTop: `4px solid ${profile.brandColor}` } : undefined}
+        data-testid={profile ? "branded-storefront" : undefined}
+      >
         <div className="mx-auto grid max-w-[1400px] gap-8 px-5 pb-12 pt-12 sm:px-8 lg:grid-cols-12 lg:items-end lg:px-12 lg:pb-14 lg:pt-16">
           <div className="lg:col-span-8">
             <div className="flex flex-wrap items-center gap-3">
-              {supplier.isPartner ? (
-                <span className="tag flex items-center gap-1.5 bg-orange px-2 py-1.5 text-white">
-                  <span aria-hidden className="h-1.5 w-1.5 bg-white" />
-                  Featured partner
-                </span>
-              ) : null}
+              {supplier.isPartner ? <PartnerBadge /> : null}
               <TierBadge status={supplier.status} tone="dark" />
             </div>
-            <h1
-              data-testid="supplier-name"
-              className="mt-5 font-semiwide text-4xl font-light leading-[1.02] tracking-[-0.03em] sm:text-6xl"
-            >
-              {supplier.name}
-            </h1>
+            {supplier.isPartner ? (
+              <p data-testid="partner-disclosure" className="mt-3 max-w-xl text-xs leading-relaxed text-on-dark-muted">
+                {PARTNER_DISCLOSURE}
+              </p>
+            ) : null}
+            <div className="mt-5 flex items-center gap-5">
+              {profile ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={profile.logoUrl}
+                  alt={`${supplier.name} logo`}
+                  width={88}
+                  height={70}
+                  className="h-[70px] w-auto shrink-0"
+                />
+              ) : null}
+              <h1
+                data-testid="supplier-name"
+                className="font-semiwide text-4xl font-light leading-[1.02] tracking-[-0.03em] sm:text-6xl"
+              >
+                {supplier.name}
+              </h1>
+            </div>
             <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-sm">
               <div>
                 <dt className="tag text-on-dark-muted">Location</dt>
@@ -93,9 +124,19 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
             ) : null}
           </div>
           {profile ? (
-            <p className="text-sm leading-relaxed text-on-dark-muted lg:col-span-4 lg:text-right">
-              {profile.tagline}
-            </p>
+            <div className="lg:col-span-4 lg:text-right">
+              <p className="text-sm leading-relaxed text-on-dark-muted">{profile.tagline}</p>
+              <a
+                href="#catalog"
+                data-testid="storefront-browse"
+                className="mt-5 inline-flex h-11 items-center gap-2 bg-orange px-5 text-sm font-medium text-white transition-colors hover:bg-orange-hi"
+              >
+                Browse all {supplier.products.length} products
+                <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M12 4v15M6 13l6 6 6-6" />
+                </svg>
+              </a>
+            </div>
           ) : (
             <div className="lg:col-span-4 lg:text-right">
               {/* No seeded supplier has an owning user yet, so the claim CTA
@@ -149,7 +190,7 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
             </div>
             <ul className="grid gap-5 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
               {profile.services.map((service) => (
-                <li key={service.title} className="border-l-2 border-orange pl-4">
+                <li key={service.title} className="border-l-2 border-partner-accent pl-4">
                   <p className="font-semibold">{service.title}</p>
                   <p className="mt-1.5 text-sm leading-relaxed text-on-dark-muted">
                     {service.body}
@@ -178,6 +219,53 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
                   >
                     source
                   </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
+
+      {showcase.length > 0 && profile ? (
+        <section data-testid="storefront-showcase" className="border-b border-line bg-paper">
+          <div className="mx-auto max-w-[1400px] px-5 py-12 sm:px-8 lg:px-12">
+            <div className="flex flex-wrap items-baseline justify-between gap-4">
+              <h2 className="font-semiwide text-3xl font-light tracking-[-0.02em] text-ink">
+                Featured from {supplier.name}
+              </h2>
+              <p className="text-xs text-ink-faint">Photos supplied by {supplier.name}</p>
+            </div>
+            <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {showcase.map((product) => (
+                <li key={product.id}>
+                  <Link href={`/products/${product.id}`} className="group block">
+                    <span className="relative block aspect-[4/5] overflow-hidden bg-white">
+                      <ProductPicture
+                        src={product.primaryImage!.url}
+                        alt={product.primaryImage!.alt ?? product.title}
+                        sizes="(min-width: 1024px) 22vw, 45vw"
+                        className="p-6 transition-transform duration-500 group-hover:scale-[1.04]"
+                      />
+                      <span
+                        className="absolute inset-x-0 bottom-0 h-1"
+                        style={{ background: profile.brandColor }}
+                        aria-hidden
+                      />
+                      <span className="tag absolute left-3 top-3 bg-card/85 px-1.5 py-1 text-[10px] text-ink-muted">
+                        {isRepresentativeImage(product.primaryImage!.url)
+                          ? "Representative image"
+                          : "Supplier photo"}
+                      </span>
+                    </span>
+                    <span className="mt-3 block text-sm font-medium leading-snug text-ink group-hover:underline">
+                      {product.title.split(" — ")[0]}
+                    </span>
+                    <span className="mt-1 block text-sm text-ink-muted tabular-nums">
+                      {product.basePrice === null
+                        ? "Ask the supplier"
+                        : formatMoney(product.basePrice, priceCurrency(product.priceBasis))}
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -254,11 +342,22 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
         </div>
 
         <section>
+          {missingFacts.length > 0 ? (
+            <p
+              data-testid="missing-facts"
+              className="mb-6 border-l-2 border-line bg-well px-4 py-3 text-sm text-ink-muted"
+            >
+              Our captures of {supplier.name}&rsquo;s product pages don&rsquo;t include{" "}
+              {missingFacts.join(" or ")}, so these listings show &ldquo;Not published&rdquo;. Ask
+              for them in your quote request.
+            </p>
+          ) : null}
           <h2 className="font-semiwide text-3xl font-light tracking-[-0.02em] text-ink">
             Catalog{" "}
             <span className="text-ink-faint tabular-nums">({supplier.products.length})</span>
           </h2>
           <div
+            id="catalog"
             data-testid="supplier-catalog"
             className="mt-8 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 xl:grid-cols-4"
           >

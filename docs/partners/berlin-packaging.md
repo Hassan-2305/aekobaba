@@ -39,13 +39,37 @@ and fulfilment speed. Berlin replies to ~100% of negative reviews.
 | 3301B08-B  | 8 oz White HDPE Wide Mouth Jar (cap separate)              | $0.73                          | each  |
 | 337048     | 3.5 oz 100% PCR Aluminum Packer Bottle                     | not shown → "Ask the supplier" | —     |
 
-MOQ and lead time are not published per item on these pages → shown as "Ask the supplier".
+MOQ and lead time are not published per item on these pages → shown as "Not published".
+Re-checked 2026-10-06: the product pages show price and "Bulk pricing is not available for this
+item" but no MOQ, case quantity or lead time; two featured SKUs (3351B09-B, 322420-K) read
+"Currently unavailable. We do not have an estimated date this item will be back in stock."
 Samples exist for some items (e.g. YSP4SQ-SAM) but are not verified per listing → sample requests go
 through the inquiry form with "we'll ask them for you".
 
+## Closing the data gaps (partner program, Oct 2026)
+
+Berlin fills in `docs/partners/berlin-packaging-data-request.csv` (one row per listed SKU: MOQ,
+lead time, case pack, pallet quantity, stock). Paste each answer into
+`src/lib/catalog/partner-facts.ts` with the date they sent it. Values render labelled
+"Supplied by Berlin Packaging, <date>" — never as captured from their page — and only fill gaps;
+anything their page publishes still wins. Also ask for:
+
+- Legal entity name (verification gate 1 — the remaining blocker for the Recommended tier).
+- Restock dates for any featured SKU that is out of stock.
+- Hero product photography at full resolution (partner photography perk).
+
+## Partner program surfaces (live in the app)
+
+- "Partner" badge + "Sponsored" tag on every paid placement; disclosure text in `tier-badge.tsx`.
+- Sponsored slot on results: "Featured in <category>" (results-view.tsx).
+- Branded storefront: `/suppliers/berlin-packaging` (logo, brand red, photo showcase).
+- Invite-only partner collection: `/partners`.
+- Lead dashboard (demo, live + labelled sample data): `/suppliers/berlin-packaging/dashboard`,
+  with the lead inbox preview at `/suppliers/berlin-packaging/inbox-preview`.
+
 ## Next for the partnership
 
-1. Ask Berlin for official product photography (or written permission to use theirs). Listings
-   currently show Aekobaba's representative packshots — the biggest single upgrade to their showcase.
+1. Listings now use Berlin's own product photos ("Supplier photo"). Premium perk: shoot or retouch
+   their hero products at high resolution for the storefront.
 2. A product feed (SKU, price, case quantity, stock status) would keep prices current automatically.
 3. Confirm legal entity name → completes verification gate 1 for the Recommended tier.

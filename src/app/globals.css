@@ -51,6 +51,15 @@
   --orange-ink: #b9470c; /* orange as text on off-white — AA */
   --orange-tint: #fbe9dc;
 
+  /* Partner mark — graphite with a brass accent. Deliberately not orange:
+     orange is the action colour, and partner listings repeat down a grid. */
+  --partner: #1e252c;
+  --partner-on: #f4efe4;
+  --partner-accent: #b08d57;
+  --partner-accent-ink: #7f6234; /* brass as text on off-white — AA */
+  --partner-tint: #f0ebe1;
+  --partner-star: #c9a46a;
+
   /* Status */
   --success-ink: #177248;
   --success-tint: #e2f1e8;
@@ -108,6 +117,14 @@
   --orange-hi: #ff7f3a;
   --orange-ink: #ff8a45;
   --orange-tint: rgba(245, 102, 22, 0.14);
+
+  /* Dark theme: the ribbon flips to champagne so it reads on graphite cards. */
+  --partner: #e6d8bd;
+  --partner-on: #1a1916;
+  --partner-accent: #d2b07a;
+  --partner-accent-ink: #dcbd8a;
+  --partner-tint: rgba(210, 176, 122, 0.1);
+  --partner-star: #8a6a35;
 
   --success-ink: #79d1a4;
   --success-tint: rgba(55, 180, 120, 0.14);
@@ -207,6 +224,12 @@
   --color-orange-hi: var(--orange-hi);
   --color-orange-ink: var(--orange-ink);
   --color-orange-tint: var(--orange-tint);
+  --color-partner: var(--partner);
+  --color-partner-on: var(--partner-on);
+  --color-partner-accent: var(--partner-accent);
+  --color-partner-accent-ink: var(--partner-accent-ink);
+  --color-partner-tint: var(--partner-tint);
+  --color-partner-star: var(--partner-star);
   --color-on-orange: var(--on-orange);
   --color-well-ink: var(--well-ink);
   --color-well-ink-muted: var(--well-ink-muted);
@@ -381,4 +404,28 @@ body {
 }
 .stage-fade {
   animation: stage-fade 600ms ease-out both;
+}
+
+/* Loading skeletons (app/loading.tsx) — a soft pulse; still under reduced motion. */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.skeleton {
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* Partner ribbon — a folded flag on partner cards (PartnerRibbon). */
+.partner-ribbon {
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%);
 }

@@ -1,13 +1,13 @@
 import Link from "next/link";
 
 import { ArrowCorner } from "@/components/brand/icons";
-import { formatLeadTime, formatMoq } from "@/lib/catalog/format";
+import { formatCaptureDate, formatLeadTime, formatMoq } from "@/lib/catalog/format";
 import { productTags } from "@/lib/catalog/tags";
 import type { ProductVM } from "@/lib/catalog/view-models";
 import { PriceTagInline } from "./price-display";
 import { ProvenanceLine } from "./provenance-line";
 import { ReviewScore } from "./review-score";
-import { TierBadge } from "./tier-badge";
+import { PartnerRibbon, TierBadge } from "./tier-badge";
 import { isRepresentativeImage, ProductPicture } from "@/components/catalog/product-picture";
 
 // Catalog object — the results-grid card. The packshot sits in a warm image
@@ -29,12 +29,31 @@ export function ProductCard({ product }: { product: ProductVM }) {
       : (image.alt ?? product.title)
     : `Representative image of ${product.title}`;
   const tags = productTags(product, 2);
+  const partner = product.supplier.isPartner;
+  const facts = product.partnerFacts ?? null;
+  const partnerNote = facts
+    ? `${[
+        facts.moq ? "MOQ" : null,
+        facts.leadTime ? "lead time" : null,
+        facts.casePack !== null ? `case of ${facts.casePack.toLocaleString("en-US")}` : null,
+      ]
+        .filter(Boolean)
+        .join(", ")
+        .replace(/^./, (c) => c.toUpperCase())} supplied by ${facts.supplierName}, ${formatCaptureDate(facts.suppliedAt)}`
+    : null;
+  const unpublished = [
+    product.moq === null ? "MOQ" : null,
+    product.leadTimeDays === null ? (product.moq === null ? "lead time" : "Lead time") : null,
+  ].filter((fact): fact is string => fact !== null);
 
   return (
     <article
       data-testid="product-card"
       data-product-id={product.id}
-      className="group relative flex h-full flex-col bg-card shadow-[0_1px_0_rgba(11,14,18,.06)] transition-shadow duration-300 hover:shadow-[0_24px_48px_-28px_rgba(11,14,18,.35)]"
+      data-partner={partner ? "true" : undefined}
+      className={`group relative flex h-full flex-col bg-card shadow-[0_1px_0_rgba(11,14,18,.06)] transition-shadow duration-300 hover:shadow-[0_24px_48px_-28px_rgba(11,14,18,.35)] ${
+        partner ? "ring-1 ring-partner-accent/35 hover:ring-partner-accent/70" : ""
+      }`}
     >
       <Link
         href={`/products/${product.id}`}
@@ -55,23 +74,21 @@ export function ProductCard({ product }: { product: ProductVM }) {
               No image available
             </div>
           )}
-          {product.supplier.isPartner ? (
-            <span className="tag absolute left-3 top-3 z-10 flex items-center gap-1.5 bg-orange px-2 py-1.5 text-white">
-              <span aria-hidden className="h-1.5 w-1.5 bg-white" />
-              Featured partner
-            </span>
-          ) : null}
-          <span
-            className={`tag absolute left-4 max-w-[70%] truncate text-ink-muted ${product.supplier.isPartner ? "top-12" : "top-4"}`}
-          >
-            {product.categoryName}
-          </span>
+          {partner ? <PartnerRibbon className="absolute left-0 top-3 z-10" /> : null}
           <span
             aria-hidden
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center border border-ink/10 bg-paper/60 text-ink transition-colors group-hover:border-orange group-hover:bg-orange group-hover:text-on-orange"
+            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center bg-ink text-paper opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           >
             <ArrowCorner size={15} />
           </span>
+          {image ? (
+            <span
+              data-testid="image-source"
+              className="absolute bottom-3 right-3 z-10 text-[10px] text-ink-faint"
+            >
+              {isRepresentativeImage(image.url) ? "Representative image" : "Supplier photo"}
+            </span>
+          ) : null}
           {tags.length > 0 ? (
             <ul
               className="absolute bottom-3 left-4 flex flex-wrap gap-1.5"
@@ -88,6 +105,7 @@ export function ProductCard({ product }: { product: ProductVM }) {
       </Link>
 
       <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+        <p className="tag mb-1.5 truncate text-[10.5px] text-ink-faint">{product.categoryName}</p>
         <h3 className="line-clamp-2 min-h-[2.5rem] text-[15px] font-medium leading-snug text-ink">
           <Link
             href={`/products/${product.id}`}
@@ -106,9 +124,7 @@ export function ProductCard({ product }: { product: ProductVM }) {
           </Link>
           <TierBadge status={product.supplier.status} />
         </div>
-
-        <div className="mt-4 flex items-end justify-between gap-3">
-          <PriceTagInline product={product} />
+        <div className="mt-1.5">
           <ReviewScore
             reviewScore={product.supplier.reviewScore}
             reviewCount={product.supplier.reviewCount}
@@ -116,22 +132,48 @@ export function ProductCard({ product }: { product: ProductVM }) {
           />
         </div>
 
+        <div className="mt-4">
+          <PriceTagInline product={product} />
+        </div>
+
+        {/* Only published facts get a cell; unknowns collapse into one muted
+            line instead of repeating "not published" down every card. */}
         <dl className="mt-4 grid grid-cols-2 border-t border-line text-xs">
-          <div className="border-r border-line py-2.5 pr-3">
-            <dt className="tag text-ink-faint">Min order:</dt>
-            <dd className="mt-1.5 truncate text-ink tabular-nums">
-              {formatMoq(product.moq, product.moqUnit)}
-            </dd>
-          </div>
-          <div className="py-2.5 pl-3">
-            <dt className="tag text-ink-faint">Lead time:</dt>
-            <dd className="mt-1.5 text-ink tabular-nums">{formatLeadTime(product.leadTimeDays)}</dd>
-          </div>
-          <div className="col-span-2 border-t border-line py-2.5">
+          {product.moq !== null ? (
+            <div
+              className={`py-2.5 pr-3 ${product.leadTimeDays !== null ? "border-r border-line" : "col-span-2"}`}
+            >
+              <dt className="tag text-ink-faint">Min order:</dt>
+              <dd className="mt-1.5 truncate text-ink tabular-nums">
+                {formatMoq(product.moq, product.moqUnit)}
+              </dd>
+            </div>
+          ) : null}
+          {product.leadTimeDays !== null ? (
+            <div className={`py-2.5 ${product.moq !== null ? "pl-3" : "col-span-2"}`}>
+              <dt className="tag text-ink-faint">Lead time:</dt>
+              <dd className="mt-1.5 text-ink tabular-nums">
+                {formatLeadTime(product.leadTimeDays)}
+              </dd>
+            </div>
+          ) : null}
+          <div
+            className={`col-span-2 py-2.5 ${product.moq !== null || product.leadTimeDays !== null ? "border-t border-line" : ""}`}
+          >
             <dt className="tag text-ink-faint">Material:</dt>
             <dd className="mt-1.5 truncate text-ink">{product.material}</dd>
           </div>
         </dl>
+        {unpublished.length > 0 ? (
+          <p data-testid="unpublished-facts" className="pb-2.5 text-[11px] text-ink-faint">
+            {unpublished.join(" and ")} not published — ask in your quote.
+          </p>
+        ) : null}
+        {partnerNote ? (
+          <p data-testid="partner-supplied" className="pb-2.5 text-[11px] text-ink-muted">
+            {partnerNote}
+          </p>
+        ) : null}
 
         <div className="relative z-20 mt-auto border-t border-line pt-3">
           <ProvenanceLine

@@ -135,7 +135,7 @@ describe("ReviewScore", () => {
     const html = render(
       createElement(ReviewScore, { reviewScore: null, reviewCount: 0, reviewPlatform: null }),
     );
-    expect(html).toContain("No published reviews");
+    expect(html).toContain("No published supplier rating");
     expect(html).not.toContain("★");
   });
 });
@@ -212,5 +212,91 @@ describe("QuantityBreakTable", () => {
 
   it("renders nothing when no breaks are published", () => {
     expect(render(createElement(QuantityBreakTable, { breaks: [] }))).toBe("");
+  });
+});
+
+describe("Berlin demo review fixes", () => {
+  it("flags captures older than two weeks", () => {
+    const now = new Date("2026-10-06T00:00:00Z");
+    const fresh = render(
+      createElement(ProvenanceLine, { sourceUrl: "https://x.example", sourceCapturedAt: "2026-10-03T00:00:00Z", now }),
+    );
+    const old = render(
+      createElement(ProvenanceLine, { sourceUrl: "https://x.example", sourceCapturedAt: "2026-09-21T00:00:00Z", now }),
+    );
+    expect(fresh).not.toContain('data-testid="stale-capture"');
+    expect(old).toContain('data-testid="stale-capture"');
+    expect(old.replace(/<!-- -->/g, "")).toContain("15 days old");
+  });
+
+  it("hides unpublished MOQ / lead time cells behind one muted line", () => {
+    const html = render(
+      createElement(ProductCard, { product: makeProduct({ moq: null, leadTimeDays: null }) }),
+    ).replace(/<!-- -->/g, "");
+    expect(html).not.toContain("Min order:");
+    expect(html).not.toContain("Lead time:");
+    expect(html).toContain("MOQ and lead time not published");
+    expect(html).not.toContain("Ask the supplier");
+  });
+
+  it("labels the rating as a supplier rating", () => {
+    const html = render(
+      createElement(ReviewScore, { reviewScore: 4.4, reviewCount: 4779, reviewPlatform: "Trustpilot" }),
+    );
+    expect(html).toContain("Supplier rating");
+    expect(html).toContain("4,779");
+  });
+
+  it("shows a pack price as a comparable per-unit price, in the published currency", () => {
+    const product = {
+      ...makeProduct({ basePrice: 73.72 }),
+      priceBasis: "per 1000 bags, ex. VAT (GBP; £88.47 inc. VAT)",
+    };
+    const html = render(createElement(PriceTagInline, { product }));
+    expect(html).toContain("£0.074");
+    expect(html).toContain("/ bag");
+    expect(html).toContain("£73.72");
+    expect(html).toContain("GBP");
+    expect(html).not.toContain("$");
+  });
+});
+
+describe("Partner program labels", () => {
+  it("labels the image source on every card", () => {
+    const representative = render(createElement(ProductCard, { product: makeProduct({}) }));
+    expect(representative).toContain("Representative image");
+    const photo = render(
+      createElement(ProductCard, {
+        product: makeProduct({ primaryImage: { url: "/partners/berlin-packaging/33512.webp", alt: "Bottle" } }),
+      }),
+    );
+    expect(photo).toContain("Supplier photo");
+  });
+
+  it("labels partner-supplied values instead of passing them off as captured", () => {
+    const product = {
+      ...makeProduct({ moq: 240, leadTimeDays: 5 }),
+      partnerFacts: {
+        supplierName: "Berlin Packaging",
+        suppliedAt: "2026-10-10T00:00:00Z",
+        moq: true,
+        leadTime: true,
+        casePack: 240,
+      },
+    };
+    const html = render(createElement(ProductCard, { product })).replace(/<!-- -->/g, "");
+    expect(html).toContain("MOQ, lead time, case of 240 supplied by Berlin Packaging, 10 Oct 2026");
+  });
+});
+
+describe("Partner ribbon", () => {
+  it("marks partner cards with the orange ribbon and nothing else", () => {
+    const base = makeProduct();
+    const partner = { ...base, supplier: { ...base.supplier, isPartner: true } };
+    const html = render(createElement(ProductCard, { product: partner }));
+    expect(html).toContain('data-testid="partner-ribbon"');
+    expect(html).toContain("Aekobaba Partner");
+    expect(html).toContain('data-partner="true"');
+    expect(render(createElement(ProductCard, { product: base }))).not.toContain("partner-ribbon");
   });
 });

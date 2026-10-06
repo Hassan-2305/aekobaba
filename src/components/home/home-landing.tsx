@@ -3,9 +3,15 @@ import Link from "next/link";
 import { ArrowCorner, ArrowRight } from "@/components/brand/icons";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ProductPicture } from "@/components/catalog/product-picture";
-import { TierBadge } from "@/components/catalog/tier-badge";
-import { categoryImageAsset } from "../../../data/image-mapping";
-import { formatCaptureDate, formatMoq, formatPriceLine } from "@/lib/catalog/format";
+import { PartnerBadge, TierBadge } from "@/components/catalog/tier-badge";
+import {
+  formatCaptureDate,
+  formatMoq,
+  formatPerUnit,
+  formatPriceLine,
+  isStaleCapture,
+  unitPrice,
+} from "@/lib/catalog/format";
 import type { CategoryVM, ProductVM } from "@/lib/catalog/view-models";
 import { ExploreStrip } from "./explore-strip";
 import { PartnerShowcase } from "./partner-showcase";
@@ -14,11 +20,16 @@ import { HeroStudio } from "./hero-studio";
 
 // Home (spec C4) — the page alternates between two worlds:
 //
-//   dark   hero: the packaging shelf, the promise, search
-//   light  explore packaging: popular material categories
+//   dark   hero: the one headline, search, quick filters
+//   dark   partner spotlight (labelled placement)
+//   light  explore packaging: the grouped category index (live ones only)
+//   light  featured packaging: partner listings first (ribboned), then others
 //   dark   how it works: the provenance "receipt" and the tier system
-//   light  featured listings + the full category index
 //   dark   one request to every supplier (Quote Basket)
+//
+// Categories live in the header menu and the grouped index only. The lead
+// partner is showcased on purpose (spotlight, then the head of the rail);
+// the example listing stays a neutral, non-partner record.
 //
 // Everything browsable signed-out. Popular tiles are material categories only
 // (user review: no use-case entries in navigation — PR #9). All imagery is
@@ -33,15 +44,24 @@ interface HomeLandingProps {
   featured: ProductVM[];
   /** Distinct suppliers with at least one listed product. */
   supplierCount?: number;
+  /** The "live listing" shown in How it works — a complete record (price + MOQ). */
+  specimen?: ProductVM | null;
 }
 
-const plural = (n: number, word: string) =>
-  `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
-
-export function HomeLanding({ categories, featured, supplierCount, partner }: HomeLandingProps) {
+export function HomeLanding({
+  categories,
+  featured,
+  supplierCount,
+  partner,
+  specimen: specimenProp,
+}: HomeLandingProps) {
   const totalProducts = categories.reduce((sum, c) => sum + c.productCount, 0);
   const specimen =
-    featured.find((p) => p.basePrice !== null && p.primaryImage) ?? featured[0] ?? null;
+    specimenProp ??
+    featured.find((p) => p.basePrice !== null && p.moq !== null && p.primaryImage) ??
+    featured.find((p) => p.basePrice !== null && p.primaryImage) ??
+    featured[0] ??
+    null;
   const fanOut = [...new Map(featured.map((p) => [p.supplier.slug, p.supplier])).values()].slice(
     0,
     3,
@@ -49,8 +69,6 @@ export function HomeLanding({ categories, featured, supplierCount, partner }: Ho
 
   return (
     <div>
-      <h1 className="sr-only">Packaging, sourced properly. What are you packaging?</h1>
-
       {/* One composition for both themes: the studio hero and the explore
           strip. The dark theme re-lights them; it does not re-lay them out. */}
       <HeroStudio
@@ -62,6 +80,41 @@ export function HomeLanding({ categories, featured, supplierCount, partner }: Ho
         <PartnerShowcase profile={partner.profile} products={partner.products} />
       ) : null}
       <ExploreStrip categories={categories} />
+
+      {/* ─── Light: featured listings (partner first) ───────────────────── */}
+      <div className="bg-paper">
+        {featured.length > 0 ? (
+          <section
+            className="mx-auto max-w-[1400px] px-5 pb-20 pt-4 sm:px-8 lg:px-12 lg:pb-24"
+            data-testid="featured-rail-section"
+          >
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <h2 className="font-semiwide text-4xl font-light leading-[1] tracking-[-0.03em] text-ink sm:text-5xl">
+                Featured packaging
+              </h2>
+              <Link
+                href="/results"
+                className="inline-flex items-center gap-2 text-sm font-medium text-ink underline decoration-ink/20 underline-offset-[5px] hover:decoration-orange"
+              >
+                Browse the catalog
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div
+              className="-mx-5 mt-10 flex snap-x snap-mandatory scroll-pl-5 gap-4 overflow-x-auto px-5 pb-6 sm:-mx-8 sm:scroll-pl-8 sm:px-8 lg:-mx-12 lg:scroll-pl-12 lg:px-12"
+              data-testid="featured-rail"
+            >
+              {featured.map((product) => (
+                <div key={product.id} className="w-[280px] shrink-0 snap-start sm:w-[310px]">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+      </div>
+
 
       {/* ─── Dark: how it works ─────────────────────────────────────────── */}
       <section id="how-it-works" className="tone-dark grain scroll-mt-4 bg-navy text-on-dark">
@@ -110,7 +163,7 @@ export function HomeLanding({ categories, featured, supplierCount, partner }: Ho
           <div className="lg:col-span-6 lg:col-start-7">
             {specimen ? <SpecimenSheet product={specimen} /> : null}
 
-            <dl className="mt-10 grid gap-6 border-t border-line-dark pt-6 sm:grid-cols-3">
+            <dl className="mt-10 grid gap-6 border-t border-line-dark pt-6 sm:grid-cols-2">
               <div>
                 <dt>
                   <TierBadge status="RECOMMENDED" tone="dark" />
@@ -135,91 +188,19 @@ export function HomeLanding({ categories, featured, supplierCount, partner }: Ho
                   Sells, but doesn&rsquo;t publish prices.
                 </dd>
               </div>
+              <div>
+                <dt>
+                  <PartnerBadge />
+                </dt>
+                <dd className="mt-2 text-sm leading-relaxed text-on-dark-muted">
+                  Paid partner. Gets sponsored, labelled placement and a branded storefront — never
+                  a better tier or a hidden ranking boost.
+                </dd>
+              </div>
             </dl>
           </div>
         </div>
       </section>
-
-      {/* ─── Light: featured listings + category index ──────────────────── */}
-      <div className="bg-paper">
-        {featured.length > 0 ? (
-          <section
-            className="mx-auto max-w-[1400px] px-5 pt-20 sm:px-8 lg:px-12 lg:pt-28"
-            data-testid="featured-rail-section"
-          >
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <h2 className="font-semiwide text-4xl font-light leading-[1] tracking-[-0.03em] text-ink sm:text-5xl">
-                From verified suppliers
-              </h2>
-              <Link
-                href="/results"
-                className="inline-flex items-center gap-2 text-sm font-medium text-ink underline decoration-ink/20 underline-offset-[5px] hover:decoration-orange"
-              >
-                Browse the catalog
-                <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div
-              className="-mx-5 mt-10 flex snap-x snap-mandatory scroll-pl-5 gap-4 overflow-x-auto px-5 pb-6 sm:-mx-8 sm:scroll-pl-8 sm:px-8 lg:-mx-12 lg:scroll-pl-12 lg:px-12"
-              data-testid="featured-rail"
-            >
-              {featured.map((product) => (
-                <div key={product.id} className="w-[280px] shrink-0 snap-start sm:w-[310px]">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        <section className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-          <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
-            <h2 className="font-semiwide text-4xl font-light leading-[1] tracking-[-0.03em] text-ink sm:text-5xl lg:col-span-6">
-              Every category
-            </h2>
-            <p className="text-base leading-relaxed text-ink-muted lg:col-span-5 lg:col-start-8">
-              {categories.length} packaging categories, from flexible pouches to shipping cartons.
-            </p>
-          </div>
-          <ul
-            className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3 lg:gap-x-12"
-            data-testid="category-grid"
-          >
-            {categories.map((category) => {
-              const asset = categoryImageAsset(category.slug);
-              return (
-                <li key={category.slug} className="border-b border-line">
-                  <Link
-                    href={`/results?category=${encodeURIComponent(category.slug)}`}
-                    className="group flex items-center gap-4 py-3"
-                  >
-                    <span className="relative h-12 w-12 shrink-0 overflow-hidden bg-well">
-                      {asset ? (
-                        <ProductPicture
-                          src={asset}
-                          alt={`${category.name} — representative packaging image`}
-                          sizes="48px"
-                          className="scale-[1.3]"
-                        />
-                      ) : null}
-                    </span>
-                    <span
-                      className={`min-w-0 flex-1 text-sm group-hover:underline group-hover:decoration-orange group-hover:underline-offset-4 ${
-                        category.productCount > 0 ? "text-ink" : "text-ink-faint"
-                      }`}
-                    >
-                      {category.name}
-                    </span>
-                    <span className="text-xs text-ink-faint tabular-nums">
-                      {plural(category.productCount, "product")}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      </div>
 
       {/* ─── Dark: one request, every supplier ──────────────────────────── */}
       <section className="grain relative overflow-hidden bg-void text-on-dark">
@@ -267,6 +248,10 @@ export function HomeLanding({ categories, featured, supplierCount, partner }: Ho
 /** A real listing drawn as an annotated spec sheet — the provenance model, shown. */
 function SpecimenSheet({ product }: { product: ProductVM }) {
   const image = product.primaryImage;
+  const unit = unitPrice(product);
+  const perUnit =
+    unit && unit.packSize !== 1 ? formatPerUnit(unit.amount, unit.currency, unit.unit) : null;
+  const stale = isStaleCapture(product.sourceCapturedAt);
   return (
     <figure className="relative">
       <div className="grid grid-cols-[1fr] border border-line-dark bg-surface sm:grid-cols-[1.05fr_1fr]">
@@ -290,6 +275,9 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
               <dt className="tag self-center text-on-dark-muted">Price</dt>
               <dd className="text-right text-on-dark tabular-nums">
                 {formatPriceLine(product.basePrice, product.priceBasis)}
+                {perUnit ? (
+                  <span className="mt-0.5 block text-xs text-on-dark-muted">{perUnit}</span>
+                ) : null}
               </dd>
             </div>
             <div className="flex justify-between gap-4 border-t border-line-dark py-2.5">
@@ -310,6 +298,11 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
                   {formatCaptureDate(product.sourceCapturedAt)}
                   <ArrowCorner size={12} />
                 </a>
+                {stale ? (
+                  <span className="mt-0.5 block text-xs text-on-dark-muted">
+                    Older capture — check the source
+                  </span>
+                ) : null}
               </dd>
             </div>
           </dl>

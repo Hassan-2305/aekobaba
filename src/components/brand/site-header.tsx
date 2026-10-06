@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { CATEGORY_MENU } from "@/lib/catalog/menu";
+import { groupedMenu } from "@/lib/catalog/menu";
 import { BasketBadge } from "@/components/quotes/basket-badge";
 import { ChevronDown, SearchIcon } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
@@ -36,7 +36,7 @@ export function SiteHeader() {
 
         <nav
           aria-label="Primary"
-          className="order-4 flex w-full items-center gap-6 border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8 lg:gap-9 lg:pl-12 lg:text-[15px]"
+          className="order-4 flex w-full items-center gap-6 overflow-x-auto whitespace-nowrap border-t border-line-dark px-5 text-sm sm:order-none sm:w-auto sm:border-t-0 sm:px-8 lg:gap-9 lg:pl-12 lg:text-[15px]"
         >
           <Link
             href="/results"
@@ -49,19 +49,26 @@ export function SiteHeader() {
               Categories
               <ChevronDown size={14} className="transition-transform group-open:rotate-180" />
             </summary>
-            <div className="absolute left-0 top-full z-40 mt-[13px] w-[min(92vw,560px)] border border-line-dark bg-navy p-2 shadow-[0_30px_60px_-20px_rgba(0,0,0,.7)]">
-              <ul className="grid grid-cols-1 sm:grid-cols-2">
-                {CATEGORY_MENU.map((category) => (
-                  <li key={category.slug}>
-                    <Link
-                      href={`/results?category=${encodeURIComponent(category.slug)}`}
-                      className="block px-3 py-2 text-sm text-on-dark/80 transition-colors hover:bg-surface-2 hover:text-on-dark"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
+            <div className="absolute left-0 top-full z-40 mt-[13px] max-h-[75vh] w-[min(92vw,720px)] overflow-y-auto border border-line-dark bg-navy p-4 shadow-[0_30px_60px_-20px_rgba(0,0,0,.7)]">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+                {groupedMenu().map(({ group, entries }) => (
+                  <div key={group.id}>
+                    <p className="tag px-2 pb-1 text-on-dark-muted">{group.name}</p>
+                    <ul>
+                      {entries.map((category) => (
+                        <li key={category.slug}>
+                          <Link
+                            href={`/results?category=${encodeURIComponent(category.slug)}`}
+                            className="block px-2 py-1.5 text-sm text-on-dark/80 transition-colors hover:bg-surface-2 hover:text-on-dark"
+                          >
+                            {category.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </details>
           <Link
@@ -69,6 +76,12 @@ export function SiteHeader() {
             className="whitespace-nowrap py-3 text-on-dark/80 transition-colors hover:text-on-dark"
           >
             Suppliers
+          </Link>
+          <Link
+            href="/partners"
+            className="whitespace-nowrap py-3 text-on-dark/80 transition-colors hover:text-on-dark"
+          >
+            Partners
           </Link>
           <Link
             href="/#how-it-works"
@@ -81,7 +94,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-3 py-3 pr-5 lg:gap-4 lg:pr-[var(--edge)]">
           <form action="/results" role="search" className="hidden lg:block">
             <label htmlFor="site-search" className="sr-only">
-              What are you packaging?
+              Search packaging
             </label>
             <div className="flex h-11 w-72 items-center border border-line-dark bg-surface transition-colors focus-within:border-orange xl:w-[300px]">
               <SearchIcon size={15} className="ml-3 shrink-0 text-on-dark-muted" />

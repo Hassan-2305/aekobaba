@@ -28,3 +28,16 @@ describe("buildDirectory", () => {
     expect(directory[1].productCount).toBe(2);
   });
 });
+
+describe("buildDirectory — partners", () => {
+  it("puts partners ahead of every tier", () => {
+    const base = makeProduct();
+    const partner = { ...base.supplier, slug: "berlin", name: "Berlin", status: "LISTED" as const, isPartner: true };
+    const rec = { ...base.supplier, slug: "rec", name: "Rec", status: "RECOMMENDED" as const, isPartner: false };
+    const directory = buildDirectory([
+      { ...makeProduct(), supplier: rec },
+      { ...makeProduct(), supplier: partner },
+    ]);
+    expect(directory.map((d) => d.supplier.slug)).toEqual(["berlin", "rec"]);
+  });
+});

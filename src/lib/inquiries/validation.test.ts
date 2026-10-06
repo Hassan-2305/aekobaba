@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   designFileError,
+  inquiryDescription,
   inquiryFieldErrors,
   inquiryReference,
   inquirySchema,
@@ -32,15 +33,31 @@ describe("inquirySchema", () => {
       ...base,
       name: "",
       email: "nope",
-      description: "short",
+      quantity: "",
     });
     expect(result.success).toBe(false);
     if (!result.success) {
       const errors = inquiryFieldErrors(result.error);
       expect(errors.name).toBeTruthy();
       expect(errors.email).toBeTruthy();
-      expect(errors.description).toBeTruthy();
+      expect(errors.quantity).toBeTruthy();
     }
+  });
+
+  it("keeps the design question and description optional", () => {
+    const parsed = inquirySchema.parse({ ...base, designStatus: undefined, description: undefined });
+    expect(parsed.designStatus).toBeNull();
+    expect(parsed.description).toBe("");
+    expect(inquirySchema.parse({ ...base, designStatus: "" }).designStatus).toBeNull();
+  });
+
+  it("accepts a share link for large artwork and stores it with the description", () => {
+    const parsed = inquirySchema.parse({ ...base, fileLink: "wetransfer.com/downloads/abc" });
+    expect(parsed.fileLink).toBe("https://wetransfer.com/downloads/abc");
+    expect(inquiryDescription(parsed)).toBe(
+      "250g coffee, matte black, one-colour logo.\n\nArtwork link: https://wetransfer.com/downloads/abc",
+    );
+    expect(inquirySchema.safeParse({ ...base, fileLink: "not a link" }).success).toBe(false);
   });
 
   it("rejects an invalid website and an unknown design status", () => {

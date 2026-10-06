@@ -33,7 +33,7 @@ export function SearchForm({
   return (
     <form action="/results" role="search" className="w-full">
       <label htmlFor={id} className="sr-only">
-        What are you packaging?
+        Search packaging
       </label>
       <div
         className={`flex items-stretch border transition-colors ${
@@ -51,7 +51,7 @@ export function SearchForm({
           type="search"
           name="q"
           defaultValue={defaultValue}
-          placeholder="Pouches, bottles, labels…"
+          placeholder="Search pouches, bottles, labels…"
           className={`w-full min-w-0 bg-transparent focus:outline-none ${
             studio ? "px-4 text-[17px] placeholder:text-ink-faint" : placeholder
           } ${studio ? "" : size === "lg" ? "px-3 py-4 text-base" : "px-3 py-2.5 text-sm"}`}
@@ -64,8 +64,7 @@ export function SearchForm({
               : `text-on-orange hover:bg-orange-hi ${size === "lg" ? "px-6 text-sm sm:px-8" : "px-4 text-sm"}`
           }`}
         >
-          <span className="sm:hidden">Search</span>
-          <span className="hidden sm:inline">Find packaging</span>
+          Search
           {arrow ? (
             <svg
               aria-hidden

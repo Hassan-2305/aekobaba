@@ -14,8 +14,10 @@ export const DESIGN_STATUS_LABEL: Record<(typeof DESIGN_STATUSES)[number], strin
 };
 
 /**
- * Vercel functions accept request bodies up to 4.5 MB, so the design file is
- * capped at 4 MB to leave room for the form fields.
+ * Vercel functions accept request bodies up to 4.5 MB, so the attached design
+ * file is capped at 4 MB to leave room for the form fields. Print-ready AI,
+ * PSD and PDF files are usually bigger: the form takes a share link
+ * (`fileLink`) for those instead.
  */
 export const MAX_DESIGN_BYTES = 4 * 1024 * 1024;
 
@@ -72,13 +74,45 @@ export const inquirySchema = z.object({
   quantity: z.string().trim().min(1, "How many do you need?").max(80),
   packagingType: optionalText(120),
   format: optionalText(160),
-  designStatus: z.enum(DESIGN_STATUSES, { message: "Tell us whether you have a design" }),
+  // Optional: an unanswered design question is stored as null, never guessed.
+  designStatus: z.preprocess(
+    (v) => (v === "" ? undefined : v),
+    z
+      .enum(DESIGN_STATUSES, { message: "Choose one of the design options" })
+      .optional()
+      .transform((v) => v ?? null),
+  ),
   description: z
     .string()
     .trim()
-    .min(10, "Add a few words about what you need (10+ characters)")
-    .max(4000),
+    .max(4000)
+    .optional()
+    .transform((v) => v ?? ""),
+  /** Share link (WeTransfer, Drive, Dropbox…) for artwork too large to attach. */
+  fileLink: z
+    .string()
+    .trim()
+    .max(500)
+    .optional()
+    .transform((v, ctx) => {
+      if (!v) return null;
+      try {
+        const url = new URL(/^https?:\/\//i.test(v) ? v : `https://${v}`);
+        if (!url.hostname.includes(".")) throw new Error("no tld");
+        return url.toString();
+      } catch {
+        ctx.addIssue({ code: "custom", message: "Paste a full link, e.g. https://wetransfer.com/…" });
+        return z.NEVER;
+      }
+    }),
 });
+
+/** The stored description: the buyer's notes plus the large-file link, if any. */
+export function inquiryDescription(input: Pick<InquiryInput, "description" | "fileLink">): string {
+  return [input.description, input.fileLink ? `Artwork link: ${input.fileLink}` : null]
+    .filter((part): part is string => !!part)
+    .join("\n\n");
+}
 
 export type InquiryInput = z.infer<typeof inquirySchema>;
 
@@ -96,7 +130,7 @@ export function designFileError(file: DesignFile | null): string | null {
     return `Upload a ${DESIGN_EXTENSIONS.map((e) => e.toUpperCase()).join(", ")} file`;
   }
   if (file.size > MAX_DESIGN_BYTES)
-    return "Design files can be up to 4 MB — share a link in the description for larger files";
+    return "Attached files can be up to 4 MB — paste a share link below for larger print files";
   return null;
 }
 

@@ -6,7 +6,19 @@ import { DEFAULT_THEME, THEME_INIT_SCRIPT } from "@/lib/theme";
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+// Absolute base for Open Graph / Twitter image URLs. Order: the configured
+// canonical URL, then Vercel's production domain, then this deployment's own
+// URL — localhost only in local development, so a shared preview link never
+// points crawlers at http://localhost:3000/og.png.
+function siteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured && !/localhost|127\.0\.0\.1/.test(configured)) return configured;
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  if (vercel) return `https://${vercel}`;
+  return configured || "http://localhost:3000";
+}
+
+const SITE_URL = siteUrl();
 
 // Archivo, variable on width + weight: expanded cuts carry the display voice,
 // the normal width carries reading text — one family, two distinct roles.

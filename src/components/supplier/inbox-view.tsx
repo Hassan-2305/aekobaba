@@ -5,6 +5,7 @@ import { FilterTabs, WorkspaceShell } from "@/components/workspace/shell";
 import { LeadItemActions } from "./lead-item-actions";
 import type { InboxLeadGroup, InboxLeadItem } from "@/lib/supplier/inbox";
 import type { SupplierStatusValue } from "@/lib/catalog/view-models";
+import { formatPriceLine } from "@/lib/catalog/format";
 
 // Supplier lead inbox — presentational. Requests arrive as cards: the brand's
 // brief on the left (when it was sent, when it is needed by, artwork notes),
@@ -22,6 +23,12 @@ export interface SupplierInboxProps {
   view: InboxView;
   /** Injected for deterministic deadline maths in tests. */
   now: Date;
+  /**
+   * Demo preview (e.g. /suppliers/<slug>/inbox-preview): tabs link to the
+   * preview route and the answer buttons are inert. The page labels the
+   * requests as sample data.
+   */
+  preview?: { basePath: string } | null;
 }
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -33,7 +40,7 @@ function formatDate(date: Date | null): string {
 
 function priceLine(product: InboxLeadItem["product"]): string {
   if (product.priceType === "QUOTE_ONLY" || product.basePrice === null) return "Ask the supplier";
-  return `$${product.basePrice.toFixed(2)}${product.priceBasis ? ` ${product.priceBasis}` : ""}`;
+  return formatPriceLine(product.basePrice, product.priceBasis);
 }
 
 /** Deadline urgency from the brand's "needed by" date. */
@@ -48,7 +55,8 @@ export function deadlineState(deadline: Date | null, now: Date): { label: string
 
 const isOpen = (group: InboxLeadGroup) => group.items.some((item) => item.status === "SENT");
 
-export function SupplierInbox({ supplier, groups, view, now }: SupplierInboxProps) {
+export function SupplierInbox({ supplier, groups, view, now, preview = null }: SupplierInboxProps) {
+  const base = preview?.basePath ?? "/supplier/inbox";
   const items = groups.flatMap((g) => g.items);
   const openItems = items.filter((i) => i.status === "SENT").length;
   const quoted = items.filter((i) => i.status === "QUOTED").length;
@@ -105,9 +113,9 @@ export function SupplierInbox({ supplier, groups, view, now }: SupplierInboxProp
       <div className="mt-10">
         <FilterTabs
           tabs={[
-            { href: "/supplier/inbox", label: "All requests", count: groups.length, active: view === "all" },
-            { href: "/supplier/inbox?view=open", label: "Needs an answer", count: openGroups.length, active: view === "open" },
-            { href: "/supplier/inbox?view=answered", label: "Answered", count: answeredGroups.length, active: view === "answered" },
+            { href: base, label: "All requests", count: groups.length, active: view === "all" },
+            { href: `${base}?view=open`, label: "Needs an answer", count: openGroups.length, active: view === "open" },
+            { href: `${base}?view=answered`, label: "Answered", count: answeredGroups.length, active: view === "answered" },
           ]}
         />
       </div>
@@ -208,7 +216,16 @@ export function SupplierInbox({ supplier, groups, view, now }: SupplierInboxProp
                           ) : null}
                         </div>
                         <div className="md:justify-self-end">
-                          {item.status === "SENT" ? (
+                          {item.status === "SENT" && preview ? (
+                            <span className="flex gap-2" title="Preview — answer from your own inbox">
+                              <span className="inline-flex h-9 items-center bg-orange px-4 text-xs font-medium text-white opacity-80">
+                                Mark quoted
+                              </span>
+                              <span className="inline-flex h-9 items-center border border-line px-4 text-xs font-medium text-ink-muted">
+                                Decline
+                              </span>
+                            </span>
+                          ) : item.status === "SENT" ? (
                             <LeadItemActions itemId={item.id} />
                           ) : (
                             <span
