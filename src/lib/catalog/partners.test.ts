@@ -6,8 +6,10 @@ import { makeProduct } from "./test-fixtures";
 describe("partner profiles", () => {
   it("source every fact and service", () => {
     for (const profile of Object.values(PARTNER_PROFILES)) {
-      for (const fact of profile.facts) expect(fact.sourceUrl).toMatch(/^https:\/\//);
-      for (const service of profile.services) expect(service.sourceUrl).toMatch(/^https:\/\//);
+      // A public page, or a document the partner supplied (hosted under /partners/<slug>/).
+      const src = /^(https:\/\/|\/partners\/[a-z0-9-]+\/)/;
+      for (const fact of profile.facts) expect(fact.sourceUrl).toMatch(src);
+      for (const service of profile.services) expect(service.sourceUrl).toMatch(src);
       expect(profile.capturedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
   });

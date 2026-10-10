@@ -3,7 +3,6 @@ import Link from "next/link";
 import { PriceDisplay } from "./price-display";
 import { ProductActions } from "./product-actions";
 import { ProductGallery } from "./product-gallery";
-import { ProvenanceLine } from "./provenance-line";
 import { QuantityBreakTable } from "./quantity-break-table";
 import { ReviewScore } from "./review-score";
 import { PartnerRibbon, TierBadge } from "./tier-badge";
@@ -78,6 +77,7 @@ export function ProductDetailView({ product }: { product: ProductVM }) {
               reviewScore={product.supplier.reviewScore}
               reviewCount={product.supplier.reviewCount}
               reviewPlatform={product.supplier.reviewPlatform}
+              reviewUrl={product.supplier.reviewUrl}
             />
           </div>
 
@@ -97,7 +97,18 @@ export function ProductDetailView({ product }: { product: ProductVM }) {
               <ProductActions product={product} />
             </div>
             <div className="mt-5 border-t border-line pt-4">
-              <ProvenanceLine variant="md" sourceUrl={product.sourceUrl} sourceCapturedAt={product.sourceCapturedAt} />
+              <a
+                href={product.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="supplier-source-link"
+                className="text-sm text-ink underline decoration-ink/25 underline-offset-[3px] hover:decoration-orange"
+              >
+                {product.sourceUrl.startsWith("/partners/")
+                  ? `View ${product.supplier.name}'s catalog (PDF)`
+                  : `View on ${product.supplier.name}'s site`}{" "}
+                &#8599;
+              </a>
             </div>
           </div>
 

@@ -36,8 +36,8 @@ export function SiteFooter() {
             company
           </p>
           <p className="mt-6 text-sm leading-relaxed text-on-dark-muted">
-            Packaging discovery for consumer brands. Every price on Aekobaba is a dated snapshot
-            taken from the supplier&rsquo;s own page — and linked back to it.
+            Packaging discovery for consumer brands. Every price on Aekobaba comes from the
+            supplier&rsquo;s own page — and links back to it.
           </p>
         </div>
 

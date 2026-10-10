@@ -213,6 +213,7 @@ async function main(): Promise<void> {
     products: emptyCounts(),
     quantityBreaks: 0,
     images: 0,
+    disabledSuppliers: 0,
   };
 
   // One all-or-nothing transaction: several hundred round-trips to a hosted
@@ -248,6 +249,15 @@ async function main(): Promise<void> {
       for (const supplier of seed.suppliers) {
         await upsertSupplier(tx, supplier, categoryIds, counts, nextImageIndex);
       }
+
+      // Suppliers dropped from the seed file are disabled, never deleted:
+      // their products may carry buyer inquiries. Catalog queries hide
+      // DISABLED suppliers and their listings.
+      const disabled = await tx.supplier.updateMany({
+        where: { slug: { notIn: seed.suppliers.map((s) => s.slug) }, status: { not: "DISABLED" } },
+        data: { status: "DISABLED", isPartner: false },
+      });
+      counts.disabledSuppliers = disabled.count;
     },
     { timeout: 10 * 60 * 1000, maxWait: 60 * 1000 },
   );
@@ -261,6 +271,7 @@ async function main(): Promise<void> {
         products: counts.products,
         quantityBreakRows: counts.quantityBreaks,
         imageRows: counts.images,
+        disabledSuppliers: counts.disabledSuppliers,
       },
       null,
       2,

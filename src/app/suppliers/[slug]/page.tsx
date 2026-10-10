@@ -233,7 +233,7 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
               <h2 className="font-semiwide text-3xl font-light tracking-[-0.02em] text-ink">
                 Featured from {supplier.name}
               </h2>
-              <p className="text-xs text-ink-faint">Photos supplied by {supplier.name}</p>
+              <p className="text-xs text-ink-faint">Images supplied by {supplier.name}</p>
             </div>
             <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {showcase.map((product) => (
@@ -251,11 +251,11 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
                         style={{ background: profile.brandColor }}
                         aria-hidden
                       />
-                      <span className="tag absolute left-3 top-3 bg-card/85 px-1.5 py-1 text-[10px] text-ink-muted">
-                        {isRepresentativeImage(product.primaryImage!.url)
-                          ? "Representative image"
-                          : "Supplier photo"}
-                      </span>
+                      {isRepresentativeImage(product.primaryImage!.url) ? (
+                        <span className="tag absolute left-3 top-3 bg-card/85 px-1.5 py-1 text-[10px] text-ink-muted">
+                          Illustrative image
+                        </span>
+                      ) : null}
                     </span>
                     <span className="mt-3 block text-sm font-medium leading-snug text-ink group-hover:underline">
                       {product.title.split(" — ")[0]}
@@ -284,14 +284,27 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
                     key={index}
                     className="grid grid-cols-[5rem_1fr] gap-4 border-b border-line py-4 text-sm"
                   >
-                    <p className="font-semiwide text-2xl font-light text-ink tabular-nums">
+                    <a
+                      href={review.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Open ${review.sourcePlatform}`}
+                      className="font-semiwide text-2xl font-light text-ink tabular-nums hover:underline hover:decoration-orange"
+                    >
                       {review.score.toFixed(1)}
                       <span aria-hidden className="ml-1 align-top text-sm text-orange">
                         ★
                       </span>
-                    </p>
+                    </a>
                     <div>
-                      <p className="text-ink">{review.sourcePlatform}</p>
+                      <a
+                        href={review.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-ink underline decoration-ink/20 underline-offset-4 hover:decoration-orange"
+                      >
+                        {review.sourcePlatform} &#8599;
+                      </a>
                       {review.summary ? (
                         <p className="mt-1 text-xs text-ink-muted">{review.summary}</p>
                       ) : null}

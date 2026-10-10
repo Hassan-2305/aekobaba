@@ -20,6 +20,8 @@ export interface SupplierSummaryVM {
   reviewCount: number;
   /** Platform the aggregate review was read from, e.g. "Trustpilot". */
   reviewPlatform: string | null;
+  /** The supplier's page on that platform — the rating links there. */
+  reviewUrl: string | null;
   legalIdentity: string | null;
   /** Featured partner (signed-up supplier): shown first and badged. */
   isPartner: boolean;
@@ -129,7 +131,7 @@ export interface ProductWithRelations {
     reviewCount: number;
     legalIdentity: string | null;
     isPartner?: boolean;
-    reviews: { sourcePlatform: string }[];
+    reviews: { sourcePlatform: string; sourceUrl?: string }[];
     certifications: { name: string }[];
   };
   category: { slug: string; name: string };
@@ -238,6 +240,7 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
       reviewScore: row.supplier.reviewScore,
       reviewCount: row.supplier.reviewCount,
       reviewPlatform: row.supplier.reviews[0]?.sourcePlatform ?? null,
+      reviewUrl: row.supplier.reviews[0]?.sourceUrl ?? null,
       legalIdentity: row.supplier.legalIdentity,
       isPartner: row.supplier.isPartner ?? false,
     },

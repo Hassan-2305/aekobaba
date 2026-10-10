@@ -64,6 +64,7 @@ function productVM(overrides: Partial<ProductVM> = {}): ProductVM {
       reviewScore: 4.5,
       reviewCount: 214,
       reviewPlatform: "Trustpilot",
+      reviewUrl: "https://www.trustpilot.com/review/www.containerandpackaging.com",
       legalIdentity: null,
       isPartner: false,
     },

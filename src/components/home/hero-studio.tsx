@@ -25,8 +25,8 @@ const QUICK_FILTERS = [
   { label: "Food grade", href: "/results?food=1" },
   { label: "Glass", href: "/results?material=Glass" },
   { label: "US suppliers", href: "/results?location=US" },
-  { label: "UK suppliers", href: "/results?location=UK" },
-  { label: "EU suppliers", href: "/results?location=EU" },
+  { label: "Custom printed", href: "/results?stock=CUSTOM" },
+  { label: "Stock items", href: "/results?stock=STOCK" },
 ];
 
 const BENEFITS = [

@@ -5,7 +5,6 @@ import { formatCaptureDate, formatLeadTime, formatMoq } from "@/lib/catalog/form
 import { productTags } from "@/lib/catalog/tags";
 import type { ProductVM } from "@/lib/catalog/view-models";
 import { PriceTagInline } from "./price-display";
-import { ProvenanceLine } from "./provenance-line";
 import { ReviewScore } from "./review-score";
 import { PartnerRibbon, TierBadge } from "./tier-badge";
 import { isRepresentativeImage, ProductPicture } from "@/components/catalog/product-picture";
@@ -81,12 +80,13 @@ export function ProductCard({ product }: { product: ProductVM }) {
           >
             <ArrowCorner size={15} />
           </span>
-          {image ? (
+          {image && isRepresentativeImage(image.url) ? (
             <span
               data-testid="image-source"
+              title="Generated illustration of this packaging type, not the supplier's own photo"
               className="absolute bottom-3 right-3 z-10 text-[10px] text-ink-faint"
             >
-              {isRepresentativeImage(image.url) ? "Representative image" : "Supplier photo"}
+              Illustrative image
             </span>
           ) : null}
           {tags.length > 0 ? (
@@ -129,6 +129,7 @@ export function ProductCard({ product }: { product: ProductVM }) {
             reviewScore={product.supplier.reviewScore}
             reviewCount={product.supplier.reviewCount}
             reviewPlatform={product.supplier.reviewPlatform}
+            reviewUrl={product.supplier.reviewUrl}
           />
         </div>
 
@@ -175,12 +176,6 @@ export function ProductCard({ product }: { product: ProductVM }) {
           </p>
         ) : null}
 
-        <div className="relative z-20 mt-auto border-t border-line pt-3">
-          <ProvenanceLine
-            sourceUrl={product.sourceUrl}
-            sourceCapturedAt={product.sourceCapturedAt}
-          />
-        </div>
       </div>
     </article>
   );

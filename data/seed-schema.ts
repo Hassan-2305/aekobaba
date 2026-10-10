@@ -17,7 +17,12 @@ import { z } from "zod";
 const isoDate = z.string().date();
 
 /** Verbatim source URL of the page a fact was read from. */
-const sourceUrl = z.url();
+// A fact's source: a public URL, or a partner-supplied document we host under
+// /partners/<slug>/ (catalogs and decks partners send us directly).
+const partnerDocument = z
+  .string()
+  .regex(/^\/partners\/[a-z0-9-]+\/[A-Za-z0-9._-]+$/, "hosted partner document path");
+const sourceUrl = z.union([z.url(), partnerDocument]);
 
 const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "lowercase-hyphen slug");
 
@@ -160,7 +165,8 @@ export type SeedCertification = z.infer<typeof certificationSchema>;
 export const supplierSchema = z.strictObject({
   slug,
   name: z.string().min(1),
-  website: z.url(),
+  /** "" when the supplier has no public website (shown as "No website published"). */
+  website: z.union([z.url(), z.literal("")]),
   location: z.string().min(1),
   /** Registered legal entity where the research docs name one — a verification gate. */
   legalIdentity: z.string().min(1).nullable(),

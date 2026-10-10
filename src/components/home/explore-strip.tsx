@@ -67,10 +67,8 @@ export function ExploreStrip({
                   data-group={group.id}
                   className="flex border border-line-dark bg-paper"
                 >
-                  <Link
-                    href={`/results?category=${encodeURIComponent(lead.slug)}`}
+                  <span
                     aria-hidden
-                    tabIndex={-1}
                     className="group relative block w-[34%] shrink-0 overflow-hidden bg-well"
                   >
                     {asset ? (
@@ -78,10 +76,10 @@ export function ExploreStrip({
                         src={asset}
                         alt=""
                         sizes="(min-width: 1280px) 10vw, (min-width: 640px) 16vw, 34vw"
-                        className="origin-[50%_55%] scale-[1.25] transition-transform duration-500 group-hover:scale-[1.32]"
+                        className="origin-[50%_55%] scale-[1.25]"
                       />
                     ) : null}
-                  </Link>
+                  </span>
                   <div className="min-w-0 flex-1 px-4 py-3.5">
                     <p className="flex items-baseline justify-between gap-3">
                       <span className="text-[16px] font-semibold leading-tight text-ink">

@@ -71,10 +71,15 @@ function RequestRow({
         href={`/products/${request.productId}`}
         className="relative block aspect-square w-24 overflow-hidden bg-well"
         tabIndex={-1}
-        aria-hidden
+        aria-label={request.productTitle}
       >
         {request.imageUrl ? (
-          <ProductPicture src={request.imageUrl} alt="" sizes="96px" className="p-2" />
+          <ProductPicture
+            src={request.imageUrl}
+            alt={request.productTitle}
+            sizes="96px"
+            className="p-2"
+          />
         ) : null}
       </Link>
       <div className="min-w-0">

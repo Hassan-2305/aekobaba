@@ -37,8 +37,10 @@ export function ResultsView({
   const products = partnerFirst(sortProducts(filtered, filters.sort));
   const facets = computeFacets(allProducts, filters, resolved);
   const partnerListings = products.filter((p) => p.supplier.isPartner);
-  const partnerName = partnerListings[0]?.supplier.name ?? null;
-  const partnerSlug = partnerListings[0]?.supplier.slug ?? null;
+  const partnerSuppliers = [
+    ...new Map(partnerListings.map((p) => [p.supplier.slug, p.supplier.name])).entries(),
+  ].map(([slug, name]) => ({ slug, name }));
+  const partnerName = partnerSuppliers[0]?.name ?? null;
   // The sponsored slot is named for what the buyer is browsing.
   const featuredIn =
     partnerListings.length > 0 &&
@@ -146,17 +148,23 @@ export function ResultsView({
                   <PartnerBadge />
                   <span>
                     {featuredIn ? `Featured in ${featuredIn}: ` : ""}
-                    {partnerListings.length} {partnerName} listing
+                    {partnerListings.length}{" "}
+                    {partnerSuppliers.length === 1 ? partnerName : "partner"} listing
                     {partnerListings.length === 1 ? "" : "s"} shown first
                   </span>
                   <SponsoredTag />
                 </p>
-                <Link
-                  href={`/suppliers/${partnerSlug}`}
-                  className="text-xs text-ink underline decoration-partner-accent underline-offset-4 hover:text-partner-accent-ink"
-                >
-                  Visit {partnerName}&rsquo;s storefront
-                </Link>
+                <span className="flex flex-wrap gap-x-4 gap-y-1">
+                  {partnerSuppliers.map((partner) => (
+                    <Link
+                      key={partner.slug}
+                      href={`/suppliers/${partner.slug}`}
+                      className="text-xs text-ink underline decoration-partner-accent underline-offset-4 hover:text-partner-accent-ink"
+                    >
+                      Visit {partner.name}&rsquo;s storefront
+                    </Link>
+                  ))}
+                </span>
               </div>
             ) : null}
 
