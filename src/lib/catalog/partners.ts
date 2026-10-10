@@ -83,6 +83,57 @@ export const PARTNER_PROFILES: Record<string, PartnerProfile> = {
     // Berlin's red, taken from the logo file they supplied.
     brandColor: "#E21A22",
   },
+  // Every fact below comes from the two documents Daehung Pack supplied
+  // (hosted under /partners/daehung-pack/); Chinese text translated to English.
+  "daehung-pack": {
+    slug: "daehung-pack",
+    name: "Daehung Pack",
+    tagline: "Family-owned printed flexible packaging maker in Southern China (Mingda Packaging)",
+    summary:
+      "Custom printed pouches, roll stock and form-fill-seal film for CPG and FMCG brands — from design and proofing through rotogravure or digital printing, lamination, slitting and bag making in their own plant.",
+    facts: [
+      {
+        value: "10",
+        label: "pouch and film formats",
+        sourceUrl: "/partners/daehung-pack/products-2025.pdf",
+        sourceName: "Daehung Pack product catalog 2025",
+      },
+      {
+        value: "500 pcs",
+        label: "minimum order, digital print",
+        sourceUrl: "/partners/daehung-pack/products-2025.pdf",
+        sourceName: "Daehung Pack product catalog 2025",
+      },
+      {
+        value: "10",
+        label: "print colours, digital or gravure",
+        sourceUrl: "/partners/daehung-pack/products-2025.pdf",
+        sourceName: "Daehung Pack product catalog 2025",
+      },
+    ],
+    services: [
+      {
+        title: "Design and proofing",
+        body: "Die lines and artwork prepared before production, with digital, offset and cylinder proofing through a colour management system.",
+        sourceUrl: "/partners/daehung-pack/company-profile.pdf",
+      },
+      {
+        title: "In-house production",
+        body: "Rotogravure printing (CMYK and Pantone spot colours), lamination, curing, slitting and bag making on their own lines.",
+        sourceUrl: "/partners/daehung-pack/company-profile.pdf",
+      },
+    ],
+    perks: [
+      {
+        text: "No setup cost on digital print (gravure needs printing cylinders)",
+        sourceUrl: "/partners/daehung-pack/products-2025.pdf",
+      },
+    ],
+    capturedAt: "2026-10-10",
+    logoUrl: "/partners/daehung-pack/logo.png",
+    // Mingda red, from the company logo in their presentation.
+    brandColor: "#D7262D",
+  },
 };
 
 /** The partner whose profile leads the home page (first signed-up partner). */
@@ -94,7 +145,10 @@ export function partnerProfile(slug: string): PartnerProfile | null {
 
 /** Stable partner-first ordering: partner products lead, original order kept otherwise. */
 export function partnerFirst(products: ProductVM[]): ProductVM[] {
-  return [...products].sort((a, b) => Number(b.supplier.isPartner) - Number(a.supplier.isPartner));
+  // Lead partner, then other partners, then everyone — stable within each.
+  const rank = (p: ProductVM) =>
+    p.supplier.slug === LEAD_PARTNER_SLUG ? 0 : p.supplier.isPartner ? 1 : 2;
+  return [...products].sort((a, b) => rank(a) - rank(b));
 }
 
 /** Variety-first order: one listing per product type, round-robin, so a showcase never repeats a shape back to back. */

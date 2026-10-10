@@ -5,15 +5,9 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { InquiryDialog, type InquiryDialogHandle } from "@/components/catalog/inquiry-dialog";
-import { cutoutFor, isRepresentativeImage } from "@/components/catalog/product-picture";
+import { cutoutFor } from "@/components/catalog/product-picture";
 import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
-import {
-  formatCaptureDate,
-  formatMoney,
-  formatMoq,
-  isStaleCapture,
-  priceCurrency,
-} from "@/lib/catalog/format";
+import { formatMoney, formatMoq, priceCurrency } from "@/lib/catalog/format";
 import type { PartnerProfile } from "@/lib/catalog/partners";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -142,7 +136,6 @@ export function PartnerShowcase({
   const { name, sku } = shortTitle(current.title);
   const cap = capacity(current);
   const material = materialShort(current);
-  const real = current.primaryImage ? !isRepresentativeImage(current.primaryImage.url) : false;
   const closure = closureNote(current);
 
   return (
@@ -539,20 +532,6 @@ export function PartnerShowcase({
                 Get a sample
               </button>
             </div>
-            <p className="mt-3 text-[11px] text-on-dark-muted">
-              Verified from{" "}
-              <a
-                href={current.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-on-dark underline decoration-on-dark/30 underline-offset-2"
-              >
-                {profile.name}&rsquo;s page
-              </a>{" "}
-              on {formatCaptureDate(current.sourceCapturedAt)}
-              {isStaleCapture(current.sourceCapturedAt) ? " (older capture)" : ""} ·{" "}
-              {real ? "Supplier photo" : "Representative image"}
-            </p>
 
             <div className="mt-auto pt-6">
               <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-on-dark-muted">

@@ -167,9 +167,10 @@ export function SupplierDirectory({
         <ul data-testid="supplier-directory" className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {grid.map(({ supplier, productCount, categories }) => (
             <li key={supplier.slug}>
-              <Link
-                href={`/suppliers/${supplier.slug}`}
-                className={`group flex h-full flex-col border bg-card p-5 transition-shadow hover:shadow-[0_18px_40px_-24px_rgba(16,19,24,.35)] ${
+              {/* The name link stretches over the card; the rating keeps its own
+                  link (to the review platform) above that layer. */}
+              <div
+                className={`group relative flex h-full flex-col border bg-card p-5 transition-shadow hover:shadow-[0_18px_40px_-24px_rgba(16,19,24,.35)] ${
                   supplier.isPartner ? "border-partner-accent/50" : "border-line"
                 }`}
               >
@@ -179,9 +180,12 @@ export function SupplierDirectory({
                   </span>
                 ) : null}
                 <div className="flex items-start justify-between gap-4">
-                  <p className="text-base font-medium leading-snug text-ink group-hover:underline group-hover:decoration-orange group-hover:underline-offset-4">
+                  <Link
+                    href={`/suppliers/${supplier.slug}`}
+                    className="text-base font-medium leading-snug text-ink after:absolute after:inset-0 group-hover:underline group-hover:decoration-orange group-hover:underline-offset-4"
+                  >
                     {supplier.name}
-                  </p>
+                  </Link>
                   <TierBadge status={supplier.status} />
                 </div>
                 <p className="mt-1 text-xs text-ink-faint">{supplier.location}</p>
@@ -194,9 +198,10 @@ export function SupplierDirectory({
                     reviewScore={supplier.reviewScore}
                     reviewCount={supplier.reviewCount}
                     reviewPlatform={supplier.reviewPlatform}
+                    reviewUrl={supplier.reviewUrl}
                   />
                 </div>
-              </Link>
+              </div>
             </li>
           ))}
         </ul>

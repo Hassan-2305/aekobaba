@@ -201,8 +201,14 @@ describe("shipped dataset (C3)", () => {
     expect(seed.suppliers.length).toBeGreaterThan(0);
   });
 
-  it("covers at least 20 suppliers", () => {
-    expect(seed.suppliers.length).toBeGreaterThanOrEqual(20);
+  it("covers at least 15 suppliers (US-based, plus partners)", () => {
+    expect(seed.suppliers.length).toBeGreaterThanOrEqual(15);
+  });
+
+  it("lists only US-based suppliers, except partners", () => {
+    for (const s of seed.suppliers) {
+      if (!s.isPartner) expect(s.location).toMatch(/^US\b/);
+    }
   });
 
   it("covers at least 60 products", () => {
@@ -242,12 +248,12 @@ describe("shipped dataset (C3)", () => {
     expect(unresolved).toEqual([]);
   });
 
-  it("traces every supplier and product to the research corpus via a dated source URL", () => {
+  it("traces every supplier and product to a dated source (public URL or hosted partner document)", () => {
     for (const s of seed.suppliers) {
-      expect(s.sourceUrl).toMatch(/^https?:\/\//);
+      expect(s.sourceUrl).toMatch(/^(https?:\/\/|\/partners\/[a-z0-9-]+\/)/);
       expect(s.sourceCapturedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       for (const p of s.products) {
-        expect(p.sourceUrl).toMatch(/^https?:\/\//);
+        expect(p.sourceUrl).toMatch(/^(https?:\/\/|\/partners\/[a-z0-9-]+\/)/);
         expect(p.sourceCapturedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
         expect([p.sourceUrl, s.sourceUrl]).toContain(p.sourceUrl); // explicit, not inferred
       }

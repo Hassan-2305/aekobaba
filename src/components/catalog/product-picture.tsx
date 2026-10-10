@@ -9,12 +9,18 @@ import Image from "next/image";
 //        sit on graphite; the cut-out can.
 // Images without a cut-out (e.g. future supplier photography) render as-is.
 
+/** Partners whose photography ships with dark-theme cut-outs. */
+const PARTNERS_WITH_CUTOUTS = new Set(["berlin-packaging"]);
+
 export function cutoutFor(src: string): string | null {
   const packshot = /^\/products\/([a-z0-9-]+)\.png$/.exec(src);
   if (packshot) return `/products/cutouts/${packshot[1]}.webp`;
   // Partner photography keeps a cut-out beside it: /partners/<slug>/cutouts/<file>.webp
+  // — only for partners whose cut-outs exist; others render their photo as-is.
   const partner = /^\/partners\/([a-z0-9-]+)\/([A-Za-z0-9._-]+)\.(webp|jpg|png)$/.exec(src);
-  if (partner) return `/partners/${partner[1]}/cutouts/${partner[2]}.webp`;
+  if (partner && PARTNERS_WITH_CUTOUTS.has(partner[1])) {
+    return `/partners/${partner[1]}/cutouts/${partner[2]}.webp`;
+  }
   return null;
 }
 

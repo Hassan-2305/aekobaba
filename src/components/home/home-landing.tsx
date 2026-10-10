@@ -4,14 +4,7 @@ import { ArrowCorner, ArrowRight } from "@/components/brand/icons";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ProductPicture } from "@/components/catalog/product-picture";
 import { PartnerBadge, TierBadge } from "@/components/catalog/tier-badge";
-import {
-  formatCaptureDate,
-  formatMoq,
-  formatPerUnit,
-  formatPriceLine,
-  isStaleCapture,
-  unitPrice,
-} from "@/lib/catalog/format";
+import { formatMoq, formatPerUnit, formatPriceLine, unitPrice } from "@/lib/catalog/format";
 import type { CategoryVM, ProductVM } from "@/lib/catalog/view-models";
 import { ExploreStrip } from "./explore-strip";
 import { PartnerShowcase } from "./partner-showcase";
@@ -124,9 +117,9 @@ export function HomeLanding({
               Every price comes with a receipt.
             </h2>
             <p className="mt-6 max-w-md text-base leading-relaxed text-on-dark-muted">
-              We only list what a supplier publishes. Each price, minimum and lead time is captured
-              from their own product page, dated, and linked — so you can check it before you ask
-              for a quote.
+              We only list what a supplier publishes. Each price, minimum and lead time comes from
+              their own product page and links back to it — so you can check it before you ask for
+              a quote.
             </p>
 
             <ol className="mt-12 border-t border-line-dark">
@@ -137,7 +130,7 @@ export function HomeLanding({
                 ],
                 [
                   "Compare what suppliers publish",
-                  "Price, minimum order and lead time side by side, each with its capture date and source.",
+                  "Price, minimum order and lead time side by side, each linked to its source.",
                 ],
                 [
                   "Request quotes in one go",
@@ -251,7 +244,6 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
   const unit = unitPrice(product);
   const perUnit =
     unit && unit.packSize !== 1 ? formatPerUnit(unit.amount, unit.currency, unit.unit) : null;
-  const stale = isStaleCapture(product.sourceCapturedAt);
   return (
     <figure className="relative">
       <div className="grid grid-cols-[1fr] border border-line-dark bg-surface sm:grid-cols-[1.05fr_1fr]">
@@ -287,7 +279,7 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
               </dd>
             </div>
             <div className="flex justify-between gap-4 border-y border-line-dark py-2.5">
-              <dt className="tag self-center text-on-dark-muted">Captured</dt>
+              <dt className="tag self-center text-on-dark-muted">Source</dt>
               <dd className="text-right tabular-nums">
                 <a
                   href={product.sourceUrl}
@@ -295,21 +287,16 @@ function SpecimenSheet({ product }: { product: ProductVM }) {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-on-dark underline decoration-orange underline-offset-4"
                 >
-                  {formatCaptureDate(product.sourceCapturedAt)}
+                  Supplier&rsquo;s page
                   <ArrowCorner size={12} />
                 </a>
-                {stale ? (
-                  <span className="mt-0.5 block text-xs text-on-dark-muted">
-                    Older capture — check the source
-                  </span>
-                ) : null}
               </dd>
             </div>
           </dl>
         </div>
       </div>
       <figcaption className="mt-3 text-xs text-on-dark-muted">
-        A live listing from the catalog. The capture date links to the supplier&rsquo;s own page.
+        A live listing from the catalog, linked to the supplier&rsquo;s own page.
       </figcaption>
     </figure>
   );

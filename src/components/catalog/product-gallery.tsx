@@ -199,8 +199,8 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
           data-testid="representative-image-caption"
           className="mt-3 text-xs text-ink-faint"
         >
-          Representative image — generated illustration, not a photo of the supplier&rsquo;s actual
-          stock. Ask the supplier for production photos or a sample.
+          Illustrative image — a generated picture of this packaging type, not the supplier&rsquo;s own
+          photo. Ask the supplier for production photos or a sample.
         </figcaption>
       ) : (
         <figcaption data-testid="supplier-photo-caption" className="mt-3 text-xs text-ink-faint">

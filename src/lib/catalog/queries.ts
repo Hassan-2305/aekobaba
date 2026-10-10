@@ -41,8 +41,12 @@ const cached = <A extends unknown[], R>(fn: (...args: A) => Promise<R>, key: str
     unstable_cache(fn, [key], { tags: [CATALOG_TAG], revalidate: CATALOG_REVALIDATE_SECONDS }),
   );
 
+/** Listings of suppliers removed from the catalog (status DISABLED) never show. */
+const LIVE_SUPPLIER = { supplier: { status: { not: "DISABLED" as const } } };
+
 export const getAllProducts = cached(async (): Promise<ProductVM[]> => {
   const rows = await db.product.findMany({
+    where: LIVE_SUPPLIER,
     include: productInclude,
     orderBy: { createdAt: "asc" },
   });
@@ -58,7 +62,7 @@ export const getProduct = cache(async (id: string): Promise<ProductVM | null> =>
 export const getCategories = cached(async (): Promise<CategoryVM[]> => {
   const rows = await db.category.findMany({
     orderBy: { name: "asc" },
-    include: { _count: { select: { products: true } } },
+    include: { _count: { select: { products: { where: LIVE_SUPPLIER } } } },
   });
   return rows.map((row) => ({
     slug: row.slug,
@@ -104,7 +108,7 @@ async function loadSupplier(slug: string): Promise<SupplierWithCatalog | null> {
       },
     },
   });
-  if (!row) return null;
+  if (!row || row.status === "DISABLED") return null;
 
   const reviews: ReviewVM[] = row.reviews.map((r) => ({
     score: r.score,
@@ -125,7 +129,7 @@ async function loadSupplier(slug: string): Promise<SupplierWithCatalog | null> {
     reviewCount: row.reviewCount,
     legalIdentity: row.legalIdentity,
     isPartner: row.isPartner,
-    reviews: row.reviews.map((r) => ({ sourcePlatform: r.sourcePlatform })),
+    reviews: row.reviews.map((r) => ({ sourcePlatform: r.sourcePlatform, sourceUrl: r.sourceUrl })),
     certifications: row.certifications.map((c) => ({ name: c.name })),
   };
 
@@ -138,6 +142,7 @@ async function loadSupplier(slug: string): Promise<SupplierWithCatalog | null> {
     reviewScore: row.reviewScore,
     reviewCount: row.reviewCount,
     reviewPlatform: row.reviews[0]?.sourcePlatform ?? null,
+    reviewUrl: row.reviews[0]?.sourceUrl ?? null,
     legalIdentity: row.legalIdentity,
     isPartner: row.isPartner,
     lastVerifiedAt: row.lastVerifiedAt ? row.lastVerifiedAt.toISOString() : null,

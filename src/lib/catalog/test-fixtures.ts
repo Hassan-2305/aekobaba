@@ -68,6 +68,8 @@ export function makeProduct(overrides: FixtureOverrides = {}): ProductVM {
       reviewScore: overrides.reviewScore === undefined ? 4.5 : overrides.reviewScore,
       reviewCount: overrides.reviewCount ?? 214,
       reviewPlatform: overrides.reviewScore === null ? null : "Trustpilot",
+      reviewUrl:
+        overrides.reviewScore === null ? null : "https://www.trustpilot.com/review/supplier.example",
       legalIdentity: null,
       isPartner: false,
     },

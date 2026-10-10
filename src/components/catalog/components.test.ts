@@ -165,9 +165,11 @@ describe("ProductCard — image-led results card", () => {
     expect(html).toContain("Material:");
     expect(html).toContain("4.5 (214)");
     expect(html).toContain("via Trustpilot");
-    // Imagery must not evict evidence: the provenance line stays on the card.
-    expect(html).toContain('data-testid="provenance-line"');
-    expect(html).toContain("Verified from");
+    // The dated "Verified from supplier's page" line was removed on request;
+    // the rating still links out to the review platform.
+    expect(html).not.toContain('data-testid="provenance-line"');
+    expect(html).toContain('href="https://www.trustpilot.com/review/supplier.example"');
+    expect(html).not.toContain("Verified from");
   });
 
   it("collapses the price to 'Ask the supplier' with no numerals on the card", () => {
@@ -262,15 +264,30 @@ describe("Berlin demo review fixes", () => {
 });
 
 describe("Partner program labels", () => {
-  it("labels the image source on every card", () => {
+  it("labels illustrations only — supplier images carry no label", () => {
     const representative = render(createElement(ProductCard, { product: makeProduct({}) }));
-    expect(representative).toContain("Representative image");
+    expect(representative).toContain("Illustrative image");
     const photo = render(
       createElement(ProductCard, {
         product: makeProduct({ primaryImage: { url: "/partners/berlin-packaging/33512.webp", alt: "Bottle" } }),
       }),
     );
-    expect(photo).toContain("Supplier photo");
+    expect(photo).not.toContain("Illustrative image");
+    expect(photo).not.toContain("Supplier photo");
+  });
+
+  it("links the supplier rating to the review platform", () => {
+    const html = render(
+      createElement(ReviewScore, {
+        reviewScore: 4.4,
+        reviewCount: 4779,
+        reviewPlatform: "Trustpilot",
+        reviewUrl: "https://www.trustpilot.com/review/berlinpackaging.com",
+      }),
+    );
+    expect(html).toContain('data-testid="review-link"');
+    expect(html).toContain('href="https://www.trustpilot.com/review/berlinpackaging.com"');
+    expect(html).toContain('target="_blank"');
   });
 
   it("labels partner-supplied values instead of passing them off as captured", () => {

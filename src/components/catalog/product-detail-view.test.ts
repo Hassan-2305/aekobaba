@@ -19,7 +19,7 @@ describe("ProductDetailView — gallery", () => {
     expect(html).toContain("glass-jar.png");
     expect(html).toContain("representative packaging image");
     expect(html).toContain('data-testid="representative-image-caption"');
-    expect(html).toContain("Representative image");
+    expect(html).toContain("Illustrative image");
   });
 
   it("renders thumbnails only from actual Image rows — no invented views", () => {
@@ -50,10 +50,11 @@ describe("ProductDetailView — gallery", () => {
 });
 
 describe("ProductDetailView — evidence and actions survive the redesign", () => {
-  it("keeps the provenance line distinct from the imagery", () => {
+  it("links to the supplier's own page without a dated 'verified' line", () => {
     const html = render(createElement(ProductDetailView, { product: makeProduct() }));
 
-    expect(html).toContain("Verified from");
+    expect(html).not.toContain("Verified from");
+    expect(html).toContain('data-testid="supplier-source-link"');
     expect(html).toContain("https://supplier.example/");
   });
 
