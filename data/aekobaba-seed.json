@@ -175,10 +175,10 @@
       "sourceCapturedAt": "2026-10-03",
       "review": {
         "score": 4.4,
-        "count": 4779,
+        "count": 4807,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/berlinpackaging.com",
-        "sourceCapturedAt": "2026-10-03"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -502,10 +502,10 @@
       "sourceCapturedAt": "2026-09-21",
       "review": {
         "score": 4.4,
-        "count": 3503,
+        "count": 3549,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/bottlestore.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -579,11 +579,11 @@
       "sourceUrl": "https://www.specialtybottle.com",
       "sourceCapturedAt": "2026-09-21",
       "review": {
-        "score": 3.8,
-        "count": 9,
+        "score": 4.4,
+        "count": 12,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/specialtybottle.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -731,10 +731,10 @@
       "sourceCapturedAt": "2026-09-21",
       "review": {
         "score": 4.7,
-        "count": 9621,
+        "count": 9922,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/www.papermart.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -807,11 +807,11 @@
       "sourceUrl": "https://www.burchbottle.com",
       "sourceCapturedAt": "2026-09-21",
       "review": {
-        "score": 4.8,
-        "count": 2257,
+        "score": 4.9,
+        "count": 2552,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/www.burchbottle.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -956,10 +956,10 @@
       "sourceCapturedAt": "2026-09-21",
       "review": {
         "score": 4.7,
-        "count": 43782,
+        "count": 44132,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/stickermule.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1037,7 +1037,7 @@
         "count": 61,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/ecoenclose.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1110,7 +1110,13 @@
       "isPartner": false,
       "sourceUrl": "https://www.boxup.com",
       "sourceCapturedAt": "2026-09-21",
-      "review": null,
+      "review": {
+        "score": 3.7,
+        "count": 1,
+        "platform": "Trustpilot",
+        "sourceUrl": "https://www.trustpilot.com/review/boxup.com",
+        "sourceCapturedAt": "2026-10-14"
+      },
       "certifications": [],
       "products": [
         {
@@ -1180,11 +1186,11 @@
       "sourceUrl": "https://customboxesnow.com",
       "sourceCapturedAt": "2026-09-21",
       "review": {
-        "score": 4.8,
-        "count": 183,
+        "score": 3.7,
+        "count": 186,
         "platform": "Trustpilot",
-        "sourceUrl": "https://uk.trustpilot.com/review/customboxesnow.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceUrl": "https://www.trustpilot.com/review/customboxesnow.com",
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1221,10 +1227,10 @@
       "sourceCapturedAt": "2026-09-21",
       "review": {
         "score": 4.7,
-        "count": 20284,
+        "count": 20748,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/stickerapp.com",
-        "sourceCapturedAt": "2026-09-21"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1260,11 +1266,11 @@
       "sourceUrl": "https://www.tricorbraun.com",
       "sourceCapturedAt": "2026-09-18",
       "review": {
-        "score": 4.7,
-        "count": 41,
+        "score": 4.5,
+        "count": 255,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/tricorbraun.com",
-        "sourceCapturedAt": "2026-09-18"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1300,11 +1306,11 @@
       "sourceUrl": "https://www.sks-bottle.com",
       "sourceCapturedAt": "2026-09-18",
       "review": {
-        "score": 4.3,
-        "count": 3933,
+        "score": 4.6,
+        "count": 4139,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/www.sks-bottle.com",
-        "sourceCapturedAt": "2026-09-18"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1398,10 +1404,10 @@
       "sourceCapturedAt": "2026-10-06",
       "review": {
         "score": 4.8,
-        "count": 396,
+        "count": 638,
         "platform": "Trustpilot",
         "sourceUrl": "https://www.trustpilot.com/review/www.containerandpackaging.com",
-        "sourceCapturedAt": "2026-09-18"
+        "sourceCapturedAt": "2026-10-14"
       },
       "certifications": [],
       "products": [
@@ -1507,7 +1513,13 @@
       "isPartner": false,
       "sourceUrl": "https://www.thepkglab.com/",
       "sourceCapturedAt": "2026-10-06",
-      "review": null,
+      "review": {
+        "score": 4.8,
+        "count": 324,
+        "platform": "Trustpilot",
+        "sourceUrl": "https://www.trustpilot.com/review/thepkglab.com",
+        "sourceCapturedAt": "2026-10-14"
+      },
       "certifications": [],
       "products": [
         {

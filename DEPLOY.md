@@ -23,6 +23,8 @@ and the `iad1` region.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client + server  | Anon key — access constrained by Row Level Security                         |
 | `SUPABASE_SERVICE_ROLE_KEY`     | Server only      | Bypasses RLS — never expose to the browser                                  |
 | `NEXT_PUBLIC_SITE_URL`          | Client + server  | Production URL (e.g. `https://app.aekobaba.com`) — absolute OG/metadata URLs |
+| `GOOGLE_PLACES_API_KEY`         | Server only      | Optional — live Google review cards on product pages (Places API (New))     |
+| `TRUSTPILOT_API_KEY`            | Server only      | Optional — live Trustpilot review cards (key from a Trustpilot business account) |
 
 Secrets live in the Vercel project, never in the repo. `.env.example` mirrors
 the same list for local development.
