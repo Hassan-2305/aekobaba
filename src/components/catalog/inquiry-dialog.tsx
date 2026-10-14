@@ -20,8 +20,15 @@ import type { ProductVM } from "@/lib/catalog/view-models";
 
 export type InquiryKindValue = "QUOTE" | "SAMPLE";
 
+/** Choices made on the product page, carried into the form. */
+export interface InquiryPrefill {
+  quantity?: string;
+  format?: string;
+  description?: string;
+}
+
 export interface InquiryDialogHandle {
-  open: (kind: InquiryKindValue) => void;
+  open: (kind: InquiryKindValue, prefill?: InquiryPrefill) => void;
 }
 
 type Status =
@@ -79,10 +86,15 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
     const [status, setStatus] = useState<Status>({ state: "idle" });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [fileName, setFileName] = useState<string | null>(null);
+    const [prefill, setPrefill] = useState<InquiryPrefill>({});
+    // Bumped on every open so prefilled inputs remount with the new values.
+    const [openCount, setOpenCount] = useState(0);
 
     useImperativeHandle(ref, () => ({
-      open(nextKind) {
+      open(nextKind, nextPrefill) {
         setKind(nextKind);
+        setPrefill(nextPrefill ?? {});
+        setOpenCount((n) => n + 1);
         if (status.state === "sent" || status.state === "error") setStatus({ state: "idle" });
         setErrors({});
         dialogRef.current?.showModal();
@@ -345,8 +357,8 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
                   <input
                     id="inq-quantity"
                     name="quantity"
-                    key={kind}
-                    defaultValue={sample ? "1" : ""}
+                    key={`${kind}-${openCount}`}
+                    defaultValue={prefill.quantity ?? (sample ? "1" : "")}
                     placeholder={sample ? "e.g. 2 samples" : "e.g. 5,000 pouches"}
                     className={inputClass}
                     {...aria("quantity")}
@@ -370,6 +382,8 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
                     <input
                       id="inq-format"
                       name="format"
+                      key={`format-${openCount}`}
+                      defaultValue={prefill.format}
                       placeholder="e.g. 250 g, 130 × 210 mm, matte kraft, zip + valve"
                       className={inputClass}
                     />
@@ -417,6 +431,8 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
                   <textarea
                     id="inq-description"
                     name="description"
+                    key={`description-${openCount}`}
+                    defaultValue={prefill.description}
                     rows={5}
                     placeholder={
                       sample

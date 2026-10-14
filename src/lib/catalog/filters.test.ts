@@ -177,12 +177,16 @@ describe("sortProducts (C5)", () => {
 describe("spec priority order", () => {
   it("pins the left-rail group order", () => {
     expect(FILTER_GROUP_ORDER).toEqual([
+      "specs",
       "min-order",
+      "budget",
       "food-grade",
       "material-category",
       "location",
-      "price-type",
+      "delivery",
       "stock-custom",
+      "customization",
+      "price-type",
       "lead-time",
       "certifications",
     ]);

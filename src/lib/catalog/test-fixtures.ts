@@ -1,3 +1,5 @@
+import { emptySpecSelection } from "./spec-filters";
+import { extractSpecs } from "./specs";
 import type { ProductVM } from "./view-models";
 
 // Fixture view models shaped like the seeded catalog's real records — used
@@ -36,7 +38,7 @@ export function makeProduct(overrides: FixtureOverrides = {}): ProductVM {
     overrides.primaryImage === undefined
       ? { url: "/products/glass-jar.png", alt: `${title} — representative packaging image` }
       : overrides.primaryImage;
-  return {
+  const product: Omit<ProductVM, "specs"> = {
     id,
     title,
     description: null,
@@ -75,6 +77,14 @@ export function makeProduct(overrides: FixtureOverrides = {}): ProductVM {
     },
     certificationNames: overrides.cert === undefined ? ["FSC"] : overrides.cert ? [overrides.cert] : [],
   };
+  return { ...product, specs: specsOf(product) };
+}
+
+/** Specs for a fixture, read from its text exactly as toProductVM does. */
+export function specsOf(
+  p: Pick<ProductVM, "title" | "description" | "material" | "subcategory" | "categorySlug" | "priceBasis" | "stockOrCustom">,
+) {
+  return extractSpecs(p);
 }
 
 export function baseFilters() {
@@ -89,6 +99,8 @@ export function baseFilters() {
     maxLeadDays: null,
     cert: null,
     foodGrade: false,
+    budget: null,
+    spec: emptySpecSelection(),
     sort: "reviews" as const,
   };
 }
