@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { ProductDetailView } from "@/components/catalog/product-detail-view";
+import { SupplierReviews } from "@/components/catalog/supplier-reviews";
 import { getAllProducts, getProduct } from "@/lib/catalog/queries";
 import { similarProducts, variantsOf } from "@/lib/catalog/related";
 
@@ -38,6 +40,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
       product={product}
       variants={variantsOf(product, all)}
       similar={similarProducts(product, all)}
+      reviews={
+        <Suspense
+          fallback={<div className="skeleton mt-20 h-64 bg-well" aria-label="Loading supplier reviews" />}
+        >
+          <SupplierReviews supplier={product.supplier} />
+        </Suspense>
+      }
     />
   );
 }

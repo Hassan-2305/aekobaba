@@ -55,7 +55,7 @@ export const PARTNER_PROFILES: Record<string, PartnerProfile> = {
       },
       {
         value: "4.4★",
-        label: "supplier rating, Trustpilot (4,779 reviews)",
+        label: "supplier rating, Trustpilot (4,807 reviews)",
         sourceUrl: "https://www.trustpilot.com/review/berlinpackaging.com",
         sourceName: "Trustpilot",
       },

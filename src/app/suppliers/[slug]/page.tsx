@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
+import { SupplierReviews } from "@/components/catalog/supplier-reviews";
 
 import { ProductCard } from "@/components/catalog/product-card";
 import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
@@ -379,6 +382,10 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
             ))}
           </div>
         </section>
+
+        <Suspense fallback={<div className="skeleton mt-20 h-64 bg-well" />}>
+          <SupplierReviews supplier={supplier} />
+        </Suspense>
       </div>
     </div>
   );

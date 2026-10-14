@@ -81,10 +81,13 @@ export function ProductDetailView({
   product,
   variants = [],
   similar = [],
+  reviews = null,
 }: {
   product: ProductVM;
   variants?: VariantVM[];
   similar?: ProductVM[];
+  /** The supplier reviews block (streamed in by the page). */
+  reviews?: React.ReactNode;
 }) {
   const tags = productTags(product, 4);
   const s = product.specs;
@@ -371,6 +374,8 @@ export function ProductDetailView({
           ) : null}
         </Section>
       </div>
+
+      {reviews}
 
       {similar.length > 0 ? (
         <section className="mt-20" data-testid="similar-products">
