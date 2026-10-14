@@ -6,16 +6,29 @@
 // functions; when the catalog grows this is where SQL aggregation replaces
 // the in-memory pass.
 //
-// Filter priority order: the buyer's first questions lead (Berlin demo
-// review, Oct 2026) — minimum order → food grade → material & category →
-// supplier region → price type → stock/custom → lead time → certifications.
-// FILTER_GROUP_ORDER pins it, and a test asserts the rail renders in exactly
-// this order.
+// Filter priority order: the category's own spec block first (capacity and
+// neck finish for bottles, dimensions and strength for boxes — see
+// spec-filters.ts), then the buyer's commercial questions — minimum order →
+// budget → food grade → material & category → supplier country → delivery
+// region → stock/custom → printing & customization → price type → lead time
+// → certifications. FILTER_GROUP_ORDER pins it, and a test asserts the rail
+// renders in exactly this order.
 
 import type { ProductVM } from "./view-models";
 import { effectiveUnitPrice } from "./format";
 import type { ResolvedQuery } from "./aliases";
 import { isFoodGrade } from "./tags";
+import {
+  ALWAYS_SPEC_KEYS,
+  BUDGET_BUCKETS,
+  matchesSpecs,
+  parseSpecSelection,
+  SPEC_FACETS,
+  SPEC_KEYS,
+  specBlockFor,
+  type SpecKey,
+  type SpecSelection,
+} from "./spec-filters";
 
 export const SORTS = ["price", "moq", "lead", "reviews"] as const;
 export type SortKey = (typeof SORTS)[number];
@@ -24,12 +37,16 @@ export const DEFAULT_SORT: SortKey = "reviews";
 
 /** Spec priority order for the left rail, top to bottom. */
 export const FILTER_GROUP_ORDER = [
+  "specs",
   "min-order",
+  "budget",
   "food-grade",
   "material-category",
   "location",
-  "price-type",
+  "delivery",
   "stock-custom",
+  "customization",
+  "price-type",
   "lead-time",
   "certifications",
 ] as const;
@@ -55,6 +72,10 @@ export interface ResultsFilters {
   maxLeadDays: number | null;
   /** Certification name (supplier-level). */
   cert: string | null;
+  /** Indicative US-dollar ceiling per unit (budget). */
+  budget: number | null;
+  /** Spec filters: capacity / dimensions / thickness buckets, neck, closure… */
+  spec: SpecSelection;
   sort: SortKey;
 }
 
@@ -98,8 +119,16 @@ export function parseFilters(searchParams: ResultsSearchParams): ResultsFilters 
     foodGrade: firstValue(searchParams.food) === "1",
     maxLeadDays: parseNonNegativeInt(firstValue(searchParams.maxLead)),
     cert: firstValue(searchParams.cert) || null,
+    budget: parseBudget(firstValue(searchParams.budget)),
+    spec: parseSpecSelection((key) => firstValue(searchParams[key])),
     sort: parseSort(firstValue(searchParams.sort)),
   };
+}
+
+function parseBudget(raw: string | undefined): number | null {
+  if (raw === undefined || raw === "") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : null;
 }
 
 /**
@@ -118,6 +147,11 @@ export function filtersToQueryString(filters: ResultsFilters): string {
   if (filters.foodGrade) params.set("food", "1");
   if (filters.maxLeadDays !== null) params.set("maxLead", String(filters.maxLeadDays));
   if (filters.cert) params.set("cert", filters.cert);
+  if (filters.budget !== null) params.set("budget", String(filters.budget));
+  for (const key of SPEC_KEYS) {
+    const value = filters.spec[key];
+    if (value) params.set(key, value);
+  }
   if (filters.sort !== DEFAULT_SORT) params.set("sort", filters.sort);
   return params.toString();
 }
@@ -156,6 +190,11 @@ export function applyFilters(products: ProductVM[], filters: ResultsFilters, res
     if (filters.foodGrade && !isFoodGrade(p)) return false;
     if (filters.maxLeadDays !== null && (p.leadTimeDays === null || p.leadTimeDays > filters.maxLeadDays)) return false;
     if (filters.cert && !p.certificationNames.includes(filters.cert)) return false;
+    if (filters.budget !== null) {
+      const unit = effectiveUnitPrice(p);
+      if (unit === null || unit > filters.budget) return false;
+    }
+    if (!matchesSpecs(p, filters.spec)) return false;
     return true;
   });
 }
@@ -198,6 +237,11 @@ export interface Facets {
   category: FacetOption[];
   location: FacetOption[];
   foodGrade: FacetOption[];
+  budget: FacetOption[];
+  /** The category-dependent spec block: its title and facets, in order. */
+  specBlock: { title: string; facets: { key: SpecKey; title: string; options: FacetOption[] }[] };
+  /** Printing & customization — offered in every category. */
+  customization: { key: SpecKey; title: string; options: FacetOption[] }[];
   leadTime: FacetOption[];
   certifications: FacetOption[];
 }
@@ -251,6 +295,40 @@ export function computeFacets(products: ProductVM[], filters: ResultsFilters, re
       { ...filters, [omit]: omit === "foodGrade" ? false : null },
       resolved,
     );
+  const exceptSpec = (key: SpecKey): ProductVM[] =>
+    applyFilters(products, { ...filters, spec: { ...filters.spec, [key]: null } }, resolved);
+  const specOptions = (key: SpecKey): FacetOption[] => {
+    const def = SPEC_FACETS[key];
+    const counts = new Map<string, number>();
+    for (const p of exceptSpec(key)) for (const v of def.values(p)) counts.set(v, (counts.get(v) ?? 0) + 1);
+    const selected = filters.spec[key];
+    if (selected && !counts.has(selected)) counts.set(selected, 0);
+    const options = [...counts.entries()].map(([value, count]) => ({ value, label: def.label(value), count }));
+    return def.order
+      ? options.sort((a, b) => def.order!.indexOf(a.value) - def.order!.indexOf(b.value))
+      : options.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  };
+  const block = specBlockFor(effectiveCategorySlugs({ ...filters, category: filters.category }, resolved));
+  const specBlock = {
+    title: block.title,
+    facets: block.keys
+      .map((key) => ({ key, title: SPEC_FACETS[key].title, options: specOptions(key) }))
+      .filter((f) => f.options.length > 0),
+  };
+  const customization = ALWAYS_SPEC_KEYS.map((key) => ({
+    key,
+    title: SPEC_FACETS[key].title,
+    options: specOptions(key),
+  })).filter((f) => f.options.length > 0);
+  const budgetCandidates = except("budget");
+  const budget = BUDGET_BUCKETS.map((bucket) => ({
+    value: String(bucket.value),
+    label: bucket.label,
+    count: budgetCandidates.filter((p) => {
+      const unit = effectiveUnitPrice(p);
+      return unit !== null && unit <= bucket.value;
+    }).length,
+  }));
 
   const moqCandidates = except("maxMoq");
   const priceCandidates = except("priceType");
@@ -311,6 +389,9 @@ export function computeFacets(products: ProductVM[], filters: ResultsFilters, re
     category,
     location,
     foodGrade,
+    budget,
+    specBlock,
+    customization,
     leadTime,
     certifications,
   };

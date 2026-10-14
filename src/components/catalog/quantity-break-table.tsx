@@ -1,10 +1,17 @@
-import { formatBreakRange, formatMoney } from "@/lib/catalog/format";
+import { formatBreakRange, formatMoney, type CurrencyCode } from "@/lib/catalog/format";
 import type { QuantityBreakVM } from "@/lib/catalog/view-models";
 
 // Quantity-break table on the product detail page — the supplier's own
 // published tiers, in the order they publish them (ascending by minimum).
 
-export function QuantityBreakTable({ breaks }: { breaks: QuantityBreakVM[] }) {
+export function QuantityBreakTable({
+  breaks,
+  currency = "USD",
+}: {
+  breaks: QuantityBreakVM[];
+  /** The listing's published currency (tiers are quoted in it). */
+  currency?: CurrencyCode;
+}) {
   if (breaks.length === 0) return null;
   return (
     <div data-testid="quantity-breaks">
@@ -24,7 +31,7 @@ export function QuantityBreakTable({ breaks }: { breaks: QuantityBreakVM[] }) {
           {breaks.map((brk, index) => (
             <tr key={`${brk.minQty}-${index}`} className="border-b border-line">
               <td className="py-3 pr-4 text-ink-muted tabular-nums">{formatBreakRange(brk.minQty, brk.maxQty)}</td>
-              <td className="py-3 text-right font-medium text-ink tabular-nums">{formatMoney(brk.unitPrice)}</td>
+              <td className="py-3 text-right font-medium text-ink tabular-nums">{formatMoney(brk.unitPrice, currency)}</td>
             </tr>
           ))}
         </tbody>

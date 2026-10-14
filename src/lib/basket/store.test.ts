@@ -22,6 +22,7 @@ const localStorageStub = vi.hoisted(() => {
 
 import { BASKET_STORAGE_KEY, BASKET_STORAGE_VERSION, useQuoteBasketStore } from "./store";
 import type { ProductVM } from "@/lib/catalog/view-models";
+import { specsOf } from "@/lib/catalog/test-fixtures";
 
 function productVM(overrides: Partial<ProductVM> = {}): ProductVM {
   return {
@@ -69,6 +70,15 @@ function productVM(overrides: Partial<ProductVM> = {}): ProductVM {
       isPartner: false,
     },
     certificationNames: ["FDA"],
+    specs: specsOf({
+      title: "12 oz Amber PET Boston Round Bottle",
+      description: null,
+      material: "PET",
+      subcategory: null,
+      categorySlug: "plastic-bottles",
+      priceBasis: null,
+      stockOrCustom: "STOCK",
+    }),
     ...overrides,
   };
 }

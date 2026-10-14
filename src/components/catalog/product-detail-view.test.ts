@@ -69,3 +69,36 @@ describe("ProductDetailView — evidence and actions survive the redesign", () =
     expect(html).toContain("Get a sample");
   });
 });
+
+describe("ProductDetailView — full product page", () => {
+  it("shows specs, order terms, customization, downloads, supplier and price date", () => {
+    const html = render(createElement(ProductDetailView, { product: makeProduct() })).replace(/<!-- -->/g, "");
+    expect(html).toContain('data-testid="product-configurator"');
+    expect(html).toContain('data-testid="product-setup"');
+    expect(html).toContain('data-testid="product-samples"');
+    expect(html).toContain('data-testid="product-downloads"');
+    expect(html).toContain("/spec.csv");
+    expect(html).toContain('data-testid="product-supplier"');
+    expect(html).toContain("Price last updated 18 Sep 2026");
+    expect(html).toContain("Typical artwork requirements");
+  });
+
+  it("renders variants and similar products when given", () => {
+    const product = makeProduct();
+    const other = makeProduct();
+    const html = render(
+      createElement(ProductDetailView, {
+        product,
+        variants: [
+          { id: product.id, label: "4 oz", sku: null, active: true },
+          { id: "v2", label: "8 oz", sku: "X8", active: false },
+        ],
+        similar: [other],
+      }),
+    );
+    expect(html).toContain("Available variants (2)");
+    expect(html).toContain('href="/products/v2"');
+    expect(html).toContain('data-testid="similar-products"');
+    expect(html).toContain(other.title);
+  });
+});

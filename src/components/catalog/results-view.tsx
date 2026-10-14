@@ -57,6 +57,8 @@ export function ResultsView({
     filters.maxLeadDays,
     filters.cert,
     filters.foodGrade ? true : null,
+    filters.budget,
+    ...Object.values(filters.spec),
   ].filter((value) => value !== null).length;
   const categoryName = filters.category
     ? (allProducts.find((p) => p.categorySlug === filters.category)?.categoryName ??

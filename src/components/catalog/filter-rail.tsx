@@ -2,9 +2,11 @@ import Link from "next/link";
 
 // Left-rail filters (spec C5) — server-rendered links, no client JS. Each
 // option toggles its filter on the current query; clicking the active option
-// clears it. Groups render in FILTER_GROUP_ORDER: min order → food grade →
-// material & category → supplier region → price type → stock/custom → lead
-// time → certifications. Facet counts update with the query (computeFacets).
+// clears it. Groups render in FILTER_GROUP_ORDER: the category's spec block
+// (capacity / neck for bottles, dimensions / strength for boxes…) → min order
+// → budget → food grade → material & category → supplier country → delivery
+// region → stock/custom → printing & customization → price type → lead time
+// → certifications. Facet counts update with the query (computeFacets).
 
 import {
   buildResultsUrl,
@@ -13,6 +15,7 @@ import {
   type ResultsFilters,
 } from "@/lib/catalog/filters";
 import { hasAnyLeadTimeData } from "@/lib/catalog/filters";
+import { emptySpecSelection } from "@/lib/catalog/spec-filters";
 
 interface FilterGroupProps {
   id: string;
@@ -85,7 +88,9 @@ export function FilterRail({
     filters.location !== null ||
     filters.maxLeadDays !== null ||
     filters.cert !== null ||
-    filters.foodGrade;
+    filters.foodGrade ||
+    filters.budget !== null ||
+    Object.values(filters.spec).some((v) => v !== null);
 
   return (
     <nav data-testid="filter-rail" aria-label="Filters">
@@ -93,13 +98,44 @@ export function FilterRail({
         <h2 className="font-semiwide text-lg text-ink">Filters</h2>
         {anyActive ? (
           <Link
-            href={buildResultsUrl(filters, { maxMoq: null, priceType: null, stockOrCustom: null, material: null, category: null, location: null, maxLeadDays: null, cert: null, foodGrade: false })}
+            href={buildResultsUrl(filters, { maxMoq: null, priceType: null, stockOrCustom: null, material: null, category: null, location: null, maxLeadDays: null, cert: null, foodGrade: false, budget: null, spec: emptySpecSelection() })}
             className="text-xs text-orange-ink underline underline-offset-4 hover:text-ink"
           >
             Clear all
           </Link>
         ) : null}
       </div>
+
+      {facets.specBlock.facets.length > 0 ? (
+        <section data-testid="filter-group-specs" className="border-t border-line py-5">
+          <h3 className="text-sm font-medium text-ink">{facets.specBlock.title}</h3>
+          {facets.specBlock.facets.map((facet) => (
+            <div key={facet.key} data-testid={`spec-facet-${facet.key}`} className="mt-3">
+              <p className="tag mb-1 text-ink-faint">{facet.title}</p>
+              {facet.options.map((option) => (
+                <OptionLink
+                  key={option.value}
+                  href={buildResultsUrl(filters, {
+                    spec: {
+                      ...filters.spec,
+                      [facet.key]: filters.spec[facet.key] === option.value ? null : option.value,
+                    },
+                  })}
+                  active={filters.spec[facet.key] === option.value}
+                  label={option.label}
+                  count={option.count}
+                />
+              ))}
+            </div>
+          ))}
+          <p className="mt-3 text-xs leading-relaxed text-ink-faint">
+            Read from each listing&rsquo;s own description — listings that don&rsquo;t state a spec
+            drop out when you filter on it.
+          </p>
+        </section>
+      ) : (
+        <span data-testid="filter-group-specs" className="hidden" />
+      )}
 
       <FilterGroup id="min-order" title="Minimum order">
         {facets.minOrder.map((option) => (
@@ -113,6 +149,24 @@ export function FilterRail({
         ))}
         <p className="mt-2 text-xs leading-relaxed text-ink-faint">
           Filters apply to published minimums — products without one are shown when this filter is off.
+        </p>
+      </FilterGroup>
+
+      <FilterGroup id="budget" title="Budget per unit">
+        {facets.budget.map((option) => (
+          <OptionLink
+            key={option.value}
+            href={buildResultsUrl(filters, {
+              budget: filters.budget === Number(option.value) ? null : Number(option.value),
+            })}
+            active={filters.budget === Number(option.value)}
+            label={option.label}
+            count={option.count}
+          />
+        ))}
+        <p className="mt-2 text-xs leading-relaxed text-ink-faint">
+          Uses each listing&rsquo;s per-unit price; other currencies at indicative rates. Quote-only
+          listings drop out.
         </p>
       </FilterGroup>
 
@@ -156,7 +210,7 @@ export function FilterRail({
         </div>
       </FilterGroup>
 
-      <FilterGroup id="location" title="Supplier region">
+      <FilterGroup id="location" title="Supplier country">
         {facets.location.map((option) => (
           <OptionLink
             key={option.value}
@@ -168,16 +222,11 @@ export function FilterRail({
         ))}
       </FilterGroup>
 
-      <FilterGroup id="price-type" title="Price type">
-        {facets.priceType.map((option) => (
-          <OptionLink
-            key={option.value}
-            href={buildResultsUrl(filters, { priceType: filters.priceType === option.value ? null : option.value })}
-            active={filters.priceType === option.value}
-            label={option.label}
-            count={option.count}
-          />
-        ))}
+      <FilterGroup id="delivery" title="Delivery region">
+        <p className="text-xs leading-relaxed text-ink-faint">
+          Suppliers haven&rsquo;t published where they deliver yet — add your delivery location to
+          your quote request and they&rsquo;ll confirm.
+        </p>
       </FilterGroup>
 
       <FilterGroup id="stock-custom" title="Stock or custom">
@@ -188,6 +237,44 @@ export function FilterRail({
               stockOrCustom: filters.stockOrCustom === option.value ? null : (option.value as "STOCK" | "CUSTOM"),
             })}
             active={filters.stockOrCustom === option.value}
+            label={option.label}
+            count={option.count}
+          />
+        ))}
+      </FilterGroup>
+
+      {facets.customization.length > 0 ? (
+        <FilterGroup id="customization" title="Printing &amp; customization">
+          {facets.customization.map((facet) => (
+            <div key={facet.key} className="mb-2">
+              <p className="tag mb-1 text-ink-faint">{facet.title}</p>
+              {facet.options.map((option) => (
+                <OptionLink
+                  key={option.value}
+                  href={buildResultsUrl(filters, {
+                    spec: {
+                      ...filters.spec,
+                      [facet.key]: filters.spec[facet.key] === option.value ? null : option.value,
+                    },
+                  })}
+                  active={filters.spec[facet.key] === option.value}
+                  label={option.label}
+                  count={option.count}
+                />
+              ))}
+            </div>
+          ))}
+        </FilterGroup>
+      ) : (
+        <span data-testid="filter-group-customization" className="hidden" />
+      )}
+
+      <FilterGroup id="price-type" title="Price type">
+        {facets.priceType.map((option) => (
+          <OptionLink
+            key={option.value}
+            href={buildResultsUrl(filters, { priceType: filters.priceType === option.value ? null : option.value })}
+            active={filters.priceType === option.value}
             label={option.label}
             count={option.count}
           />

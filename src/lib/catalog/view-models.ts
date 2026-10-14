@@ -5,6 +5,7 @@
 // JSON-serializable so the same objects can cross into client components.
 
 import { partnerFactsFor, type PartnerFactsVM } from "./partner-facts";
+import { extractSpecs, type ProductSpecs } from "./specs";
 
 export type SupplierStatusValue = "PENDING" | "LISTED" | "RECOMMENDED" | "QUOTE_ONLY" | "DISABLED";
 export type PriceTypeValue = "EXACT" | "CALCULATOR" | "FROM" | "QUOTE_ONLY";
@@ -75,6 +76,8 @@ export interface ProductVM {
    * labelled as such wherever they render. Null when none apply.
    */
   partnerFacts?: PartnerFactsVM | null;
+  /** Technical specs read from the listing's own text (see specs.ts). */
+  specs: ProductSpecs;
 }
 
 export interface CategoryVM {
@@ -246,5 +249,14 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
     },
     certificationNames: row.supplier.certifications.map((c) => c.name),
     partnerFacts: supplied.facts,
+    specs: extractSpecs({
+      title: row.title,
+      description: row.description,
+      material: row.material,
+      subcategory: row.subcategory,
+      categorySlug: row.category.slug,
+      priceBasis: row.priceBasis,
+      stockOrCustom: row.stockOrCustom as StockOrCustomValue,
+    }),
   };
 }
