@@ -1,4 +1,6 @@
 import { db } from "@/lib/db";
+import { deliverOutbox, enqueueEmail } from "@/lib/notify/outbox";
+import { inquiryEmail } from "@/lib/notify/templates";
 import { newAccessToken } from "@/lib/inquiries/access";
 import {
   designFileError,
@@ -63,7 +65,7 @@ export async function POST(request: Request) {
 
   const product = await db.product.findUnique({
     where: { id: parsed.data.productId },
-    select: { id: true },
+    select: { id: true, title: true, sourceUrl: true, supplier: { select: { name: true } } },
   });
   if (!product) return Response.json({ error: "unknown_product" }, { status: 404 });
 
@@ -72,26 +74,59 @@ export async function POST(request: Request) {
   const access = newAccessToken();
 
   const { fileLink, ...fields } = parsed.data;
-  const inquiry = await db.inquiry.create({
-    data: {
-      ...fields,
-      description: inquiryDescription({ description: fields.description, fileLink }),
-      accessTokenHash: access.hash,
-      ...(file
-        ? {
-            file: {
-              create: {
-                name: file.name.slice(-200),
-                contentType: file.type || "application/octet-stream",
-                size: file.size,
-                data: new Uint8Array(await file.arrayBuffer()),
+  // The request and its team email are written together; the email is sent
+  // right after (and retried from the outbox if sending fails).
+  const { inquiry, outboxId } = await db.$transaction(async (tx) => {
+    const inquiry = await tx.inquiry.create({
+      data: {
+        ...fields,
+        description: inquiryDescription({ description: fields.description, fileLink }),
+        accessTokenHash: access.hash,
+        ...(file
+          ? {
+              file: {
+                create: {
+                  name: file.name.slice(-200),
+                  contentType: file.type || "application/octet-stream",
+                  size: file.size,
+                  data: new Uint8Array(await file.arrayBuffer()),
+                },
               },
-            },
-          }
-        : {}),
-    },
-    select: { id: true },
+            }
+          : {}),
+      },
+      select: { id: true },
+    });
+    const outboxId = await enqueueEmail(
+      tx,
+      inquiryEmail({
+        reference: inquiryReference(inquiry.id),
+        kind: fields.kind,
+        name: fields.name,
+        email: fields.email,
+        company: fields.company,
+        website: fields.website,
+        phone: fields.phone,
+        quantity: fields.quantity,
+        packagingType: fields.packagingType,
+        format: fields.format,
+        designStatus: fields.designStatus,
+        description: inquiryDescription({ description: fields.description, fileLink }),
+        hasFile: Boolean(file),
+        product: {
+          id: product.id,
+          title: product.title,
+          supplierName: product.supplier.name,
+          sourceUrl: product.sourceUrl,
+        },
+      }),
+    );
+    return { inquiry, outboxId };
   });
+
+  await deliverOutbox(db, { ids: [outboxId] }).catch((error) =>
+    console.error("[aekobaba] inquiry notification delivery failed", error),
+  );
 
   return Response.json(
     { ok: true, id: inquiry.id, token: access.token, reference: inquiryReference(inquiry.id) },

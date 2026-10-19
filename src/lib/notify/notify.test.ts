@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { deliverOutbox, teamInbox, type OutboxMessage } from "./outbox";
-import { applicationEmail, newRequestEmail } from "./templates";
+import { applicationEmail, inquiryEmail, newRequestEmail } from "./templates";
 
 function fakeDb(rows: (OutboxMessage & { id: string; status: string; attempts: number })[]) {
   const updates: { id: string; data: Record<string, unknown> }[] = [];
@@ -89,5 +89,25 @@ describe("team email templates", () => {
     expect(mail.subject).toBe("Fetch products: Jar Co (APP-261019-AB23)");
     expect(mail.textBody).toContain("authorize extraction");
     expect(mail.textBody).toContain("/admin/applications/app_1");
+  });
+
+  it("product-page request email names the product, supplier, customer and links the dashboard", () => {
+    process.env.NEXT_PUBLIC_SITE_URL = "http://localhost:3000";
+    process.env.VERCEL_PROJECT_PRODUCTION_URL = "aekobaba.vercel.app";
+    const mail = inquiryEmail({
+      reference: "KJGQJXBX",
+      kind: "QUOTE",
+      name: "Test",
+      email: "buyer@x.test",
+      quantity: "500",
+      description: "Need black caps",
+      hasFile: false,
+      product: { id: "p1", title: "68 x 50 Clear PVC Shrink Band", supplierName: "Burch Bottle", sourceUrl: "https://burch.example/x" },
+    });
+    expect(mail.subject).toBe("Quote request #KJGQJXBX — Test — 68 x 50 Clear PVC Shrink Band");
+    for (const part of ["buyer@x.test", "Burch Bottle", "Quantity: 500", "Need black caps", "https://aekobaba.vercel.app/admin/inquiries"])
+      expect(mail.textBody).toContain(part);
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    delete process.env.VERCEL_PROJECT_PRODUCTION_URL;
   });
 });

@@ -8,7 +8,7 @@ import { getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { DESIGN_STATUS_LABEL, inquiryReference } from "@/lib/inquiries/validation";
 
-export const metadata: Metadata = { title: "Inquiries · Admin" };
+export const metadata: Metadata = { title: "Product requests · Admin" };
 export const dynamic = "force-dynamic";
 
 // Admin inbox for "Get a quote" / "Get a sample" requests from product pages.
@@ -53,7 +53,7 @@ export default async function AdminInquiriesPage({
     <WorkspaceShell
       area="admin"
       active="inquiries"
-      title="Inquiries"
+      title="Product requests"
       subtitle="Quote and sample requests from product pages. Reply by email, then move them along."
     >
       <FilterTabs
