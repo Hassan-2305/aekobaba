@@ -279,6 +279,7 @@
   --font-sans: var(--font-geist), system-ui, "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-hand: var(--font-caveat), "Segoe Print", cursive;
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
 
   /* v12 corners: soft, consistent. */
   --radius-sm: 4px;

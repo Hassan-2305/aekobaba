@@ -144,7 +144,7 @@ export default async function AdminQuoteDetailPage({ params }: { params: Promise
   };
 
   return (
-    <WorkspaceShell area="admin" active="quotes" title={`Quote request ${reference}`} subtitle="Everything about this request, per supplier and per product.">
+    <WorkspaceShell area="admin" active="quotes" bare title={`Quote request ${reference}`} subtitle="Everything about this request, per supplier and per product.">
       <Link href="/admin/quotes" className="text-sm text-ink-muted hover:text-ink">
         ← All quote requests
       </Link>
