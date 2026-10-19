@@ -111,7 +111,7 @@ export function packFromBasis(priceBasis: string | null): { size: number; unit: 
 }
 
 const SINGLE_UNIT =
-  /^per (?:custom |sample )?(bottle|jar|piece|box|pouch|bucket|roll|unit|tube|bag)\b/i;
+  /^per (?:custom |sample )?(bottle|jar|piece|box|pouch|bucket|roll|unit|tube|bag|cap|pump|can|tin)\b/i;
 
 /**
  * The comparable figure: what one unit costs, in the published currency.

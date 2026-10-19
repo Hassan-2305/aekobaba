@@ -100,16 +100,17 @@ export const productSchema = z
     ...provenance,
     quantityBreaks: z.array(quantityBreakSchema),
     /**
-     * Real product photography supplied by (or licensed from) the supplier,
-     * hosted under /partners/<slug>/. When present these are the product's
-     * Image rows and no representative packshot is written for it.
+     * Real product photography from the supplier, hosted under
+     * /partners/<slug>/ (partner-supplied) or /suppliers/<slug>/ (copied from
+     * the supplier's own product page, credited). When present these are the
+     * product's Image rows and no representative packshot is written for it.
      */
     images: z
       .array(
         z.strictObject({
           url: z
             .string()
-            .regex(/^\/partners\/[a-z0-9-]+\/[A-Za-z0-9._-]+$/, "hosted partner image path"),
+            .regex(/^\/(partners|suppliers)\/[a-z0-9-]+\/[A-Za-z0-9._-]+$/, "hosted supplier image path"),
           alt: z.string().min(1),
           credit: z.string().min(1),
         }),

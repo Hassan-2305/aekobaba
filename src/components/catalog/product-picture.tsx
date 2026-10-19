@@ -9,8 +9,12 @@ import Image from "next/image";
 //        sit on graphite; the cut-out can.
 // Images without a cut-out (e.g. future supplier photography) render as-is.
 
-/** Partners whose photography ships with dark-theme cut-outs. */
-const PARTNERS_WITH_CUTOUTS = new Set(["berlin-packaging"]);
+/** Partner photos that ship with a hand-made cut-out (partner slug → file names). */
+const PARTNER_CUTOUTS: Record<string, Set<string>> = {
+  "berlin-packaging": new Set([
+    "2310B05WHT", "322420-B", "322420-K", "324050", "33512-B", "33512", "3351B09-B", "3351B09", "337048",
+  ]),
+};
 
 export function cutoutFor(src: string): string | null {
   const packshot = /^\/products\/([a-z0-9-]+)\.png$/.exec(src);
@@ -18,7 +22,7 @@ export function cutoutFor(src: string): string | null {
   // Partner photography keeps a cut-out beside it: /partners/<slug>/cutouts/<file>.webp
   // — only for partners whose cut-outs exist; others render their photo as-is.
   const partner = /^\/partners\/([a-z0-9-]+)\/([A-Za-z0-9._-]+)\.(webp|jpg|png)$/.exec(src);
-  if (partner && PARTNERS_WITH_CUTOUTS.has(partner[1])) {
+  if (partner && PARTNER_CUTOUTS[partner[1]]?.has(partner[2])) {
     return `/partners/${partner[1]}/cutouts/${partner[2]}.webp`;
   }
   return null;
@@ -26,7 +30,7 @@ export function cutoutFor(src: string): string | null {
 
 /** Representative (generated) imagery vs real supplier photography. */
 export function isRepresentativeImage(src: string): boolean {
-  return !src.startsWith("/partners/");
+  return !src.startsWith("/partners/") && !src.startsWith("/suppliers/");
 }
 
 export function ProductPicture({

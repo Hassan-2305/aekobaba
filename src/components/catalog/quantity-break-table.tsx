@@ -7,11 +7,15 @@ import type { QuantityBreakVM } from "@/lib/catalog/view-models";
 export function QuantityBreakTable({
   breaks,
   currency = "USD",
+  packSize = 1,
 }: {
   breaks: QuantityBreakVM[];
   /** The listing's published currency (tiers are quoted in it). */
   currency?: CurrencyCode;
+  /** Units per selling pack when the listing is sold by the case (tiers count cases). */
+  packSize?: number;
 }) {
+  const byCase = packSize > 1;
   if (breaks.length === 0) return null;
   return (
     <div data-testid="quantity-breaks">
@@ -20,10 +24,10 @@ export function QuantityBreakTable({
         <thead>
           <tr className="border-y border-line text-left">
             <th scope="col" className="tag py-3 pr-4 font-semibold text-ink-faint">
-              Quantity
+              {byCase ? `Cases of ${packSize.toLocaleString("en-US")}` : "Quantity"}
             </th>
             <th scope="col" className="tag py-3 text-right font-semibold text-ink-faint">
-              Unit price
+              {byCase ? "Price per case" : "Unit price"}
             </th>
           </tr>
         </thead>
