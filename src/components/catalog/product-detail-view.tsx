@@ -13,6 +13,7 @@ import {
   formatMoq,
   NOT_PUBLISHED,
   priceCurrency,
+  unitPrice,
 } from "@/lib/catalog/format";
 import type { PartnerFactsVM } from "@/lib/catalog/partner-facts";
 import type { VariantVM } from "@/lib/catalog/related";
@@ -250,7 +251,11 @@ export function ProductDetailView({
           </dl>
           <div className="mt-6">
             {product.quantityBreaks.length > 0 ? (
-              <QuantityBreakTable breaks={product.quantityBreaks} currency={currency} />
+              <QuantityBreakTable
+                breaks={product.quantityBreaks}
+                currency={currency}
+                packSize={unitPrice(product)?.packSize ?? 1}
+              />
             ) : (
               <p className="text-sm text-ink-faint">
                 Price tiers: not published — the supplier quotes per quantity.
