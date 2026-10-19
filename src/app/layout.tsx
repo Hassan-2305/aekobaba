@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
 import { CompareTray } from "@/components/compare/compare-tray";
 import { BasketSync } from "@/components/quotes/basket-sync";
+import { ChromeGate } from "@/components/brand/chrome-gate";
 
 // Absolute base for Open Graph / Twitter image URLs. Order: the configured
 // canonical URL, then Vercel's production domain, then this deployment's own
@@ -91,11 +92,17 @@ export default function RootLayout({
     <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
       <body className={`${geist.variable} ${geistMono.variable} ${caveat.variable} min-h-screen bg-paper text-ink antialiased`}>
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          <ChromeGate>
+            <SiteHeader />
+          </ChromeGate>
           <main className="flex-1">{children}</main>
-          <SiteFooter />
+          <ChromeGate>
+            <SiteFooter />
+          </ChromeGate>
         </div>
-        <CompareTray />
+        <ChromeGate>
+          <CompareTray />
+        </ChromeGate>
         <BasketSync />
       </body>
     </html>

@@ -49,12 +49,17 @@ async function requestOrigin(): Promise<string> {
   return `${proto}://${host}`;
 }
 
+/** Shown instead of crashing when the Supabase keys are missing or placeholders. */
+const AUTH_NOT_CONFIGURED =
+  "Accounts aren't available right now — sign-in is still being set up. Please try again later.";
+
 async function requireSupabase() {
   const env = supabaseEnv();
   if (!env) {
-    throw new Error(
-      "Supabase environment is not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+    console.error(
+      "[aekobaba] Supabase auth is not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (real values, not the .env.example placeholders).",
     );
+    return null;
   }
   return createSupabaseServerClient(env);
 }
@@ -80,6 +85,7 @@ export async function signInWithPasswordAction(
 
   const { email, password, next } = parsed.data;
   const supabase = await requireSupabase();
+  if (!supabase) return { error: AUTH_NOT_CONFIGURED };
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -115,6 +121,7 @@ export async function signUpAction(
 
   const { email, password, next } = parsed.data;
   const supabase = await requireSupabase();
+  if (!supabase) return { error: AUTH_NOT_CONFIGURED };
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -162,6 +169,7 @@ export async function sendMagicLinkAction(
 
   const { email, next } = parsed.data;
   const supabase = await requireSupabase();
+  if (!supabase) return { error: AUTH_NOT_CONFIGURED };
 
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
@@ -204,6 +212,7 @@ export async function beginGoogleSignInAction(
 ): Promise<AuthFormState> {
   const next = safeNextPath(formValue(formData, "next") || undefined);
   const supabase = await requireSupabase();
+  if (!supabase) return { error: AUTH_NOT_CONFIGURED };
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -223,6 +232,7 @@ export async function beginGoogleSignInAction(
 
 export async function signOutAction(): Promise<void> {
   const supabase = await requireSupabase();
+  if (!supabase) redirect("/");
   await supabase.auth.signOut();
   redirect("/");
 }

@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+import { accountLinks } from "@/lib/auth/account-links";
+import { getCurrentUserRole, getServerSessionUser } from "@/lib/auth/session";
+
+import { SignOutButton } from "./account-menu";
+
 // Footer (v12 marketplace design): dark, five columns, the image disclaimer.
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
@@ -35,7 +40,12 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   { title: "Account", links: [{ label: "Sign in", href: "/auth/sign-in" }] },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const session = await getServerSessionUser().catch(() => null);
+  const role = session ? await getCurrentUserRole(session.supabaseUserId).catch(() => null) : null;
+  const columns = session
+    ? COLUMNS.map((col) => (col.title === "Account" ? { ...col, links: accountLinks(role) } : col))
+    : COLUMNS;
   return (
     <footer className="bg-chrome-deep px-5 pb-28 pt-14 text-sm text-on-chrome lg:px-14 lg:pb-7">
       <div className="grid grid-cols-2 gap-8 lg:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))]">
@@ -50,7 +60,7 @@ export function SiteFooter() {
             company.
           </p>
         </div>
-        {COLUMNS.map((col) => (
+        {columns.map((col) => (
           <nav key={col.title} aria-label={col.title} className="flex flex-col gap-[9px]">
             <p className="font-semibold">{col.title}</p>
             {col.links.map((l) => (
@@ -58,6 +68,9 @@ export function SiteFooter() {
                 {l.label}
               </Link>
             ))}
+            {session && col.title === "Account" ? (
+              <SignOutButton className="text-left text-on-chrome-muted hover:text-on-chrome" />
+            ) : null}
           </nav>
         ))}
       </div>
