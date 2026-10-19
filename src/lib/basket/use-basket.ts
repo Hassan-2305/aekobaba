@@ -10,7 +10,9 @@ import { useQuoteBasketStore, type BasketItem } from "./store";
 
 /** True once the persisted basket has been restored into the store. */
 export function useBasketHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(() => useQuoteBasketStore.persist.hasHydrated());
+  // Always start false so the first client render matches the server HTML;
+  // the effect flips it once the persisted basket is in the store.
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     // Any mounted consumer (header badge, basket page) triggers the one-time

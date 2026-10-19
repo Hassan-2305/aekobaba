@@ -49,3 +49,30 @@ catalog pages only if `DATABASE_URL` points at a reachable Postgres. Auth
 sessions, Storage uploads, and Realtime status pushes stay inactive without
 `NEXT_PUBLIC_SUPABASE_URL` + keys — the app's dev harness and the SSE bridge
 (documented in the code) are development-time fallbacks, not deploy targets.
+
+## Quote workflow (Aekobaba as mediator)
+
+Buyers submit a Quote Basket → one RFQ is stored (with a reference like
+`AEK-261019-7KQ4`) and the team is emailed at `TEAM_INBOX_EMAIL`
+(default teamaekovera@gmail.com). Suppliers are **never** emailed
+automatically: the team works each request in **Admin → Quote requests**
+(Inbox / Outreach / Samples / Activity), uses **Send email** (opens your own
+mail app with the RFQ composed), and records replies, quotes and samples by hand.
+
+Setup, once:
+
+1. `npx prisma migrate deploy` (adds the workflow tables — additive only).
+2. Sign up on the site with the team account, then make it an admin:
+   `npm run admin:grant -- teamaekovera@gmail.com` (repeat for each teammate).
+3. Email notifications: create a Resend account, verify a sending domain, and
+   set `RESEND_API_KEY` and `EMAIL_FROM` in Vercel. Until then emails wait in
+   **Admin → Email outbox** (nothing is lost; press *Retry undelivered* later).
+4. Set `CRON_SECRET` in Vercel — the daily cron (`vercel.json`) retries any
+   undelivered email.
+5. Partner meetings: create a Google Calendar appointment schedule on the team
+   calendar and put its booking link in `NEXT_PUBLIC_PARTNER_BOOKING_URL`.
+6. For each supplier you contact, add its verified business email on the
+   request page (stored on the supplier, reused next time).
+
+Direct supplier access to RFQs (the supplier lead inbox) is off while the team
+mediates; set `SUPPLIER_DIRECT_LEADS=on` to re-enable it later.

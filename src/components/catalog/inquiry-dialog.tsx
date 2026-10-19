@@ -242,10 +242,10 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
-                href="/basket"
+                href="/basket/requests"
                 className="inline-flex h-11 items-center bg-ink px-6 text-sm font-medium text-paper transition-colors hover:bg-ink/85"
               >
-                View in Quote Basket
+                View your requests
               </Link>
               <button
                 type="button"

@@ -45,7 +45,7 @@ export default async function PartnersPage() {
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-on-dark-muted">
             A curated set of packaging suppliers who partner with Aekobaba: branded storefronts,
             supplier photography and data they&rsquo;ve confirmed with us. Membership is by
-            invitation. {PARTNER_DISCLOSURE}
+            invitation or application. {PARTNER_DISCLOSURE}
           </p>
           <p className="mt-4 text-sm text-on-dark-muted">
             Looking for everyone?{" "}
@@ -53,6 +53,12 @@ export default async function PartnersPage() {
               The open catalog lists every verified supplier.
             </Link>
           </p>
+          <Link
+            href="/partners/apply"
+            className="mt-6 inline-flex h-11 items-center rounded-md bg-orange px-5 text-sm font-semibold text-on-orange hover:bg-orange-hi"
+          >
+            Become a partner — book a call
+          </Link>
         </div>
       </section>
 

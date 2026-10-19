@@ -161,7 +161,7 @@ export function MyRequestsView() {
             Your requests
           </p>
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
-            Quote Basket
+            Product requests
             {hydrated && requests.length > 0 ? (
               <span className="ml-4 align-middle text-sm font-normal tracking-normal text-on-dark-muted tabular-nums">
                 {requests.length} request{requests.length === 1 ? "" : "s"}
