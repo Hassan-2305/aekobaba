@@ -1,4 +1,7 @@
+import { redirect } from "next/navigation";
+
 import { HomeLanding } from "@/components/home/home-landing";
+import { getCurrentUserRole, getServerSessionUser } from "@/lib/auth/session";
 import { LEAD_PARTNER_SLUG, partnerProfile, varietyOrder } from "@/lib/catalog/partners";
 import { getAllProducts, getCategories } from "@/lib/catalog/queries";
 
@@ -10,6 +13,12 @@ import { getAllProducts, getCategories } from "@/lib/catalog/queries";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  // The team lands on its dashboard, not the storefront ("View marketplace"
+  // in the admin bar still opens the catalog pages).
+  const session = await getServerSessionUser().catch(() => null);
+  if (session && (await getCurrentUserRole(session.supabaseUserId).catch(() => null)) === "ADMIN") {
+    redirect("/admin");
+  }
   const [categories, products] = await Promise.all([getCategories(), getAllProducts()]);
 
   // The lead partner's spotlight (sponsored, labelled), one product per type first.

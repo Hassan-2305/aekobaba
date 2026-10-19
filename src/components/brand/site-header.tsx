@@ -1,6 +1,10 @@
 import Link from "next/link";
 
+import { getCurrentUserRole, getServerSessionUser } from "@/lib/auth/session";
 import { CATEGORY_GROUPS } from "@/lib/catalog/menu";
+import { accountLinks } from "@/lib/auth/account-links";
+
+import { AccountMenu, type HeaderAccount } from "./account-menu";
 import { BasketButton, CompareLink, MegaMenu, MobileMenu } from "./header-islands";
 
 // Global header (v12 marketplace design):
@@ -10,7 +14,20 @@ import { BasketButton, CompareLink, MegaMenu, MobileMenu } from "./header-island
 //                 Compare · Quote Basket (popover) · Sign in
 //   category row  the seven category groups + Low MOQ / Sustainable
 //
-// Server-rendered and static (no DB): live counts load inside the mega menu.
+// Server-rendered: reads the session so a signed-in visitor sees their
+// account menu (with Sign out) instead of "Sign in". Live counts load inside
+// the mega menu.
+
+async function headerAccount(): Promise<HeaderAccount | null> {
+  try {
+    const session = await getServerSessionUser();
+    if (!session?.email) return null;
+    const role = await getCurrentUserRole(session.supabaseUserId).catch(() => null);
+    return { email: session.email, role };
+  } catch {
+    return null;
+  }
+}
 
 const NAV = [
   { label: "Suppliers", href: "/suppliers" },
@@ -18,7 +35,9 @@ const NAV = [
   { label: "How it works", href: "/#how" },
 ];
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const account = await headerAccount();
+  const mobileAccountLinks = account ? accountLinks(account.role) : [{ label: "Sign in", href: "/auth/sign-in" }];
   return (
     <>
       <div className="hidden h-9 items-center gap-5 bg-chrome px-5 text-[13px] text-on-chrome-muted md:flex lg:px-14">
@@ -71,10 +90,11 @@ export function SiteHeader() {
             </form>
             <CompareLink />
             <BasketButton />
-            <Link href="/auth/sign-in" className="hidden h-10 items-center whitespace-nowrap px-2.5 text-sm font-medium text-ink lg:flex">
-              Sign in
-            </Link>
-            <MobileMenu links={[...NAV, { label: "Browse all products", href: "/results" }, { label: "Sign in", href: "/auth/sign-in" }]} />
+            <AccountMenu account={account} />
+            <MobileMenu
+              links={[...NAV, { label: "Browse all products", href: "/results" }, ...mobileAccountLinks]}
+              signedInEmail={account?.email ?? null}
+            />
           </div>
         </div>
       </header>

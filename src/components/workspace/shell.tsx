@@ -1,5 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+
+import { SignOutButton } from "@/components/brand/account-menu";
 
 // Shell for the supplier and admin workspaces: an operational layout — a
 // left rail naming the area and its sections (active section marked with the
@@ -15,6 +18,7 @@ export type WorkspaceSection =
   | "suppliers"
   | "categories"
   | "inquiries"
+  | "dashboard"
   | "quotes"
   | "applications"
   | "notifications";
@@ -35,6 +39,12 @@ const NAV: Record<Area, { id: WorkspaceSection; href: string; label: string; hin
     },
   ],
   admin: [
+    {
+      id: "dashboard",
+      href: "/admin",
+      label: "Dashboard",
+      hint: "Overview of everything",
+    },
     {
       id: "quotes",
       href: "/admin/quotes",
@@ -96,7 +106,23 @@ export function WorkspaceShell({
 }) {
   return (
     <div className="bg-paper">
-      <div className="mx-auto grid max-w-[1400px] lg:grid-cols-[248px_minmax(0,1fr)]">
+      {area === "admin" ? (
+        <header className="flex h-14 items-center gap-4 bg-chrome px-5 text-on-chrome lg:px-8">
+          <Link href="/admin" className="flex items-center gap-3">
+            <Image src="/brand/logo-white.png" alt="Aekobaba" width={120} height={24} className="h-5 w-auto" />
+            <span className="rounded border border-on-chrome/30 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-on-chrome-muted">
+              Admin
+            </span>
+          </Link>
+          <nav className="ml-auto flex items-center gap-4 text-sm">
+            <Link href="/results" className="text-on-chrome-muted hover:text-on-chrome">
+              View marketplace ↗
+            </Link>
+            <SignOutButton className="h-8 rounded-md border border-on-chrome/40 px-3 text-sm text-on-chrome hover:bg-chrome-raised" />
+          </nav>
+        </header>
+      ) : null}
+      <div className={`mx-auto grid ${area === "admin" ? "max-w-[1680px]" : "max-w-[1400px]"} lg:grid-cols-[248px_minmax(0,1fr)]`}>
         <aside className="border-b border-line lg:min-h-[calc(100vh-57px)] lg:border-b-0 lg:border-r">
           <div className="lg:sticky lg:top-0 lg:px-5 lg:py-8">
             <p className="tag hidden px-3 text-ink-faint lg:block">{AREA_LABEL[area]}</p>
@@ -129,7 +155,7 @@ export function WorkspaceShell({
             </nav>
             <div className="hidden border-t border-line px-3 pt-5 lg:mt-8 lg:block">
               <Link
-                href="/"
+                href={area === "admin" ? "/results" : "/"}
                 className="text-xs text-ink-muted underline decoration-ink/20 underline-offset-4 hover:text-ink"
               >
                 View the marketplace

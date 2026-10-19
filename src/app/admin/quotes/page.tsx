@@ -2,21 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { RfqChip } from "@/components/admin/rfq-chip";
+import { SendEmailLink } from "@/components/admin/send-email-link";
 import { FilterTabs, WorkspaceShell } from "@/components/workspace/shell";
 import { requireAdminPage } from "@/lib/auth/admin";
 import { db } from "@/lib/db";
 import { emailConfigured } from "@/lib/notify/outbox";
+import { composeRfqEmail } from "@/lib/rfq/mailto";
 
 export const metadata: Metadata = { title: "Quote requests · Admin" };
 export const dynamic = "force-dynamic";
 
 // The team's quote management workspace. Four views:
 //   Inbox     — customer requests (newest first), with overall stage
+//   By supplier — each supplier's open requests, ready to email
 //   Outreach  — one row per supplier per request: contact + quote status
 //   Samples   — every product line with a sample in motion
 //   Activity  — the audit trail across all requests
 
-const VIEWS = ["inbox", "outreach", "samples", "activity"] as const;
+const VIEWS = ["inbox", "suppliers", "outreach", "samples", "activity"] as const;
 type View = (typeof VIEWS)[number];
 
 const day = (d: Date | null | undefined) => (d ? d.toISOString().slice(0, 10) : "—");
@@ -60,6 +63,7 @@ export default async function AdminQuotesPage({
       <FilterTabs
         tabs={[
           { href: "/admin/quotes", label: "Inbox", count: newCount, active: view === "inbox" },
+          { href: "/admin/quotes?view=suppliers", label: "By supplier", active: view === "suppliers" },
           { href: "/admin/quotes?view=outreach", label: "Outreach", count: outreachOpen, active: view === "outreach" },
           { href: "/admin/quotes?view=samples", label: "Samples", count: samplesOpen, active: view === "samples" },
           { href: "/admin/quotes?view=activity", label: "Activity", active: view === "activity" },
@@ -67,6 +71,7 @@ export default async function AdminQuotesPage({
       />
       <div className="mt-6">
         {view === "inbox" ? <InboxView showClosed={showClosed} /> : null}
+        {view === "suppliers" ? <BySupplierView /> : null}
         {view === "outreach" ? <OutreachView /> : null}
         {view === "samples" ? <SamplesView /> : null}
         {view === "activity" ? <ActivityView /> : null}
@@ -146,6 +151,113 @@ async function InboxView({ showClosed }: { showClosed: boolean }) {
         </Link>
       </p>
     </>
+  );
+}
+
+async function BySupplierView() {
+  const lines = await db.quoteRequestSupplier.findMany({
+    where: { quoteRequest: { stage: { notIn: ["COMPLETED", "CANCELLED"] } } },
+    orderBy: { createdAt: "desc" },
+    take: 400,
+    include: {
+      supplier: { select: { id: true, name: true, businessEmail: true, website: true } },
+      quoteRequest: {
+        select: {
+          id: true,
+          reference: true,
+          companyName: true,
+          contactName: true,
+          deadline: true,
+          notes: true,
+          artworkNotes: true,
+          artworkFileUrl: true,
+          createdAt: true,
+          items: {
+            select: { quantity: true, specNotes: true, product: { select: { title: true, sourceUrl: true, supplierId: true } } },
+          },
+        },
+      },
+    },
+  });
+  if (lines.length === 0) return <Empty text="No open requests for any supplier." />;
+
+  const groups = new Map<string, typeof lines>();
+  for (const line of lines) groups.set(line.supplier.id, [...(groups.get(line.supplier.id) ?? []), line]);
+  const ordered = [...groups.values()].sort(
+    (a, b) =>
+      b.filter((l) => l.outreachStatus === "NOT_CONTACTED").length - a.filter((l) => l.outreachStatus === "NOT_CONTACTED").length ||
+      b.length - a.length,
+  );
+
+  return (
+    <div className="space-y-6">
+      {ordered.map((group) => {
+        const supplier = group[0].supplier;
+        return (
+          <section key={supplier.id} id={`sup-${supplier.id}`} className="scroll-mt-20 rounded-xl border border-line-strong bg-paper p-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="text-base font-semibold">{supplier.name}</h2>
+              <span className="text-xs text-ink-muted">
+                {group.length} open request{group.length === 1 ? "" : "s"} ·{" "}
+                {supplier.businessEmail ? `RFQ email ${supplier.businessEmail}` : "no business email yet — add it on any request"}
+              </span>
+            </div>
+            <ul className="mt-3 divide-y divide-line">
+              {group.map((line) => {
+                const r = line.quoteRequest;
+                const items = r.items.filter((i) => i.product.supplierId === supplier.id);
+                const reference = r.reference ?? r.id.slice(0, 8);
+                const mail = supplier.businessEmail
+                  ? composeRfqEmail({
+                      reference,
+                      supplierName: supplier.name,
+                      supplierEmail: supplier.businessEmail,
+                      lines: items.map((i) => ({ productTitle: i.product.title, quantity: i.quantity, sourceUrl: i.product.sourceUrl, specNotes: i.specNotes })),
+                      deadline: r.deadline ? r.deadline.toISOString().slice(0, 10) : null,
+                      requirements: r.notes,
+                      artworkAvailable: Boolean(r.artworkFileUrl || r.artworkNotes),
+                    })
+                  : null;
+                return (
+                  <li key={line.id} className="flex flex-wrap items-start gap-x-6 gap-y-2 py-3 text-sm">
+                    <div className="w-[170px] flex-none">
+                      <Link href={`/admin/quotes/${r.id}#line-${line.id}`} className="font-mono text-[13px] font-medium text-orange-ink hover:underline">
+                        {reference}
+                      </Link>
+                      <span className="block text-xs text-ink-muted">{r.companyName ?? r.contactName ?? "—"} · {day(r.createdAt)}</span>
+                    </div>
+                    <ul className="min-w-[240px] flex-1 space-y-0.5">
+                      {items.map((i) => (
+                        <li key={i.product.title}>
+                          {i.product.title} <span className="text-ink-muted">× {i.quantity.toLocaleString("en-US")}</span>
+                          {i.specNotes ? <span className="block text-xs text-ink-muted">Spec: {i.specNotes}</span> : null}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <RfqChip value={line.outreachStatus} />
+                      <RfqChip value={line.commercialStatus} />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {mail ? (
+                        <SendEmailLink requestId={r.id} lineId={line.id} href={mail.href} />
+                      ) : (
+                        <Link href={`/admin/quotes/${r.id}#line-${line.id}`} className="text-xs underline">
+                          Add email
+                        </Link>
+                      )}
+                      <Link href={`/admin/quotes/${r.id}#line-${line.id}`} className="inline-flex h-8 items-center rounded-md border border-ink px-3 text-xs font-medium">
+                        Open
+                      </Link>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        );
+      })}
+    </div>
   );
 }
 

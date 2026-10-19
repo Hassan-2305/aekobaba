@@ -9,6 +9,8 @@ import { groupedMenu } from "@/lib/catalog/menu";
 import { formatUnitMoney, unitPrice } from "@/lib/catalog/format";
 import { useCompareHydrated, useCompareStore } from "@/lib/compare/store";
 
+import { SignOutButton } from "./account-menu";
+
 // Interactive pieces of the v12 header: the "Browse packaging" mega menu,
 // the Compare count, the Quote Basket popover and the mobile drawer. The
 // rest of the header is server-rendered.
@@ -291,7 +293,13 @@ export function BasketButton({ compact = false }: { compact?: boolean }) {
   );
 }
 
-export function MobileMenu({ links }: { links: { label: string; href: string }[] }) {
+export function MobileMenu({
+  links,
+  signedInEmail = null,
+}: {
+  links: { label: string; href: string }[];
+  signedInEmail?: string | null;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -318,6 +326,12 @@ export function MobileMenu({ links }: { links: { label: string; href: string }[]
                 </Link>
               ))}
             </nav>
+            {signedInEmail ? (
+              <div className="mt-3 flex items-center justify-between gap-3 text-sm">
+                <span className="min-w-0 truncate text-ink-muted">{signedInEmail}</span>
+                <SignOutButton className="h-9 rounded-md border border-ink px-3 font-medium" />
+              </div>
+            ) : null}
             <p className="tag mt-6 text-ink-muted">Browse packaging</p>
             {groupedMenu().map(({ group, entries }) => (
               <details key={group.id} className="border-b border-line py-2">
