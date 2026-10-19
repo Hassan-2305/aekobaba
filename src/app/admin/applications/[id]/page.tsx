@@ -22,7 +22,7 @@ export default async function AdminApplicationPage({ params }: { params: Promise
 
   const replySubject = encodeURIComponent(`Your Aekobaba ${label(app.type).toLowerCase()} request ${app.reference}`);
   return (
-    <WorkspaceShell area="admin" active="applications" title={`${label(app.type)} · ${app.companyName}`} subtitle={app.reference}>
+    <WorkspaceShell area="admin" active="applications" bare title={`${label(app.type)} · ${app.companyName}`} subtitle={app.reference}>
       <Link href="/admin/applications" className="text-sm text-ink-muted hover:text-ink">
         ← All applications
       </Link>

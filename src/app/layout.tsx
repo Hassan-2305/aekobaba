@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Caveat, Geist, Geist_Mono } from "next/font/google";
+import { Caveat, Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { DEFAULT_THEME } from "@/lib/theme";
 
@@ -41,6 +41,13 @@ const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
   weight: ["500"],
+});
+
+// Serif display face for the admin console headings.
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -93,7 +100,7 @@ export default async function RootLayout({
   return (
     // v12 is a single light theme.
     <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
-      <body className={`${geist.variable} ${geistMono.variable} ${caveat.variable} min-h-screen bg-paper text-ink antialiased`}>
+      <body className={`${geist.variable} ${geistMono.variable} ${caveat.variable} ${newsreader.variable} min-h-screen bg-paper text-ink antialiased`}>
         <div className="flex min-h-screen flex-col">
           <ChromeGate>
             <SiteHeader />
