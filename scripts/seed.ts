@@ -17,12 +17,15 @@ import "dotenv/config";
  * Idempotent seed importer: npm run db:seed
  *
  * Reads data/aekobaba-seed.json, validates it against the provenance schema,
- * and applies it to Postgres in one transaction:
+ * and applies it to Postgres in small idempotent transactions (a failed run
+ * is fixed by running it again):
  *  - categories upserted by slug
  *  - suppliers upserted by slug
  *  - products upserted by (supplierId, title) — the schema's @@unique pair
  *  - quantity breaks / images / reviews replaced per parent (no natural key)
  *  - certifications upserted by (supplierId, name)
+ *  - products no longer in the file are deleted, unless a buyer already
+ *    referenced them (request, inquiry, sample, saved list)
  *
  * Re-running against a seeded database updates rows in place; row counts do
  * not grow. No row is ever created without the provenance the schema demands.
@@ -31,8 +34,8 @@ import "dotenv/config";
 const prisma = new PrismaClient({
   // Prisma 7 requires a driver adapter; the connection string comes from
   // DATABASE_URL (local dev: direct Postgres; Supabase: the pooler URL).
-  // Prefer the session/direct URL: one long transaction suits it better than
-  // the transaction pooler. Falls back to DATABASE_URL (local Postgres).
+  // Prefer the session/direct URL (interactive transactions need it; the
+  // transaction pooler doesn't support them). Falls back to DATABASE_URL.
   adapter: new PrismaPg({
     connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL || "",
   }),
@@ -134,10 +137,8 @@ async function upsertProduct(
 async function upsertSupplier(
   tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
   supplier: SeedSupplier,
-  categoryIds: Map<string, string>,
-  counts: { suppliers: Counts; products: Counts; quantityBreaks: number; images: number },
-  nextImageIndex: (categorySlug: string) => number,
-): Promise<void> {
+  counts: { suppliers: Counts },
+): Promise<string> {
   const values = {
     slug: supplier.slug,
     name: supplier.name,
@@ -185,23 +186,24 @@ async function upsertSupplier(
     });
   }
 
-  for (const product of supplier.products) {
-    const categoryId = categoryIds.get(product.categorySlug);
-    if (!categoryId) {
-      throw new Error(
-        `Category "${product.categorySlug}" not found for product "${product.title}"`,
-      );
-    }
-    counts.quantityBreaks += await upsertProduct(
-      tx,
-      saved.id,
-      product,
-      categoryId,
-      counts,
-      nextImageIndex,
-    );
-  }
+  return saved.id;
 }
+
+/** Run `fn` over `items` with at most `limit` in flight. */
+async function inPool<T>(items: T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
+  let next = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const item = items[next++];
+      await fn(item);
+    }
+  });
+  await Promise.all(workers);
+}
+
+const PRODUCT_BATCH = 20;
+const PARALLEL_BATCHES = 4;
+const TX_OPTIONS = { timeout: 2 * 60 * 1000, maxWait: 60 * 1000 };
 
 async function main(): Promise<void> {
   const seed = loadSeedFile();
@@ -213,54 +215,103 @@ async function main(): Promise<void> {
     products: emptyCounts(),
     quantityBreaks: 0,
     images: 0,
+    removedProducts: 0,
+    keptReferencedProducts: [] as string[],
     disabledSuppliers: 0,
   };
 
-  // One all-or-nothing transaction: several hundred round-trips to a hosted
-  // Postgres (Supabase) easily outlive Prisma's 5 s interactive-transaction
-  // default, so give it room. maxWait covers acquiring a pooled connection.
-  await prisma.$transaction(
-    async (tx) => {
-      // Categories first, parents before children (the file is pre-ordered).
-      const categoryIds = new Map<string, string>();
-      for (const category of seed.categories) {
-        const values = {
-          slug: category.slug,
-          name: category.name,
-          description: category.description,
-        };
-        const existing = await tx.category.findUnique({ where: { slug: category.slug } });
-        const saved = existing
-          ? await tx.category.update({ where: { id: existing.id }, data: values })
-          : await tx.category.create({ data: values });
-        bump(counts.categories, existing !== null);
-        categoryIds.set(saved.slug, saved.id);
+  // Small transactions, not one giant one: hundreds of products against a
+  // hosted Postgres outlive any sane interactive-transaction timeout. Each
+  // step is idempotent, so a failed run is fixed by simply running it again.
+
+  // 1. Categories, parents before children (the file is pre-ordered).
+  const categoryIds = new Map<string, string>();
+  await prisma.$transaction(async (tx) => {
+    for (const category of seed.categories) {
+      const values = { slug: category.slug, name: category.name, description: category.description };
+      const existing = await tx.category.findUnique({ where: { slug: category.slug } });
+      const saved = existing
+        ? await tx.category.update({ where: { id: existing.id }, data: values })
+        : await tx.category.create({ data: values });
+      bump(counts.categories, existing !== null);
+      categoryIds.set(saved.slug, saved.id);
+    }
+    for (const category of seed.categories) {
+      if (category.parentSlug) {
+        await tx.category.update({
+          where: { slug: category.slug },
+          data: { parent: { connect: { slug: category.parentSlug } } },
+        });
       }
-      for (const category of seed.categories) {
-        if (category.parentSlug) {
-          await tx.category.update({
-            where: { slug: category.slug },
-            data: { parent: { connect: { slug: category.parentSlug } } },
-          });
+    }
+  }, TX_OPTIONS);
+
+  // Representative-image rotation is order-dependent: assign indexes up front,
+  // in file order, so parallel batches stay deterministic.
+  const nextImageIndex = createCategoryIndexWalker();
+  const imageIndex = new Map<SeedProduct, number>();
+  for (const supplier of seed.suppliers) {
+    for (const product of supplier.products) {
+      if (!product.images?.length) imageIndex.set(product, nextImageIndex(product.categorySlug));
+    }
+  }
+
+  for (const supplier of seed.suppliers) {
+    // 2. The supplier row, its review and certifications.
+    const supplierId = await prisma.$transaction(
+      (tx) => upsertSupplier(tx, supplier, counts),
+      TX_OPTIONS,
+    );
+
+    // 3. Its products, in parallel batches.
+    const batches: SeedProduct[][] = [];
+    for (let i = 0; i < supplier.products.length; i += PRODUCT_BATCH) {
+      batches.push(supplier.products.slice(i, i + PRODUCT_BATCH));
+    }
+    await inPool(batches, PARALLEL_BATCHES, async (batch) => {
+      await prisma.$transaction(async (tx) => {
+        for (const product of batch) {
+          const categoryId = categoryIds.get(product.categorySlug);
+          if (!categoryId) {
+            throw new Error(`Category "${product.categorySlug}" not found for product "${product.title}"`);
+          }
+          counts.quantityBreaks += await upsertProduct(tx, supplierId, product, categoryId, counts, () =>
+            imageIndex.get(product) ?? 0,
+          );
         }
-      }
+      }, TX_OPTIONS);
+    });
 
-      const nextImageIndex = createCategoryIndexWalker();
-      for (const supplier of seed.suppliers) {
-        await upsertSupplier(tx, supplier, categoryIds, counts, nextImageIndex);
-      }
+    // 4. Products dropped from the file come off the site. Ones a buyer has
+    //    already referenced (request, inquiry, sample, saved list) are kept so
+    //    their history stays intact — they're reported for manual review.
+    const keepTitles = supplier.products.map((p) => p.title);
+    const stale = await prisma.product.findMany({
+      where: { supplierId, title: { notIn: keepTitles } },
+      select: {
+        id: true,
+        title: true,
+        _count: { select: { quoteRequestItems: true, inquiries: true, sampleRequests: true, savedListItems: true } },
+      },
+    });
+    const referenced = stale.filter((p) => Object.values(p._count).some((n) => n > 0));
+    const removable = stale.filter((p) => !referenced.includes(p)).map((p) => p.id);
+    if (removable.length) {
+      const removed = await prisma.product.deleteMany({ where: { id: { in: removable } } });
+      counts.removedProducts += removed.count;
+    }
+    counts.keptReferencedProducts.push(...referenced.map((p) => `${supplier.slug}: ${p.title}`));
+    console.log(`  ${supplier.slug}: ${supplier.products.length} products${removable.length ? `, ${removable.length} removed` : ""}`);
+  }
 
-      // Suppliers dropped from the seed file are disabled, never deleted:
-      // their products may carry buyer inquiries. Catalog queries hide
-      // DISABLED suppliers and their listings.
-      const disabled = await tx.supplier.updateMany({
-        where: { slug: { notIn: seed.suppliers.map((s) => s.slug) }, status: { not: "DISABLED" } },
-        data: { status: "DISABLED", isPartner: false },
-      });
-      counts.disabledSuppliers = disabled.count;
-    },
-    { timeout: 10 * 60 * 1000, maxWait: 60 * 1000 },
-  );
+  // 5. Suppliers dropped from the seed file are disabled, never deleted:
+  //    their products may carry buyer inquiries. Catalog queries hide
+  //    DISABLED suppliers and their listings.
+  const disabled = await prisma.supplier.updateMany({
+    where: { slug: { notIn: seed.suppliers.map((s) => s.slug) }, status: { not: "DISABLED" } },
+    data: { status: "DISABLED", isPartner: false },
+  });
+  counts.disabledSuppliers = disabled.count;
 
   console.log(
     JSON.stringify(
@@ -271,6 +322,8 @@ async function main(): Promise<void> {
         products: counts.products,
         quantityBreakRows: counts.quantityBreaks,
         imageRows: counts.images,
+        removedProducts: counts.removedProducts,
+        keptReferencedProducts: counts.keptReferencedProducts,
         disabledSuppliers: counts.disabledSuppliers,
       },
       null,
