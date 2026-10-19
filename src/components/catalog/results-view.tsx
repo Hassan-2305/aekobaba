@@ -7,6 +7,8 @@ import { SortBar } from "./sort-bar";
 import {
   applyFilters,
   computeFacets,
+  DEFAULT_SORT,
+  filtersToQueryString,
   sortProducts,
   type ResultsFilters,
 } from "@/lib/catalog/filters";
@@ -21,21 +23,40 @@ import { PartnerBadge, SponsoredTag } from "./tier-badge";
 // spec's priority order with live facet counts, the four sorts, and the grid.
 // The page (src/app/results/page.tsx) owns the query and URL parsing.
 
+/** Cards per results page — the server only renders (and ships) one page. */
+export const RESULTS_PAGE_SIZE = 24;
+
 export function ResultsView({
   filters,
   resolved,
   allProducts,
+  page = 1,
 }: {
   filters: ResultsFilters;
   resolved: ResolvedQuery | null;
   allProducts: ProductVM[];
+  page?: number;
 }) {
   const filtered = applyFilters(allProducts, filters, resolved);
   // Partner listings lead every result set (a paid, labelled placement —
   // each card wears the partner ribbon). Within each part the visitor's
   // chosen sort is kept, so the ranking below the partner block is untouched.
-  const products = partnerFirst(sortProducts(filtered, filters.sort));
+  // When the visitor picks an explicit sort, honour it: only a few priced
+  // partner listings stay pinned on top (labelled sponsored), the rest follow
+  // the chosen order like everyone else.
+  const sorted = sortProducts(filtered, filters.sort);
+  const products = filters.sort === DEFAULT_SORT ? partnerFirst(sorted) : sponsoredTop(sorted, 3);
   const facets = computeFacets(allProducts, filters, resolved);
+  const pageCount = Math.max(1, Math.ceil(products.length / RESULTS_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pageProducts = products.slice((currentPage - 1) * RESULTS_PAGE_SIZE, currentPage * RESULTS_PAGE_SIZE);
+  const baseQuery = filtersToQueryString(filters);
+  const pageHref = (n: number) => {
+    const qs = new URLSearchParams(baseQuery);
+    if (n > 1) qs.set("page", String(n));
+    const s = qs.toString();
+    return s ? `/results?${s}` : "/results";
+  };
   const partnerListings = products.filter((p) => p.supplier.isPartner);
   const partnerSuppliers = [
     ...new Map(partnerListings.map((p) => [p.supplier.slug, p.supplier.name])).entries(),
@@ -176,14 +197,47 @@ export function ResultsView({
             ) : null}
 
             {products.length > 0 ? (
-              <div
-                data-testid="results-grid"
-                className="mt-8 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 xl:grid-cols-3"
-              >
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              <>
+                <div
+                  data-testid="results-grid"
+                  className="mt-8 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 xl:grid-cols-3"
+                >
+                  {pageProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+                {pageCount > 1 ? (
+                  <nav aria-label="Pages" data-testid="results-pagination" className="mt-10 flex flex-wrap items-center justify-center gap-2 text-sm">
+                    {currentPage > 1 ? (
+                      <Link href={pageHref(currentPage - 1)} className="flex h-10 items-center rounded-md border border-line-strong px-4 hover:border-ink">
+                        ← Previous
+                      </Link>
+                    ) : null}
+                    {Array.from({ length: pageCount }, (_, i) => i + 1)
+                      .filter((n) => n === 1 || n === pageCount || Math.abs(n - currentPage) <= 2)
+                      .map((n, i, shown) => (
+                        <span key={n} className="flex items-center gap-2">
+                          {i > 0 && n - shown[i - 1] > 1 ? <span className="text-ink-faint">…</span> : null}
+                          <Link
+                            href={pageHref(n)}
+                            aria-current={n === currentPage ? "page" : undefined}
+                            className={`flex h-10 min-w-10 items-center justify-center rounded-md border px-3 tabular-nums ${n === currentPage ? "border-ink bg-ink text-paper" : "border-line-strong hover:border-ink"}`}
+                          >
+                            {n}
+                          </Link>
+                        </span>
+                      ))}
+                    {currentPage < pageCount ? (
+                      <Link href={pageHref(currentPage + 1)} className="flex h-10 items-center rounded-md border border-line-strong px-4 hover:border-ink">
+                        Next →
+                      </Link>
+                    ) : null}
+                    <span className="w-full text-center text-xs text-ink-muted">
+                      Showing {(currentPage - 1) * RESULTS_PAGE_SIZE + 1}–{Math.min(currentPage * RESULTS_PAGE_SIZE, products.length)} of {products.length}
+                    </span>
+                  </nav>
+                ) : null}
+              </>
             ) : comingSoon ? (
               <div data-testid="results-coming-soon" className="mt-8 bg-well px-8 py-16 text-center">
                 <p className="tag text-ink-faint">Coming soon</p>
@@ -224,4 +278,11 @@ export function ResultsView({
       </div>
     </div>
   );
+}
+
+/** Pin the first `n` priced partner listings, keep everything else in the sorted order. */
+function sponsoredTop(list: ProductVM[], n: number): ProductVM[] {
+  const top = list.filter((p) => p.supplier.isPartner && p.basePrice !== null).slice(0, n);
+  const pinned = new Set(top.map((p) => p.id));
+  return [...top, ...list.filter((p) => !pinned.has(p.id))];
 }

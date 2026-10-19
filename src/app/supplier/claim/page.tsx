@@ -21,8 +21,9 @@ export default async function SupplierClaimPage() {
   const session = await getServerSessionUser();
   if (!session) redirect("/auth/sign-in?next=%2Fsupplier%2Fclaim");
 
+  const me = await db.user.findUnique({ where: { supabaseUserId: session.supabaseUserId }, select: { id: true } });
   const owned = await db.supplier.findFirst({
-    where: { ownerUserId: session.supabaseUserId },
+    where: { ownerUserId: me?.id ?? "__none__" },
     select: { id: true, slug: true, name: true, status: true },
   });
 

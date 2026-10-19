@@ -71,7 +71,8 @@ export const useCompareStore = create<CompareState>()(
 
 /** True once the saved selection is restored (server renders an empty one). */
 export function useCompareHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(() => useCompareStore.persist.hasHydrated());
+  // Always start false (like the basket hook) so hydration never mismatches.
+  const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     if (!useCompareStore.persist.hasHydrated()) void useCompareStore.persist.rehydrate();
     setHydrated(useCompareStore.persist.hasHydrated());

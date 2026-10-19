@@ -109,3 +109,18 @@ describe("applicationSchema", () => {
     expect(applicationSchema.safeParse({ ...base, fax: "555" }).success).toBe(false);
   });
 });
+
+describe("long RFQ emails", () => {
+  it("falls back to a short body when the mailto link would be cut off", () => {
+    const lines = Array.from({ length: 12 }, (_, i) => ({
+      productTitle: `Product number ${i} with a fairly long descriptive title — SKU ${i}`,
+      quantity: 1000 + i,
+      sourceUrl: `https://supplier.example/products/a-long-product-url-for-item-${i}`,
+    }));
+    const email = composeRfqEmail({ reference: "AEK-1", supplierName: "Big Co", supplierEmail: "rfq@big.example", lines });
+    expect(email.truncated).toBe(true);
+    expect(email.href.length).toBeLessThan(1900);
+    expect(email.body).toContain("Product number 11");
+    expect(decodeURIComponent(email.href)).toContain("Paste the RFQ details");
+  });
+});

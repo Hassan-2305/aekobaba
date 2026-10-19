@@ -6,7 +6,7 @@ import { SendEmailLink } from "@/components/admin/send-email-link";
 import { FilterTabs, WorkspaceShell } from "@/components/workspace/shell";
 import { requireAdminPage } from "@/lib/auth/admin";
 import { db } from "@/lib/db";
-import { emailConfigured } from "@/lib/notify/outbox";
+import { MAX_ATTEMPTS, emailConfigured } from "@/lib/notify/outbox";
 import { composeRfqEmail } from "@/lib/rfq/mailto";
 
 export const metadata: Metadata = { title: "Quote requests · Admin" };
@@ -41,7 +41,7 @@ export default async function AdminQuotesPage({
       where: { outreachStatus: { in: ["NOT_CONTACTED", "EMAIL_PREPARED", "FOLLOW_UP_NEEDED", "REPLIED"] }, quoteRequest: { stage: { notIn: ["COMPLETED", "CANCELLED"] } } },
     }),
     db.quoteRequestItem.count({ where: { sampleStatus: { in: ["REQUESTED", "APPROVED", "DISPATCHED"] } } }),
-    db.notificationOutbox.count({ where: { status: { in: ["PENDING", "FAILED"] } } }),
+    db.notificationOutbox.count({ where: { status: { in: ["PENDING", "FAILED", "SENDING"] }, attempts: { lt: MAX_ATTEMPTS } } }),
   ]);
 
   return (
@@ -240,7 +240,13 @@ async function BySupplierView() {
                     </div>
                     <div className="flex items-center gap-2">
                       {mail ? (
-                        <SendEmailLink requestId={r.id} lineId={line.id} href={mail.href} />
+                        mail.truncated ? (
+                          <Link href={`/admin/quotes/${r.id}#line-${line.id}`} className="inline-flex h-8 items-center rounded-md bg-orange px-3 text-xs font-semibold text-on-orange">
+                            Send (long — copy draft)
+                          </Link>
+                        ) : (
+                          <SendEmailLink requestId={r.id} lineId={line.id} href={mail.href} />
+                        )
                       ) : (
                         <Link href={`/admin/quotes/${r.id}#line-${line.id}`} className="text-xs underline">
                           Add email

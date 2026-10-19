@@ -34,6 +34,8 @@ export async function PATCH(
   const tier = parseSupplierTier(parsed.data.tier);
   if (!tier) return jsonError(400, "invalid_tier");
 
+  const exists = await db.supplier.findUnique({ where: { id }, select: { id: true } });
+  if (!exists) return jsonError(404, "not_found");
   const supplier = await db.supplier.update({
     where: { id },
     data: { status: tier },

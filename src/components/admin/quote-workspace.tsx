@@ -47,6 +47,7 @@ export interface QuoteWorkspaceData {
     supplier: { id: string; name: string; website: string; businessEmail: string | null; emailVerifiedAt: string | null };
     outreachStatus: string;
     commercialStatus: string;
+    sharedQuoteId: string | null;
     lastContactAt: string | null;
     lastReplyAt: string | null;
     lastReplySummary: string | null;
@@ -54,7 +55,7 @@ export interface QuoteWorkspaceData {
     nextActionDue: string | null;
     assignedToId: string | null;
     internalNotes: string | null;
-    mail: { href: string; subject: string; body: string } | null;
+    mail: { href: string; subject: string; body: string; truncated: boolean } | null;
     outreach: {
       id: string;
       direction: string;
@@ -102,6 +103,19 @@ const input =
 const btn = "h-9 rounded-md border border-ink px-3 text-sm font-medium text-ink hover:bg-well disabled:opacity-50";
 const btnPrimary = "h-9 rounded-md bg-ink px-3 text-sm font-medium text-paper hover:bg-ink/85 disabled:opacity-50";
 const when = (iso: string | null) => (iso ? iso.slice(0, 16).replace("T", " ") : "—");
+
+/**
+ * Keep only the fields that differ from what the server last sent, so a save
+ * never writes back a stale status someone else (or another button) changed.
+ */
+export function changedFields(
+  next: Record<string, string | null>,
+  current: Record<string, unknown>,
+): Record<string, string | null> {
+  const out: Record<string, string | null> = {};
+  for (const [key, value] of Object.entries(next)) if (value !== (current[key] ?? null)) out[key] = value;
+  return out;
+}
 
 function useAction(requestId: string) {
   const router = useRouter();
@@ -177,11 +191,18 @@ export function QuoteWorkspace({ data }: { data: QuoteWorkspaceData }) {
       <div className="space-y-5">
         <BuyerCard data={data} />
         {data.lines.map((line) => (
-          <SupplierCard key={line.id} line={line} data={data} />
+          <SupplierCard
+            key={[line.id, line.outreachStatus, line.commercialStatus, line.nextAction, line.nextActionDue, line.assignedToId, line.internalNotes].join("|")}
+            line={line}
+            data={data}
+          />
         ))}
       </div>
       <div className="space-y-5">
-        <RequestControls data={data} />
+        <RequestControls
+          key={[request.stage, request.assignedToId, request.nextAction, request.nextActionDue, request.internalNotes].join("|")}
+          data={data}
+        />
         <Section title="Activity">
           <ol className="max-h-[560px] space-y-2.5 overflow-y-auto text-sm">
             {data.activities.map((a) => (
@@ -301,11 +322,16 @@ function RequestControls({ data }: { data: QuoteWorkspaceData }) {
           onClick={() =>
             run({
               action: "updateRequest",
-              stage,
-              assignedToId: assignedToId || null,
-              nextAction: nextAction.trim() || null,
-              nextActionDue: nextActionDue || null,
-              internalNotes: internalNotes.trim() || null,
+              ...changedFields(
+                {
+                  stage,
+                  assignedToId: assignedToId || null,
+                  nextAction: nextAction.trim() || null,
+                  nextActionDue: nextActionDue || null,
+                  internalNotes: internalNotes.trim() || null,
+                },
+                r,
+              ),
             })
           }
         >
@@ -325,7 +351,7 @@ function SupplierCard({ line, data }: { line: Line; data: QuoteWorkspaceData }) 
   const [nextActionDue, setDue] = useState(line.nextActionDue ?? "");
   const [assignedToId, setAssigned] = useState(line.assignedToId ?? "");
   const [internalNotes, setNotes] = useState(line.internalNotes ?? "");
-  const [showMail, setShowMail] = useState(false);
+  const [showMail, setShowMail] = useState(Boolean(line.mail?.truncated));
 
   return (
     <Section
@@ -361,6 +387,12 @@ function SupplierCard({ line, data }: { line: Line; data: QuoteWorkspaceData }) 
           Last contact {when(line.lastContactAt)} · last reply {when(line.lastReplyAt)}
         </span>
       </div>
+      {line.mail?.truncated ? (
+        <p className="mt-2 text-xs text-orange-ink">
+          This request is too long for an email link. &ldquo;Send email&rdquo; opens the email with the subject — click
+          &ldquo;Copy body&rdquo; below and paste it in.
+        </p>
+      ) : null}
       {showMail && line.mail ? <MailPreview mail={line.mail} /> : null}
 
       <ItemsTable line={line} requestId={data.request.id} />
@@ -401,12 +433,17 @@ function SupplierCard({ line, data }: { line: Line; data: QuoteWorkspaceData }) 
             run({
               action: "updateSupplier",
               lineId: line.id,
-              outreachStatus,
-              commercialStatus,
-              assignedToId: assignedToId || null,
-              nextAction: nextAction.trim() || null,
-              nextActionDue: nextActionDue || null,
-              internalNotes: internalNotes.trim() || null,
+              ...changedFields(
+                {
+                  outreachStatus,
+                  commercialStatus,
+                  assignedToId: assignedToId || null,
+                  nextAction: nextAction.trim() || null,
+                  nextActionDue: nextActionDue || null,
+                  internalNotes: internalNotes.trim() || null,
+                },
+                line,
+              ),
             })
           }
         >
@@ -510,7 +547,11 @@ function ItemsTable({ line, requestId }: { line: Line; requestId: string }) {
         </thead>
         <tbody>
           {line.items.map((item) => (
-            <ItemRow key={item.id} item={item} requestId={requestId} />
+            <ItemRow
+              key={[item.id, item.sampleStatus, item.sampleCarrier, item.sampleTracking, item.customerFeedback, item.customerFeedbackNote, item.supplierFeedbackNote].join("|")}
+              item={item}
+              requestId={requestId}
+            />
           ))}
         </tbody>
       </table>
@@ -592,12 +633,17 @@ function ItemRow({ item, requestId }: { item: Item; requestId: string }) {
                 const ok = await run({
                   action: "updateItem",
                   itemId: item.id,
-                  sampleStatus,
-                  sampleCarrier: carrier.trim() || null,
-                  sampleTracking: tracking.trim() || null,
-                  customerFeedback: feedback || null,
-                  customerFeedbackNote: customerNote.trim() || null,
-                  supplierFeedbackNote: supplierNote.trim() || null,
+                  ...changedFields(
+                    {
+                      sampleStatus,
+                      sampleCarrier: carrier.trim() || null,
+                      sampleTracking: tracking.trim() || null,
+                      customerFeedback: feedback || null,
+                      customerFeedbackNote: customerNote.trim() || null,
+                      supplierFeedbackNote: supplierNote.trim() || null,
+                    },
+                    item,
+                  ),
                 });
                 if (ok) setOpen(false);
               }}
@@ -664,7 +710,7 @@ function OutreachLog({ line, requestId }: { line: Line; requestId: string }) {
               direction,
               channel,
               summary: summary.trim(),
-              ...(occurredAt ? { occurredAt: `${occurredAt}:00` } : {}),
+              ...(occurredAt ? { occurredAt: new Date(occurredAt).toISOString() } : {}),
             });
             if (ok) {
               setSummary("");
@@ -702,6 +748,9 @@ function QuotesPanel({ line, requestId }: { line: Line; requestId: string }) {
         {line.quotes.map((q) => (
           <div key={q.id} className="rounded-md bg-well px-2.5 py-2 text-sm">
             <p className="text-[11px] text-ink-muted">
+              {q.id === line.sharedQuoteId ? (
+                <span className="mr-1 rounded bg-success-tint px-1.5 py-0.5 font-medium text-success-deep">Shared with customer</span>
+              ) : null}
               Received {when(q.receivedAt)} · {q.currency}
               {q.leadTimeDays ? ` · ${q.leadTimeDays}-day lead time` : ""}
               {q.validUntil ? ` · valid until ${q.validUntil}` : ""}

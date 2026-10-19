@@ -6,6 +6,7 @@ import { assessVerificationGates, gatesPassed } from "@/lib/admin/gates";
 import type { SupplierGateFacts } from "@/lib/admin/gates";
 import { getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { requireAdminPage } from "@/lib/auth/admin";
 
 export const metadata: Metadata = {
   title: "Supplier verification · Aekobaba",
@@ -69,6 +70,7 @@ export default async function AdminSuppliersPage({
 }) {
   const session = await getServerSessionUser();
   if (!session) redirect("/auth/sign-in?next=%2Fadmin%2Fsuppliers");
+  await requireAdminPage("/admin/suppliers");
 
   const params = await searchParams;
   const requested = typeof params.status === "string" ? params.status.toUpperCase() : "";

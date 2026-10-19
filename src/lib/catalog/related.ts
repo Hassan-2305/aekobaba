@@ -3,7 +3,7 @@
 // that applies at a chosen quantity. Pure functions over view models.
 
 import { partnerFirst } from "./partners";
-import { unitPrice, type CurrencyCode } from "./format";
+import { moqInUnits, unitPrice, type CurrencyCode } from "./format";
 import type { ProductVM } from "./view-models";
 
 export interface VariantVM {
@@ -114,7 +114,15 @@ export function priceAtQuantity(product: ProductVM, quantity: number): QuantityQ
   return { perUnit, currency: unit.currency, unit: unit.unit, total: perUnit * quantity, basis, tierLabel };
 }
 
-/** Sensible starting quantity: the published MOQ, else the first tier, else 1. */
+/**
+ * Sensible starting quantity, in single items: the published MOQ, else the
+ * first tier, else 1. Pack-counted minimums/tiers are converted to items.
+ */
 export function defaultQuantity(product: ProductVM): number {
-  return product.moq ?? product.quantityBreaks[0]?.minQty ?? 1;
+  const inUnits = moqInUnits(product);
+  if (inUnits !== null) return inUnits;
+  const tier = product.quantityBreaks[0]?.minQty;
+  if (tier === undefined) return 1;
+  const pack = unitPrice(product)?.packSize ?? 1;
+  return tier * (pack > 1 ? pack : 1);
 }

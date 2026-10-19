@@ -7,6 +7,7 @@ import { FilterTabs, WorkspaceShell } from "@/components/workspace/shell";
 import { getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { DESIGN_STATUS_LABEL, inquiryReference } from "@/lib/inquiries/validation";
+import { requireAdminPage } from "@/lib/auth/admin";
 
 export const metadata: Metadata = { title: "Product requests · Admin" };
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function AdminInquiriesPage({
 }) {
   const session = await getServerSessionUser();
   if (!session) redirect("/auth/sign-in?next=%2Fadmin%2Finquiries");
+  await requireAdminPage("/admin/inquiries");
 
   const params = await searchParams;
   const requested = typeof params.status === "string" ? params.status.toUpperCase() : "NEW";

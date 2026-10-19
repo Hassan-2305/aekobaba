@@ -44,11 +44,10 @@ export interface ClaimStore {
       status: string;
       ownerUserId: string | null;
     } | null>;
-    update(args: {
-      where: { id: string };
+    updateMany(args: {
+      where: { id: string; ownerUserId: null };
       data: { ownerUserId: string; status: "PENDING" };
-      select: { id: true; slug: true; name: true; status: true };
-    }): Promise<{ id: string; slug: string; name: string; status: string }>;
+    }): Promise<{ count: number }>;
     findFirst(args: {
       where: { ownerUserId: string };
       select: { id: true };
@@ -110,11 +109,15 @@ export async function claimListing(
   // store): a failure between them leaves the listing claimed but the role
   // unchanged — the user can retry sign-in, and the admin queue still sees the
   // PENDING claim. Role is never derived from the supplier row on read.
-  const claimed = await store.supplier.update({
-    where: { id: supplier.id },
+  // Conditional on "still unclaimed": two simultaneous claims can't both win —
+  // the loser's update
+  // matches no row) and reports already_claimed.
+  const won = await store.supplier.updateMany({
+    where: { id: supplier.id, ownerUserId: null },
     data: { ownerUserId: user.id, status: "PENDING" },
-    select: { id: true, slug: true, name: true, status: true },
   });
+  if (won.count !== 1) return { ok: false, reason: "already_claimed" };
+  const claimed = { id: supplier.id, slug: supplier.slug, name: supplier.name, status: "PENDING" };
 
   await store.user.update({
     where: { id: user.id },

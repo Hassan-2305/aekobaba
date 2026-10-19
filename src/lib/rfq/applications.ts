@@ -95,7 +95,7 @@ export const adminApplicationUpdateSchema = z.object({
   meeting: z
     .object({
       status: z.enum(MEETING_STATUSES).optional(),
-      scheduledAt: z.iso.datetime({ local: true }).nullable().optional(),
+      scheduledAt: z.iso.datetime({ offset: true }).nullable().optional(),
       outcome: z.string().trim().max(2000).nullable().optional(),
       followUp: z.string().trim().max(2000).nullable().optional(),
     })

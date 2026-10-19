@@ -10,6 +10,15 @@ const input =
 
 // Status, notes and (partnerships) meeting tracking for one application.
 
+/** ISO timestamp → "YYYY-MM-DDTHH:mm" in the browser's timezone (datetime-local value). */
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export function ApplicationReview(props: {
   id: string;
   type: string;
@@ -22,7 +31,8 @@ export function ApplicationReview(props: {
   const [status, setStatus] = useState(props.status);
   const [notes, setNotes] = useState(props.internalNotes ?? "");
   const [meetingStatus, setMeetingStatus] = useState(props.meeting?.status ?? "BOOKING_PENDING");
-  const [scheduledAt, setScheduledAt] = useState(props.meeting?.scheduledAt ?? "");
+  // The server sends UTC ISO; the input shows (and edits) the team member's local time.
+  const [scheduledAt, setScheduledAt] = useState(() => toLocalInput(props.meeting?.scheduledAt ?? null));
   const [outcome, setOutcome] = useState(props.meeting?.outcome ?? "");
   const [followUp, setFollowUp] = useState(props.meeting?.followUp ?? "");
   const [busy, setBusy] = useState(false);
@@ -42,7 +52,7 @@ export function ApplicationReview(props: {
           ? {
               meeting: {
                 status: meetingStatus,
-                scheduledAt: scheduledAt ? `${scheduledAt}:00` : null,
+                scheduledAt: scheduledAt ? new Date(scheduledAt).toISOString() : null,
                 outcome: outcome.trim() || null,
                 followUp: followUp.trim() || null,
               },

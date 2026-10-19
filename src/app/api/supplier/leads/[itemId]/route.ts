@@ -40,8 +40,11 @@ export async function PATCH(
   const parsed = leadActionSchema.safeParse(body);
   if (!parsed.success) return jsonError(400, "invalid_action");
 
+  // Supplier.ownerUserId stores the User row id, not the Supabase subject.
+  const me = await db.user.findUnique({ where: { supabaseUserId: auth.supabaseUserId }, select: { id: true } });
+  if (!me) return jsonError(403, "missing_role");
   const result = await respondToLeadItem(db, {
-    ownerUserId: auth.supabaseUserId,
+    ownerUserId: me.id,
     itemId,
     action: parsed.data.action,
   });

@@ -10,6 +10,7 @@ function storeFixture(
   overrides: {
     supplier?: Record<string, unknown> | null;
     user?: { id: string } | null;
+    lostRace?: boolean;
     ownedSupplier?: { id: string } | null;
   } = {},
 ) {
@@ -28,17 +29,12 @@ function storeFixture(
             }
           : (overrides.supplier ?? null),
       ),
-      update: vi.fn().mockImplementation((args: {
-        where: { id: string };
+      updateMany: vi.fn().mockImplementation((args: {
+        where: { id: string; ownerUserId: null };
         data: { ownerUserId: string; status: "PENDING" };
       }) => {
         writes.push({ kind: "supplier.update", ...args });
-        return Promise.resolve({
-          id: args.where.id,
-          slug: "claimable-jars",
-          name: "Claimable Jars Ltd",
-          status: "PENDING",
-        });
+        return Promise.resolve({ count: overrides.lostRace ? 0 : 1 });
       }),
       findFirst: vi.fn().mockResolvedValue(overrides.ownedSupplier ?? null),
     },
@@ -80,6 +76,13 @@ describe("claimListing", () => {
 
     const userWrite = writes.find((w) => w.kind === "user.update");
     expect(userWrite).toMatchObject({ data: { role: "SUPPLIER" } });
+  });
+
+  it("loses a simultaneous claim honestly — the listing was taken in between", async () => {
+    const { store, writes } = storeFixture({ lostRace: true });
+    const result = await claimListing(store, { supabaseUserId: "sb_1", slug: "claimable-jars" });
+    expect(result).toEqual({ ok: false, reason: "already_claimed" });
+    expect(writes.find((w) => w.kind === "user.update")).toBeUndefined();
   });
 
   it("rejects an unknown slug without writing", async () => {

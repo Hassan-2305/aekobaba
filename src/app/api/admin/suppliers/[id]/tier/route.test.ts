@@ -19,7 +19,7 @@ vi.mock("@/lib/auth/session", () => ({
 
 vi.mock("@/lib/db", () => ({
   db: {
-    supplier: { update: mocks.supplierUpdate },
+    supplier: { update: mocks.supplierUpdate, findUnique: async () => ({ id: "sup_1" }) },
   },
 }));
 

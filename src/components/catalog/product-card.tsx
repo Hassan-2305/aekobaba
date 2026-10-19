@@ -111,20 +111,29 @@ export function ProductCard({ product, now }: { product: ProductVM; now?: Date }
         ) : (
           <div data-testid="price-tag" className="mt-3.5">
             <p className="tag text-ink-muted">
-              {product.priceType === "FROM" ? "From-price" : "Published price"} · {currency}
+              {product.priceType === "FROM"
+                ? "From-price"
+                : product.priceType === "CALCULATOR"
+                  ? "Configurator price"
+                  : "Published price"}{" "}
+              · {currency}
             </p>
             <p className="mt-1 flex items-baseline gap-1.5">
               <span className="text-[30px] font-semibold leading-none tracking-[-0.035em] tabular-nums">
                 {unit ? formatUnitMoney(unit.amount, unit.currency) : formatMoney(product.basePrice, currency)}
               </span>
-              <span className="text-sm text-ink-muted">/ {unitLabel}</span>
+              {unit ? (
+                <span className="text-sm text-ink-muted">/ {unitLabel}</span>
+              ) : (
+                <span className="min-w-0 truncate text-sm text-ink-muted">{basis ?? "per pack"}</span>
+              )}
             </p>
             <p className="mt-1.5 truncate text-[13px] text-ink-muted tabular-nums">
               {unit && unit.packSize > 1
                 ? `${formatMoney(product.basePrice, currency)} ${basis ?? ""}`
                 : unit
                   ? `Price ${basis ?? `per ${unitLabel}`}`
-                  : `${formatMoney(product.basePrice, currency)} ${basis ?? ""}`}
+                  : "Pack size not published — ask for the per-item price"}
             </p>
             <p className="mt-0.5 text-[13px] text-ink-muted">Excludes shipping, tax and setup</p>
           </div>

@@ -1,5 +1,5 @@
 import { jsonError } from "@/lib/auth/api";
-import { getServerSessionUser } from "@/lib/auth/session";
+import { getCurrentUserRole, getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { claimListing, type ClaimFailureReason } from "@/lib/supplier/claim";
 import { claimSchema } from "@/lib/supplier/validation";
@@ -23,6 +23,9 @@ export async function POST(request: Request) {
   if (!session) return jsonError(401, "unauthenticated");
 
   if (!session.emailVerified) return jsonError(403, "email_not_verified");
+  // Only buyer accounts become suppliers here — an admin must never be
+  // downgraded by claiming, and a supplier already has its listing.
+  if ((await getCurrentUserRole(session.supabaseUserId)) !== "BRAND") return jsonError(403, "role_not_allowed");
 
   let body: unknown;
   try {

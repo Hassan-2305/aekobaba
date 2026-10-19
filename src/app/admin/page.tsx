@@ -6,7 +6,7 @@ import { WorkspaceShell } from "@/components/workspace/shell";
 import { requireAdminPage } from "@/lib/auth/admin";
 import { db } from "@/lib/db";
 import { inquiryReference } from "@/lib/inquiries/validation";
-import { emailConfigured } from "@/lib/notify/outbox";
+import { MAX_ATTEMPTS, emailConfigured } from "@/lib/notify/outbox";
 
 export const metadata: Metadata = { title: "Dashboard · Admin" };
 export const dynamic = "force-dynamic";
@@ -51,7 +51,7 @@ export default async function AdminDashboardPage() {
     }),
     db.quoteRequestItem.count({ where: { sampleStatus: { in: ["REQUESTED", "APPROVED", "DISPATCHED"] } } }),
     db.supplierApplication.count({ where: { status: "PENDING" } }),
-    db.notificationOutbox.count({ where: { status: { in: ["PENDING", "FAILED"] } } }),
+    db.notificationOutbox.count({ where: { status: { in: ["PENDING", "FAILED", "SENDING"] }, attempts: { lt: MAX_ATTEMPTS } } }),
     db.quoteRequest.findMany({
       orderBy: { createdAt: "desc" },
       take: 8,

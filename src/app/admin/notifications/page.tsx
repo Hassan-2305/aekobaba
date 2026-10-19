@@ -4,7 +4,7 @@ import { RetryOutboxButton } from "@/components/admin/retry-outbox";
 import { WorkspaceShell } from "@/components/workspace/shell";
 import { requireAdminPage } from "@/lib/auth/admin";
 import { db } from "@/lib/db";
-import { emailConfigured, teamInbox } from "@/lib/notify/outbox";
+import { MAX_ATTEMPTS, emailConfigured, teamInbox } from "@/lib/notify/outbox";
 
 export const metadata: Metadata = { title: "Email outbox · Admin" };
 export const dynamic = "force-dynamic";
@@ -16,7 +16,7 @@ export default async function AdminNotificationsPage() {
   await requireAdminPage("/admin/notifications");
   const rows = await db.notificationOutbox.findMany({ orderBy: { createdAt: "desc" }, take: 200 });
   const configured = emailConfigured();
-  const undelivered = rows.filter((r) => r.status !== "SENT").length;
+  const undelivered = rows.filter((r) => r.status !== "SENT" && r.attempts < MAX_ATTEMPTS).length;
 
   return (
     <WorkspaceShell area="admin" active="notifications" title="Email outbox" subtitle={`Automated notifications to ${teamInbox()}.`}>

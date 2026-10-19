@@ -9,7 +9,7 @@ import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalo
 import { formatCaptureDate } from "@/lib/catalog/format";
 import { partnerProfile, varietyOrder } from "@/lib/catalog/partners";
 import { ProductPicture, isRepresentativeImage } from "@/components/catalog/product-picture";
-import { formatMoney, priceCurrency } from "@/lib/catalog/format";
+import { formatMoney, formatUnitMoney, priceCurrency, shortBasis, unitPrice } from "@/lib/catalog/format";
 import Link from "next/link";
 import { getSupplier } from "@/lib/catalog/queries";
 
@@ -23,7 +23,11 @@ export const dynamic = "force-dynamic";
 
 interface SupplierPageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
+
+/** Catalog cards per page on a supplier profile. */
+const CATALOG_PAGE_SIZE = 24;
 
 export async function generateMetadata({ params }: SupplierPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -31,10 +35,15 @@ export async function generateMetadata({ params }: SupplierPageProps): Promise<M
   return { title: supplier ? supplier.name : "Supplier" };
 }
 
-export default async function SupplierPage({ params }: SupplierPageProps) {
+export default async function SupplierPage({ params, searchParams }: SupplierPageProps) {
   const { slug } = await params;
   const supplier = await getSupplier(slug);
   if (!supplier) notFound();
+  const rawPage = (await searchParams)?.page;
+  const pageCount = Math.max(1, Math.ceil(supplier.products.length / CATALOG_PAGE_SIZE));
+  const page = Math.min(pageCount, Math.max(1, Math.floor(Number(Array.isArray(rawPage) ? rawPage[0] : rawPage)) || 1));
+  const pageProducts = supplier.products.slice((page - 1) * CATALOG_PAGE_SIZE, page * CATALOG_PAGE_SIZE);
+  const pageHref = (n: number) => `/suppliers/${supplier.slug}${n > 1 ? `?page=${n}` : ""}#catalog`;
   const profile = supplier.isPartner ? partnerProfile(supplier.slug) : null;
   // Branded storefront: the partner's best photography, one per product type.
   const showcase = profile
@@ -266,7 +275,9 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
                     <span className="mt-1 block text-sm text-ink-muted tabular-nums">
                       {product.basePrice === null
                         ? "Ask the supplier"
-                        : formatMoney(product.basePrice, priceCurrency(product.priceBasis))}
+                        : unitPrice(product)
+                          ? `${formatUnitMoney(unitPrice(product)!.amount, unitPrice(product)!.currency)} / ${unitPrice(product)!.unit}`
+                          : `${formatMoney(product.basePrice, priceCurrency(product.priceBasis))} ${shortBasis(product.priceBasis) ?? ""}`.trim()}
                     </span>
                   </Link>
                 </li>
@@ -377,10 +388,34 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
             data-testid="supplier-catalog"
             className="mt-8 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 xl:grid-cols-4"
           >
-            {supplier.products.map((product) => (
+            {pageProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+          {pageCount > 1 ? (
+            <nav aria-label="Catalog pages" className="mt-10 flex flex-wrap items-center justify-center gap-2 text-sm">
+              {page > 1 ? (
+                <Link href={pageHref(page - 1)} className="flex h-10 items-center rounded-md border border-line-strong px-4 hover:border-ink">
+                  ← Previous
+                </Link>
+              ) : null}
+              {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
+                <Link
+                  key={n}
+                  href={pageHref(n)}
+                  aria-current={n === page ? "page" : undefined}
+                  className={`flex h-10 min-w-10 items-center justify-center rounded-md border px-3 tabular-nums ${n === page ? "border-ink bg-ink text-paper" : "border-line-strong hover:border-ink"}`}
+                >
+                  {n}
+                </Link>
+              ))}
+              {page < pageCount ? (
+                <Link href={pageHref(page + 1)} className="flex h-10 items-center rounded-md border border-line-strong px-4 hover:border-ink">
+                  Next →
+                </Link>
+              ) : null}
+            </nav>
+          ) : null}
         </section>
 
         <Suspense fallback={<div className="skeleton mt-20 h-64 bg-well" />}>

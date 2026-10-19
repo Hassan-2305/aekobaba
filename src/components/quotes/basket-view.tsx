@@ -102,7 +102,10 @@ export function BasketView({ signedInRole, defaults }: BasketViewProps) {
         artwork_too_large: "That artwork file is over the 10 MB limit. Try a smaller file.",
         artwork_upload_failed: "The artwork file could not be uploaded. Try again or submit without it.",
         unknown_products: "A product in your basket is no longer available. Refresh and try again.",
-        invalid_payload: "Check your name and email address, then try again.",
+        invalid_payload:
+          items.length > 50
+            ? "A request can hold up to 50 products — remove some and send the rest in a second request."
+            : "Check your name, email address and that every quantity is a whole number.",
         contact_required: "Add an email address so we can reply to you.",
       };
       setSubmitState({

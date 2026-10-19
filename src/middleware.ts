@@ -22,11 +22,42 @@ import { supabaseEnv } from "@/lib/supabase/server";
 //    Failures of every kind (no env, no session, no RPC function, unknown
 //    role) resolve to "no access" — the guard never fails open.
 
+/** A Supabase client bound to this request whose cookie writes land on the response. */
+function supabaseFor(request: NextRequest, env: { url: string; anonKey: string }) {
+  const state = { response: NextResponse.next({ request }) };
+  const supabase = createServerClient(env.url, env.anonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        for (const { name, value } of cookiesToSet) request.cookies.set(name, value);
+        state.response = NextResponse.next({ request });
+        for (const { name, value, options } of cookiesToSet) state.response.cookies.set(name, value, options);
+      },
+    },
+  });
+  return { supabase, state };
+}
+
+function hasSupabaseAuthCookie(request: NextRequest): boolean {
+  return request.cookies.getAll().some((c) => c.name.startsWith("sb-") && c.name.includes("auth-token"));
+}
+
 export async function middleware(request: NextRequest) {
   const requiredRole = guardForPath(request.nextUrl.pathname);
 
-  // Public route: forward as-is. Anonymous browsing never touches auth.
-  if (!requiredRole) return NextResponse.next({ request });
+  // Public route. Anonymous visitors pass straight through; a signed-in
+  // visitor gets their session refreshed here, because Server Components can
+  // read a session but can't write the renewed cookies back.
+  if (!requiredRole) {
+    if (devAuthEnabled() || !hasSupabaseAuthCookie(request)) return NextResponse.next({ request });
+    const publicEnv = supabaseEnv();
+    if (!publicEnv) return NextResponse.next({ request });
+    const { supabase, state } = supabaseFor(request, publicEnv);
+    await supabase.auth.getUser().catch(() => null);
+    return state.response;
+  }
 
   // Dev harness (pending Supabase creds): role comes from the dev cookie and
   // the same fail-closed decision matrix. Inert in production builds.
@@ -45,29 +76,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
-  let response = NextResponse.next({ request });
-
   const env = supabaseEnv();
 
   // No Supabase config → no session can exist → fail closed.
   if (!env) return redirectToSignIn(request);
 
-  const supabase = createServerClient(env.url, env.anonKey, {
-    cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        for (const { name, value } of cookiesToSet) {
-          request.cookies.set(name, value);
-        }
-        response = NextResponse.next({ request });
-        for (const { name, value, options } of cookiesToSet) {
-          response.cookies.set(name, value, options);
-        }
-      },
-    },
-  });
+  const { supabase, state } = supabaseFor(request, env);
 
   const {
     data: { user },
@@ -92,7 +106,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(decision.to, request.nextUrl.origin));
   }
 
-  return response;
+  return state.response;
 }
 
 function redirectToSignIn(request: NextRequest): NextResponse {

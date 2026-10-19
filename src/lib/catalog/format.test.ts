@@ -14,6 +14,7 @@ import {
   isStaleCapture,
   priceCurrency,
   unitPrice,
+  moqInUnits,
 } from "./format";
 
 // The truth rule lives in formatting: an unpublished price formats as "Ask
@@ -147,5 +148,23 @@ describe("capture age", () => {
     expect(captureAgeDays("2026-09-21T00:00:00Z", now)).toBe(15);
     expect(isStaleCapture("2026-10-03T00:00:00Z", now)).toBe(false);
     expect(isStaleCapture("2026-09-21T00:00:00Z", now)).toBe(true);
+  });
+});
+
+describe("moqInUnits", () => {
+  it("converts pack-counted minimums to items using the published pack size", () => {
+    expect(moqInUnits({ moq: 25, moqUnit: "cases", basePrice: 4.99, priceBasis: "per case of 4 jugs (USD)", priceUnit: null })).toBe(100);
+    expect(moqInUnits({ moq: 10, moqUnit: "reams", basePrice: 69, priceBasis: "per ream of 480 sheets (USD)", priceUnit: null })).toBe(4800);
+  });
+  it("leaves item-counted or unconvertible minimums alone", () => {
+    expect(moqInUnits({ moq: 500, moqUnit: "bottles", basePrice: 0.5, priceBasis: "per bottle (USD)", priceUnit: null })).toBe(500);
+    expect(moqInUnits({ moq: 3, moqUnit: "cases", basePrice: 40, priceBasis: "per case (USD)", priceUnit: null })).toBe(3);
+    expect(moqInUnits({ moq: null, moqUnit: null, basePrice: 1, priceBasis: null, priceUnit: null })).toBeNull();
+  });
+});
+
+describe("moqInUnits — unit that only mentions a pack", () => {
+  it("keeps '24 jars (1 case)' as 24 items", () => {
+    expect(moqInUnits({ moq: 24, moqUnit: "jars (1 case)", basePrice: 9, priceBasis: "per case of 24 jars (USD)", priceUnit: null })).toBe(24);
   });
 });

@@ -24,7 +24,12 @@ export interface ComposedEmail {
   subject: string;
   body: string;
   href: string;
+  /** The full body didn't fit in a mailto link — the link carries a short note; paste the copied body. */
+  truncated: boolean;
 }
+
+/** Some mail clients (notably on Windows) cut mailto links beyond ~2,000 characters. */
+export const MAILTO_MAX = 1900;
 
 export function rfqSubject(reference: string, productTitle: string, extraLines: number): string {
   const product = productTitle.length > 70 ? `${productTitle.slice(0, 67)}…` : productTitle;
@@ -67,6 +72,11 @@ export function composeRfqEmail(input: RfqEmailInput): ComposedEmail {
     input.signOff ? `${input.signOff}\nTeam Aekovera — Aekobaba` : "Team Aekovera — Aekobaba",
   ].join("\n");
 
-  const href = `mailto:${encodeURIComponent(input.supplierEmail).replace(/%40/g, "@")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  return { to: input.supplierEmail, subject, body, href };
+  const base = `mailto:${encodeURIComponent(input.supplierEmail).replace(/%40/g, "@")}?subject=${encodeURIComponent(subject)}&body=`;
+  const full = base + encodeURIComponent(body);
+  if (full.length <= MAILTO_MAX) return { to: input.supplierEmail, subject, body, href: full, truncated: false };
+  const note = `Hello ${input.supplierName} team,
+
+[Paste the RFQ details copied from the Aekobaba dashboard here — reference ${input.reference}.]`;
+  return { to: input.supplierEmail, subject, body, href: base + encodeURIComponent(note), truncated: true };
 }

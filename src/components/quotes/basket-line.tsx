@@ -1,7 +1,9 @@
 import { formatMoq, formatPerUnit, formatPriceLine } from "@/lib/catalog/format";
+import { moqPackSize } from "@/lib/catalog/format";
 import { assessMoq } from "@/lib/quotes/moq";
 import type { BasketItem } from "@/lib/basket/store";
 import { ProductPicture } from "@/components/catalog/product-picture";
+import { QuantityInput } from "@/components/catalog/quantity-input";
 
 // One basket line — presentational, prop-driven, no store or API access so
 // tests can server-render it. The MOQ warning renders from the supplier's
@@ -16,7 +18,7 @@ export interface BasketLineProps {
 
 export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps) {
   const { product, quantity } = item;
-  const moq = assessMoq(quantity, product.moq, product.moqUnit);
+  const moq = assessMoq(quantity, product.moq, product.moqUnit, moqPackSize(product));
 
   const image = product.primaryImage;
 
@@ -63,15 +65,11 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
           <label className="tag text-ink-faint" htmlFor={`basket-qty-${product.id}`}>
             Qty
           </label>
-          <input
-            id={`basket-qty-${product.id}`}
-            data-testid="basket-quantity"
-            type="number"
-            min={1}
+          <QuantityInput
             value={quantity}
-            onChange={(event) =>
-              onQuantityChange(product.id, Math.max(1, Number(event.target.value) || 1))
-            }
+            onCommit={(n) => onQuantityChange(product.id, n)}
+            ariaLabel={`Quantity for ${product.title}`}
+            testId="basket-quantity"
             className="h-9 w-24 border border-line bg-card px-2 text-right text-sm text-ink tabular-nums focus:border-ink focus:outline-none"
           />
         </div>

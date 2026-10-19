@@ -89,6 +89,7 @@ export default async function AdminQuoteDetailPage({ params }: { params: Promise
         },
         outreachStatus: line.outreachStatus,
         commercialStatus: line.commercialStatus,
+        sharedQuoteId: line.sharedQuoteId,
         lastContactAt: iso(line.lastContactAt),
         lastReplyAt: iso(line.lastReplyAt),
         lastReplySummary: line.lastReplySummary,
@@ -96,7 +97,7 @@ export default async function AdminQuoteDetailPage({ params }: { params: Promise
         nextActionDue: day(line.nextActionDue),
         assignedToId: line.assignedToId,
         internalNotes: line.internalNotes,
-        mail: mail ? { href: mail.href, subject: mail.subject, body: mail.body } : null,
+        mail: mail ? { href: mail.href, subject: mail.subject, body: mail.body, truncated: mail.truncated } : null,
         outreach: line.outreach.map((o) => ({
           id: o.id,
           direction: o.direction,

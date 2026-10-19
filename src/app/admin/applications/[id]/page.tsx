@@ -88,7 +88,7 @@ export default async function AdminApplicationPage({ params }: { params: Promise
             app.meeting
               ? {
                   status: app.meeting.status,
-                  scheduledAt: app.meeting.scheduledAt ? app.meeting.scheduledAt.toISOString().slice(0, 16) : null,
+                  scheduledAt: app.meeting.scheduledAt ? app.meeting.scheduledAt.toISOString() : null,
                   outcome: app.meeting.outcome,
                   followUp: app.meeting.followUp,
                 }
