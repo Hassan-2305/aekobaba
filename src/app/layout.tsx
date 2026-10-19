@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Archivo, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { DEFAULT_THEME, THEME_INIT_SCRIPT } from "@/lib/theme";
+import { DEFAULT_THEME } from "@/lib/theme";
 
 import { SiteHeader } from "@/components/brand/site-header";
 import { SiteFooter } from "@/components/brand/site-footer";
+import { CompareTray } from "@/components/compare/compare-tray";
 
 // Absolute base for Open Graph / Twitter image URLs. Order: the configured
 // canonical URL, then Vercel's production domain, then this deployment's own
@@ -20,12 +21,10 @@ function siteUrl(): string {
 
 const SITE_URL = siteUrl();
 
-// Archivo, variable on width + weight: expanded cuts carry the display voice,
-// the normal width carries reading text — one family, two distinct roles.
-const archivo = Archivo({
-  variable: "--font-archivo",
+// Geist for everything, Geist Mono for data labels (v12 marketplace design).
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  axes: ["wdth"],
   display: "swap",
 });
 
@@ -80,18 +79,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // data-theme defaults to light; the inline script swaps in a saved choice
-    // before paint, which is why hydration warnings are suppressed here.
+    // v12 is a single light theme.
     <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
-      <body className={`${archivo.variable} ${geistMono.variable} min-h-screen bg-paper text-ink antialiased`}>
+      <body className={`${geist.variable} ${geistMono.variable} min-h-screen bg-paper text-ink antialiased`}>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />
         </div>
+        <CompareTray />
       </body>
     </html>
   );

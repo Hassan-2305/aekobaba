@@ -95,7 +95,7 @@ function PremiumPartnerCard({ partner }: { partner: PremiumPartner }) {
             {entry.productCount} listing{entry.productCount === 1 ? "" : "s"} ·{" "}
             {entry.categories.join(", ")}
           </span>
-          <span className="inline-flex h-11 items-center gap-2 bg-orange px-5 font-medium text-white transition-colors group-hover:bg-orange-hi">
+          <span className="inline-flex h-11 items-center gap-2 bg-orange px-5 font-medium text-on-orange transition-colors group-hover:bg-orange-hi">
             View full storefront
             <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M4 12h15M13 6l6 6-6 6" />

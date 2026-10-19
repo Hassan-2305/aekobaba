@@ -20,7 +20,7 @@ export function ProductActions({ product }: { product: ProductVM }) {
           type="button"
           data-testid="get-quote"
           onClick={() => dialog.current?.open("QUOTE")}
-          className="h-12 bg-orange px-5 text-sm font-medium text-white transition-colors hover:bg-orange-hi"
+          className="h-12 bg-orange px-5 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
         >
           Get a quote
         </button>

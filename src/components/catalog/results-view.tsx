@@ -11,7 +11,7 @@ import {
   type ResultsFilters,
 } from "@/lib/catalog/filters";
 import type { ResolvedQuery } from "@/lib/catalog/aliases";
-import { CATEGORY_MENU, requestSupplierHref } from "@/lib/catalog/menu";
+import { CATEGORY_GROUPS, CATEGORY_MENU, requestSupplierHref } from "@/lib/catalog/menu";
 import { partnerFirst } from "@/lib/catalog/partners";
 import type { ProductVM } from "@/lib/catalog/view-models";
 import { PartnerBadge, SponsoredTag } from "./tier-badge";
@@ -71,7 +71,12 @@ export function ResultsView({
     filters.category !== null &&
     !allProducts.some((p) => p.categorySlug === filters.category) &&
     CATEGORY_MENU.some((c) => c.slug === filters.category);
-  const heading = filters.q ? `Packaging for “${filters.q}”` : (categoryName ?? "All packaging");
+  const groupName = filters.group
+    ? (CATEGORY_GROUPS.find((g) => g.id === filters.group)?.name ?? null)
+    : null;
+  const heading = filters.q
+    ? `Packaging for “${filters.q}”`
+    : (categoryName ?? groupName ?? "All packaging");
 
   return (
     <div>

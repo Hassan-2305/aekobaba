@@ -71,25 +71,46 @@ export function PartnerRibbon({ className = "" }: { className?: string }) {
     <span
       data-testid="partner-ribbon"
       title={PARTNER_DISCLOSURE}
-      className={`partner-ribbon tag inline-flex items-center gap-1.5 bg-partner py-1 pl-2.5 pr-4 text-[10.5px] text-partner-on shadow-[0_6px_14px_-8px_rgba(16,19,24,.6)] ${className}`}
+      className={`inline-flex items-center gap-[5px] bg-partner px-2 py-[3px] font-mono text-[11px] font-semibold tracking-[0.06em] text-partner-on uppercase ${className}`}
     >
-      <svg aria-hidden width="10" height="10" viewBox="0 0 24 24" fill="currentColor" className="text-partner-star">
-        <path d="m12 2.5 2.9 6 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z" />
-      </svg>
+      <span aria-hidden className="h-[5px] w-[5px] rotate-45 bg-partner-accent" />
       {PARTNER_RIBBON_LABEL}
     </span>
   );
 }
 
-/** Small "Sponsored" tag for every paid placement slot. */
-export function SponsoredTag() {
+/** "SPONSORED" — dark and gold, on every paid placement (v12). */
+export function SponsoredTag({ size = "md" }: { size?: "sm" | "md" }) {
   return (
     <span
       data-testid="sponsored-tag"
       title={PARTNER_DISCLOSURE}
-      className="tag inline-flex shrink-0 items-center border border-ink/25 px-1.5 py-0.5 text-ink-muted"
+      className={`inline-flex shrink-0 items-center gap-[5px] bg-partner px-2 py-[3px] font-mono font-semibold tracking-[0.06em] text-partner-on uppercase ${size === "sm" ? "text-[10px]" : "text-[11px]"}`}
     >
+      <span aria-hidden className="h-[5px] w-[5px] rotate-45 bg-partner-accent" />
       Sponsored
+    </span>
+  );
+}
+
+/** Tier as a small pill (v12 cards): Recommended filled, Listed outlined, Quote only dashed. */
+export function TierPill({ status }: { status: SupplierStatusValue }) {
+  const style =
+    status === "RECOMMENDED"
+      ? "border border-ink bg-ink text-paper"
+      : status === "LISTED"
+        ? "border border-ink text-ink"
+        : status === "QUOTE_ONLY"
+          ? "border border-dashed border-ink text-ink"
+          : "border border-line-strong text-ink-muted";
+  return (
+    <span
+      data-testid="tier-badge"
+      data-tier={status}
+      className={`flex-none whitespace-nowrap rounded-[5px] px-1.5 py-px text-xs font-semibold ${style}`}
+    >
+      {status === "RECOMMENDED" ? "✓ " : ""}
+      {supplierStatusLabel(status)}
     </span>
   );
 }
@@ -99,16 +120,13 @@ export function PartnerBadge({ tone = "solid" }: { tone?: "solid" | "outline" })
     <span
       data-testid="partner-badge"
       title={PARTNER_DISCLOSURE}
-      className={`tag inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap px-1.5 py-1 ${
+      className={`inline-flex shrink-0 items-center gap-[5px] whitespace-nowrap px-2 py-[3px] font-mono text-[11px] font-semibold tracking-[0.06em] uppercase ${
         tone === "solid"
           ? "bg-partner text-partner-on"
-          : "border border-partner-accent/60 text-partner-accent-ink"
+          : "border border-partner-accent text-partner-accent-ink"
       }`}
     >
-      <span
-        aria-hidden
-        className={`h-1.5 w-1.5 ${tone === "solid" ? "bg-partner-star" : "bg-partner-accent"}`}
-      />
+      <span aria-hidden className="h-[5px] w-[5px] rotate-45 bg-partner-accent" />
       Partner
     </span>
   );

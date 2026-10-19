@@ -19,7 +19,7 @@ export function SubmitButton({
 
   const styles =
     variant === "primary"
-      ? "bg-orange text-white hover:bg-orange-hi"
+      ? "bg-orange text-on-orange hover:bg-orange-hi"
       : "border border-line bg-white/50 text-ink hover:border-ink dark:bg-surface";
 
   return (

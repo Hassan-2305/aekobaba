@@ -98,7 +98,7 @@ export function FilterRail({
         <h2 className="font-semiwide text-lg text-ink">Filters</h2>
         {anyActive ? (
           <Link
-            href={buildResultsUrl(filters, { maxMoq: null, priceType: null, stockOrCustom: null, material: null, category: null, location: null, maxLeadDays: null, cert: null, foodGrade: false, budget: null, spec: emptySpecSelection() })}
+            href={buildResultsUrl(filters, { maxMoq: null, priceType: null, stockOrCustom: null, material: null, category: null, group: null, location: null, maxLeadDays: null, cert: null, foodGrade: false, budget: null, spec: emptySpecSelection() })}
             className="text-xs text-orange-ink underline underline-offset-4 hover:text-ink"
           >
             Clear all

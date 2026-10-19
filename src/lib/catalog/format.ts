@@ -221,6 +221,13 @@ export function formatMoq(moq: number | null, moqUnit: string | null): string {
   return `${moq.toLocaleString("en-US")} ${unit}`;
 }
 
+/** Card-length MOQ: "1 bucket", dropping the unit's bracketed notes ("(case quantity 1; …)"). */
+export function formatMoqShort(moq: number | null, moqUnit: string | null): string {
+  if (moq === null) return NOT_PUBLISHED;
+  const unit = (moqUnit ?? "units").replace(/\s*\(.*$/, "").trim() || "units";
+  return `${moq.toLocaleString("en-US")} ${unit}`;
+}
+
 /** "14 days" / "Not published" for lead time. */
 export function formatLeadTime(leadTimeDays: number | null): string {
   if (leadTimeDays === null) return NOT_PUBLISHED;

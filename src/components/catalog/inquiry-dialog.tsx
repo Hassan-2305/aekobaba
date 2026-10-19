@@ -221,7 +221,7 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
 
         {status.state === "sent" ? (
           <div className="px-6 py-12 text-center" data-testid="inquiry-sent">
-            <span className="mx-auto flex h-12 w-12 items-center justify-center bg-orange text-white">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center bg-orange text-on-orange">
               <svg
                 aria-hidden
                 width="22"
@@ -509,7 +509,7 @@ export const InquiryDialog = forwardRef<InquiryDialogHandle, { product: ProductV
               <button
                 type="submit"
                 disabled={status.state === "sending"}
-                className="h-12 shrink-0 bg-orange px-6 text-sm font-medium text-white transition-colors hover:bg-orange-hi disabled:opacity-60"
+                className="h-12 shrink-0 bg-orange px-6 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi disabled:opacity-60"
               >
                 {status.state === "sending"
                   ? "Sending…"

@@ -1,181 +1,170 @@
+import Image from "next/image";
 import Link from "next/link";
 
-import { ArrowCorner } from "@/components/brand/icons";
-import { formatCaptureDate, formatLeadTime, formatMoq } from "@/lib/catalog/format";
-import { productTags } from "@/lib/catalog/tags";
+import { CardActions } from "./card-actions";
+import { SponsoredTag, TierPill } from "./tier-badge";
+import { cutoutFor, isRepresentativeImage } from "./product-picture";
+import {
+  captureAgeDays,
+  formatCaptureDate,
+  formatMoney,
+  formatMoq,
+  formatMoqShort,
+  formatUnitMoney,
+  priceCurrency,
+  shortBasis,
+  unitPrice,
+} from "@/lib/catalog/format";
+import { isVerifiedSupplier } from "@/lib/catalog/tags";
 import type { ProductVM } from "@/lib/catalog/view-models";
-import { PriceTagInline } from "./price-display";
-import { ReviewScore } from "./review-score";
-import { PartnerRibbon, TierBadge } from "./tier-badge";
-import { isRepresentativeImage, ProductPicture } from "@/components/catalog/product-picture";
 
-// Catalog object — the results-grid card. The packshot sits in a warm image
-// well (multiplied so the studio backdrop dissolves into it), labelled with
-// the category and real metadata tags; below it, a spec sheet: title,
-// supplier + tier, price, MOQ / lead time / material, and the provenance line.
+// Product card (v12 marketplace design). Top to bottom: the packshot on a
+// grey plate (stock / custom chip, SPONSORED for partners), supplier + tier,
+// title, the published price per unit with its currency and the pack it was
+// quoted at, minimum order, when the price was checked (freshness dot +
+// source link), and the two actions — Quote Basket and Compare.
 //
-// The whole card links to the product page via the title link's stretched
-// :after overlay; the supplier and provenance links keep their own z-layer so
-// they stay clickable on top of it. Orange appears only on interaction.
+// Truth rules hold: no price → "Ask the supplier", nothing numeric; an
+// unpublished MOQ reads "Not published", never zero.
 
-export function ProductCard({ product }: { product: ProductVM }) {
+/** Freshness of the published price: ≤30 days, ≤60 days, older. */
+export function freshness(days: number): "fresh" | "stale" | "old" {
+  return days <= 30 ? "fresh" : days <= 60 ? "stale" : "old";
+}
+const FRESH_DOT = { fresh: "bg-fresh", stale: "bg-stale", old: "bg-old" } as const;
+
+export function ProductCard({ product, now }: { product: ProductVM; now?: Date }) {
   const image = product.primaryImage;
-  // The "representative" label is a hard requirement: generated packshots are
-  // illustrative, never supplier photography (spec honesty rule).
+  const cutout = image ? cutoutFor(image.url) : null;
+  const unit = unitPrice(product);
+  const currency = priceCurrency(product.priceBasis);
+  const basis = shortBasis(product.priceBasis);
+  const days = captureAgeDays(product.sourceCapturedAt, now);
+  const partner = product.supplier.isPartner;
+  const unitLabel = unit?.unit ?? "unit";
   const imageAlt = image
     ? isRepresentativeImage(image.url)
       ? `${image.alt ?? product.title} — representative image`
       : (image.alt ?? product.title)
     : `Representative image of ${product.title}`;
-  const tags = productTags(product, 2);
-  const partner = product.supplier.isPartner;
-  const facts = product.partnerFacts ?? null;
-  const partnerNote = facts
-    ? `${[
-        facts.moq ? "MOQ" : null,
-        facts.leadTime ? "lead time" : null,
-        facts.casePack !== null ? `case of ${facts.casePack.toLocaleString("en-US")}` : null,
-      ]
-        .filter(Boolean)
-        .join(", ")
-        .replace(/^./, (c) => c.toUpperCase())} supplied by ${facts.supplierName}, ${formatCaptureDate(facts.suppliedAt)}`
-    : null;
-  const unpublished = [
-    product.moq === null ? "MOQ" : null,
-    product.leadTimeDays === null ? (product.moq === null ? "lead time" : "Lead time") : null,
-  ].filter((fact): fact is string => fact !== null);
 
   return (
     <article
       data-testid="product-card"
       data-product-id={product.id}
       data-partner={partner ? "true" : undefined}
-      className={`group relative flex h-full flex-col bg-card shadow-[0_1px_0_rgba(11,14,18,.06)] transition-shadow duration-300 hover:shadow-[0_24px_48px_-28px_rgba(11,14,18,.35)] ${
-        partner ? "ring-1 ring-partner-accent/35 hover:ring-partner-accent/70" : ""
-      }`}
+      className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line-strong bg-card transition-shadow hover:shadow-[0_18px_40px_-24px_rgba(24,26,33,.35)]"
     >
       <Link
         href={`/products/${product.id}`}
         aria-label={`View ${product.title}`}
         tabIndex={-1}
-        className="block"
+        className="relative flex aspect-[4/3] items-center justify-center border-b border-line bg-well"
       >
-        <div className="relative aspect-square overflow-hidden bg-well">
-          {image ? (
-            <ProductPicture
-              src={image.url}
+        {image ? (
+          <span className="relative block h-[78%] w-[64%]">
+            <Image
+              src={cutout ?? image.url}
               alt={imageAlt}
-              sizes="(min-width: 1280px) 340px, (min-width: 640px) 45vw, 100vw"
-              className="p-8"
+              fill
+              sizes="(min-width: 1280px) 220px, (min-width: 640px) 30vw, 60vw"
+              className={`object-contain ${cutout ? "drop-shadow-[0_10px_10px_rgba(24,26,33,.14)]" : "mix-blend-multiply"}`}
             />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-xs text-ink-faint">
-              No image available
-            </div>
-          )}
-          {partner ? <PartnerRibbon className="absolute left-0 top-3 z-10" /> : null}
-          <span
-            aria-hidden
-            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center bg-ink text-paper opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-          >
-            <ArrowCorner size={15} />
           </span>
-          {image && isRepresentativeImage(image.url) ? (
-            <span
-              data-testid="image-source"
-              title="Generated illustration of this packaging type, not the supplier's own photo"
-              className="absolute bottom-3 right-3 z-10 text-[10px] text-ink-faint"
-            >
-              Illustrative image
+        ) : (
+          <span className="flex flex-col items-center gap-2.5">
+            <span className="tag flex h-24 w-[72px] items-center justify-center rounded-[10px] border-[1.5px] border-dashed border-[#9CA3AF] bg-paper text-ink-muted">
+              {product.categoryName.split(" ")[0]}
             </span>
-          ) : null}
-          {tags.length > 0 ? (
-            <ul
-              className="absolute bottom-3 left-4 flex flex-wrap gap-1.5"
-              aria-label="Product attributes"
-            >
-              {tags.map((tag) => (
-                <li key={tag} className="tag bg-card/85 px-1.5 py-1 text-ink">
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
+            <span className="text-[13px] text-ink-muted">Supplier photo pending</span>
+          </span>
+        )}
+        <span className="absolute left-2.5 top-2.5 rounded-[5px] bg-paper px-2 py-0.5 text-xs font-semibold text-ink">
+          {product.stockOrCustom === "STOCK" ? "Stock item" : "Custom printed"}
+        </span>
+        {partner ? (
+          <span className="absolute right-2.5 top-2.5">
+            <SponsoredTag />
+          </span>
+        ) : null}
       </Link>
 
-      <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
-        <p className="tag mb-1.5 truncate text-[10.5px] text-ink-faint">{product.categoryName}</p>
-        <h3 className="line-clamp-2 min-h-[2.5rem] text-[15px] font-medium leading-snug text-ink">
-          <Link
-            href={`/products/${product.id}`}
-            className="decoration-orange decoration-2 underline-offset-4 after:absolute after:inset-0 after:z-10 group-hover:underline"
-          >
+      <div className="flex flex-1 flex-col p-4">
+        <div className="flex items-center gap-1.5 text-[13px] text-ink-muted">
+          <Link href={`/suppliers/${product.supplier.slug}`} className="relative z-20 min-w-0 truncate hover:text-ink hover:underline">
+            {product.supplier.name}
+          </Link>
+          <TierPill status={product.supplier.status} />
+        </div>
+        <h3 className="mt-1.5 line-clamp-2 min-h-[2.6em] text-base font-semibold leading-[1.3] text-ink">
+          <Link href={`/products/${product.id}`} className="after:absolute after:inset-0 after:z-10 hover:underline">
             {product.title}
           </Link>
         </h3>
 
-        <div className="mt-2 flex items-center justify-between gap-3">
-          <Link
-            href={`/suppliers/${product.supplier.slug}`}
-            className="relative z-20 min-w-0 truncate text-xs text-ink-muted hover:text-ink hover:underline"
-          >
-            {product.supplier.name}
-          </Link>
-          <TierBadge status={product.supplier.status} />
-        </div>
-        <div className="mt-1.5">
-          <ReviewScore
-            reviewScore={product.supplier.reviewScore}
-            reviewCount={product.supplier.reviewCount}
-            reviewPlatform={product.supplier.reviewPlatform}
-            reviewUrl={product.supplier.reviewUrl}
-          />
-        </div>
-
-        <div className="mt-4">
-          <PriceTagInline product={product} />
-        </div>
-
-        {/* Only published facts get a cell; unknowns collapse into one muted
-            line instead of repeating "not published" down every card. */}
-        <dl className="mt-4 grid grid-cols-2 border-t border-line text-xs">
-          {product.moq !== null ? (
-            <div
-              className={`py-2.5 pr-3 ${product.leadTimeDays !== null ? "border-r border-line" : "col-span-2"}`}
-            >
-              <dt className="tag text-ink-faint">Min order:</dt>
-              <dd className="mt-1.5 truncate text-ink tabular-nums">
-                {formatMoq(product.moq, product.moqUnit)}
-              </dd>
-            </div>
-          ) : null}
-          {product.leadTimeDays !== null ? (
-            <div className={`py-2.5 ${product.moq !== null ? "pl-3" : "col-span-2"}`}>
-              <dt className="tag text-ink-faint">Lead time:</dt>
-              <dd className="mt-1.5 text-ink tabular-nums">
-                {formatLeadTime(product.leadTimeDays)}
-              </dd>
-            </div>
-          ) : null}
-          <div
-            className={`col-span-2 py-2.5 ${product.moq !== null || product.leadTimeDays !== null ? "border-t border-line" : ""}`}
-          >
-            <dt className="tag text-ink-faint">Material:</dt>
-            <dd className="mt-1.5 truncate text-ink">{product.material}</dd>
+        {product.basePrice === null ? (
+          <div data-testid="price-tag" className="mt-3.5">
+            <p className="tag text-ink-muted">Price on request</p>
+            <p className="mt-1 text-[22px] font-semibold leading-tight tracking-[-0.03em]">Ask the supplier</p>
+            <p className="mt-1.5 text-[13px] text-ink-muted">Quote-only listing · the supplier prices your quantity</p>
           </div>
-        </dl>
-        {unpublished.length > 0 ? (
-          <p data-testid="unpublished-facts" className="pb-2.5 text-[11px] text-ink-faint">
-            {unpublished.join(" and ")} not published — ask in your quote.
+        ) : (
+          <div data-testid="price-tag" className="mt-3.5">
+            <p className="tag text-ink-muted">
+              {product.priceType === "FROM" ? "From-price" : "Published price"} · {currency}
+            </p>
+            <p className="mt-1 flex items-baseline gap-1.5">
+              <span className="text-[30px] font-semibold leading-none tracking-[-0.035em] tabular-nums">
+                {unit ? formatUnitMoney(unit.amount, unit.currency) : formatMoney(product.basePrice, currency)}
+              </span>
+              <span className="text-sm text-ink-muted">/ {unitLabel}</span>
+            </p>
+            <p className="mt-1.5 truncate text-[13px] text-ink-muted tabular-nums">
+              {unit && unit.packSize > 1
+                ? `${formatMoney(product.basePrice, currency)} ${basis ?? ""}`
+                : unit
+                  ? `Price ${basis ?? `per ${unitLabel}`}`
+                  : `${formatMoney(product.basePrice, currency)} ${basis ?? ""}`}
+            </p>
+            <p className="mt-0.5 text-[13px] text-ink-muted">Excludes shipping, tax and setup</p>
+          </div>
+        )}
+
+        <div className="mt-3.5 flex justify-between gap-3 border-t border-line pt-3 text-sm">
+          <span className="text-ink-muted">Minimum order</span>
+          <span
+            title={formatMoq(product.moq, product.moqUnit)}
+            className={`truncate text-right font-semibold ${product.moq === null ? "text-ink-faint" : "text-ink"}`}
+          >
+            {formatMoqShort(product.moq, product.moqUnit)}
+          </span>
+        </div>
+        {product.partnerFacts?.moq ? (
+          <p data-testid="partner-supplied" className="mt-0.5 text-right text-[11px] text-ink-faint">
+            MOQ supplied by {product.partnerFacts.supplierName}, {formatCaptureDate(product.partnerFacts.suppliedAt)}
           </p>
         ) : null}
-        {partnerNote ? (
-          <p data-testid="partner-supplied" className="pb-2.5 text-[11px] text-ink-muted">
-            {partnerNote}
+        <div data-testid="price-checked" className="mt-2.5 flex items-center gap-[7px] text-[13px]">
+          <span aria-hidden className={`h-2 w-2 flex-none rounded-full ${FRESH_DOT[freshness(days)]}`} />
+          <span className="min-w-0 truncate">
+            Checked {formatCaptureDate(product.sourceCapturedAt).replace(/ \d{4}$/, "")} · {days} days ago
+          </span>
+          <a
+            href={product.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative z-20 ml-auto flex-none font-medium text-orange-ink hover:text-orange"
+          >
+            Source ↗
+          </a>
+        </div>
+        {isVerifiedSupplier(product.supplier.status) ? (
+          <p className="mt-1 flex items-center gap-1.5 text-[13px] text-ink-muted">
+            <span className="font-semibold text-success-ink">✓</span>Verified supplier
           </p>
         ) : null}
 
+        <CardActions product={product} unitLabel={unitLabel} />
       </div>
     </article>
   );

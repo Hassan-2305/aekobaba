@@ -132,7 +132,7 @@ export default async function SupplierPage({ params }: SupplierPageProps) {
               <a
                 href="#catalog"
                 data-testid="storefront-browse"
-                className="mt-5 inline-flex h-11 items-center gap-2 bg-orange px-5 text-sm font-medium text-white transition-colors hover:bg-orange-hi"
+                className="mt-5 inline-flex h-11 items-center gap-2 bg-orange px-5 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
               >
                 Browse all {supplier.products.length} products
                 <svg aria-hidden width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
