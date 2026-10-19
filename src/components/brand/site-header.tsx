@@ -48,7 +48,7 @@ export async function SiteHeader() {
         <span className="ml-auto flex gap-5">
           <Link href="/list-your-company" className="text-on-chrome hover:underline">List your company</Link>
           <Link href="/partners/apply" className="text-on-chrome hover:underline">Become a partner</Link>
-          <Link href="/account/requests" className="text-on-chrome hover:underline">Your quote requests</Link>
+          <Link href="/account" className="text-on-chrome hover:underline">My account</Link>
         </span>
       </div>
 
