@@ -66,8 +66,8 @@ const NAV: Record<Area, { id: WorkspaceSection; href: string; label: string; hin
     {
       id: "inquiries",
       href: "/admin/inquiries",
-      label: "Inquiries",
-      hint: "Quote and sample requests",
+      label: "Product requests",
+      hint: "Quote & sample requests from product pages",
     },
     {
       id: "suppliers",

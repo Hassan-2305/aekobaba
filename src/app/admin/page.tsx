@@ -5,6 +5,7 @@ import { RfqChip } from "@/components/admin/rfq-chip";
 import { WorkspaceShell } from "@/components/workspace/shell";
 import { requireAdminPage } from "@/lib/auth/admin";
 import { db } from "@/lib/db";
+import { inquiryReference } from "@/lib/inquiries/validation";
 import { emailConfigured } from "@/lib/notify/outbox";
 
 export const metadata: Metadata = { title: "Dashboard · Admin" };
@@ -36,6 +37,8 @@ export default async function AdminDashboardPage() {
     suppliers,
     openLines,
     buyerCount,
+    newInquiries,
+    recentInquiries,
   ] = await Promise.all([
     db.product.count({ where: { supplier: { status: { not: "DISABLED" } } } }),
     db.supplier.count({ where: { status: { not: "DISABLED" } } }),
@@ -78,6 +81,22 @@ export default async function AdminDashboardPage() {
       _max: { lastContactAt: true },
     }),
     db.user.count({ where: { role: "BRAND" } }),
+    db.inquiry.count({ where: { status: "NEW" } }),
+    db.inquiry.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 8,
+      select: {
+        id: true,
+        kind: true,
+        status: true,
+        name: true,
+        company: true,
+        email: true,
+        quantity: true,
+        createdAt: true,
+        product: { select: { id: true, title: true, supplier: { select: { name: true } } } },
+      },
+    }),
   ]);
 
   const stage = (s: string) => stageCounts.find((c) => c.stage === s)?._count._all ?? 0;
@@ -85,7 +104,8 @@ export default async function AdminDashboardPage() {
   const openBySupplier = new Map(openLines.map((l) => [l.supplierId, l]));
 
   const attention = [
-    { n: stage("NEW"), label: "New requests", href: "/admin/quotes" },
+    { n: stage("NEW"), label: "New basket requests (AEK)", href: "/admin/quotes" },
+    { n: newInquiries, label: "New product-page requests", href: "/admin/inquiries" },
     { n: notContacted, label: "Suppliers not contacted", href: "/admin/quotes?view=suppliers" },
     { n: awaitingShare, label: "Quotes to review & share", href: "/admin/quotes?view=outreach" },
     { n: followUpsDue, label: "Follow-ups due today", href: "/admin/quotes?view=outreach" },
@@ -106,7 +126,7 @@ export default async function AdminDashboardPage() {
       ) : null}
 
       <h2 className="tag text-ink-muted">Needs attention</h2>
-      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-7">
         {attention.map((a) => (
           <Link
             key={a.label}
@@ -138,7 +158,7 @@ export default async function AdminDashboardPage() {
 
       <section className="mt-10">
         <div className="flex items-end justify-between">
-          <h2 className="text-lg font-semibold">Latest quote requests</h2>
+          <h2 className="text-lg font-semibold">Latest basket requests (AEK)</h2>
           <Link href="/admin/quotes" className="text-sm font-medium text-orange-ink hover:underline">
             All requests →
           </Link>
@@ -181,6 +201,60 @@ export default async function AdminDashboardPage() {
                       <RfqChip value={r.stage} />
                     </td>
                     <td className="py-2.5 text-xs text-ink-muted">{day(r.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      <section className="mt-10">
+        <div className="flex items-end justify-between">
+          <h2 className="text-lg font-semibold">Latest product-page requests</h2>
+          <Link href="/admin/inquiries" className="text-sm font-medium text-orange-ink hover:underline">
+            All product requests →
+          </Link>
+        </div>
+        {recentInquiries.length === 0 ? (
+          <p className="mt-3 rounded-md border border-dashed border-line px-6 py-8 text-center text-sm text-ink-muted">None yet.</p>
+        ) : (
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[760px] text-sm">
+              <thead>
+                <tr className="border-b border-line text-left text-xs text-ink-muted">
+                  <th className="py-2 pr-3 font-medium">Reference</th>
+                  <th className="py-2 pr-3 font-medium">Customer</th>
+                  <th className="py-2 pr-3 font-medium">Product</th>
+                  <th className="py-2 pr-3 font-medium">Qty</th>
+                  <th className="py-2 pr-3 font-medium">Status</th>
+                  <th className="py-2 font-medium">Received</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentInquiries.map((q) => (
+                  <tr key={q.id} className="border-b border-line align-top">
+                    <td className="py-2.5 pr-3">
+                      <Link href="/admin/inquiries" className="font-mono text-[13px] font-medium text-orange-ink hover:underline">
+                        #{inquiryReference(q.id)}
+                      </Link>
+                      <span className="block text-xs text-ink-muted">{q.kind === "SAMPLE" ? "Sample" : "Quote"}</span>
+                    </td>
+                    <td className="py-2.5 pr-3">
+                      {q.company || q.name}
+                      <span className="block text-xs text-ink-muted">{q.email}</span>
+                    </td>
+                    <td className="py-2.5 pr-3">
+                      <Link href={`/products/${q.product.id}`} className="hover:underline">
+                        {q.product.title}
+                      </Link>
+                      <span className="block text-xs text-ink-muted">{q.product.supplier.name}</span>
+                    </td>
+                    <td className="py-2.5 pr-3 text-xs">{q.quantity}</td>
+                    <td className="py-2.5 pr-3">
+                      <RfqChip value={q.status === "NEW" ? "NEW" : q.status === "CONTACTED" ? "IN_PROGRESS" : "COMPLETED"} />
+                    </td>
+                    <td className="py-2.5 text-xs text-ink-muted">{day(q.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>

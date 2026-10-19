@@ -13,8 +13,13 @@ export function teamInbox(): string {
   return process.env.TEAM_INBOX_EMAIL?.trim() || DEFAULT_TEAM_INBOX;
 }
 
+/** Public site address for links in emails: the configured URL, else Vercel's production domain. */
 export function siteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000").replace(/\/$/, "");
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured && !configured.includes("localhost")) return configured.replace(/\/$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim();
+  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "").replace(/\/$/, "")}`;
+  return (configured || "http://localhost:3000").replace(/\/$/, "");
 }
 
 export function emailConfigured(): boolean {

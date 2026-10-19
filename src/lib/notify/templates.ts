@@ -108,3 +108,58 @@ export function applicationEmail(input: ApplicationEmailInput): OutboxMessage {
     textBody,
   };
 }
+
+export interface InquiryEmailInput {
+  reference: string;
+  kind: "QUOTE" | "SAMPLE";
+  name: string;
+  email: string;
+  company?: string | null;
+  website?: string | null;
+  phone?: string | null;
+  quantity: string;
+  packagingType?: string | null;
+  format?: string | null;
+  designStatus?: string | null;
+  description: string;
+  hasFile: boolean;
+  product: { id: string; title: string; supplierName: string; sourceUrl: string };
+}
+
+/** "Get a quote" / "Get a sample" from a product page. */
+export function inquiryEmail(input: InquiryEmailInput): OutboxMessage {
+  const what = input.kind === "SAMPLE" ? "Sample request" : "Quote request";
+  const textBody = [
+    `${what} #${input.reference} from a product page`,
+    "",
+    "Customer",
+    `  Name:    ${input.name}`,
+    `  Company: ${input.company || "—"}`,
+    `  Email:   ${input.email}`,
+    `  Phone:   ${input.phone || "—"}`,
+    `  Website: ${input.website || "—"}`,
+    "",
+    "Product",
+    `  ${input.product.title}`,
+    `  Supplier: ${input.product.supplierName}`,
+    `  Listing:  ${siteUrl()}/products/${input.product.id}`,
+    `  Supplier page: ${input.product.sourceUrl}`,
+    "",
+    `Quantity: ${input.quantity}`,
+    ...(input.packagingType ? [`Packaging type: ${input.packagingType}`] : []),
+    ...(input.format ? [`Format: ${input.format}`] : []),
+    ...(input.designStatus ? [`Design: ${input.designStatus}`] : []),
+    `Design file: ${input.hasFile ? "attached in the dashboard" : "none"}`,
+    "",
+    "Details:",
+    input.description,
+    "",
+    `Open in the dashboard: ${siteUrl()}/admin/inquiries`,
+  ].join("\n");
+  return {
+    kind: `inquiry.${input.kind.toLowerCase()}`,
+    toEmail: teamInbox(),
+    subject: `${what} #${input.reference} — ${input.company || input.name} — ${input.product.title.slice(0, 60)}`,
+    textBody,
+  };
+}
