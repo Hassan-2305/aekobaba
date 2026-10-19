@@ -82,7 +82,7 @@ function singular(noun: string): string {
 }
 
 const COUNT_NOUN =
-  "(bags|boxes|bottles|jars|pieces|pcs|units|sheets|rolls|envelopes|stickers|pouches|tubes)";
+  "(bags|boxes|bottles|jars|pieces|pcs|units|sheets|rolls|envelopes|stickers|pouches|tubes|labels|bands|cups|lids|caps|cans|tins|containers|trays|buckets|jugs)";
 
 /**
  * Pack size and unit noun from the published basis, e.g. "per case of 24

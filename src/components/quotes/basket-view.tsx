@@ -10,24 +10,27 @@ import { groupBasketBySupplier, useBasketHydrated } from "@/lib/basket/use-baske
 
 import { BasketLine } from "./basket-line";
 
-// The Quote Basket page (spec C8/C9/C11). The basket itself is anonymous —
-// collection and editing need no session. Submission is auth-gated at the
-// API: an anonymous visitor is sent to sign-in (basket preserved in
-// localStorage) and lands back here; a non-BRAND session is told plainly.
-// No API calls in component bodies — one fetch at the submit action, the
-// one mutation this form owns.
+// The Quote Basket page. Collecting and editing need no session (guests keep
+// the basket in this browser; signed-in buyers also have it saved to their
+// account by BasketSync). Submission needs a buyer account: an anonymous
+// visitor is sent to sign-in and lands back here with the basket intact.
+// Aekobaba is the mediator — the request goes to the Aekovera team, who
+// contact each supplier; suppliers are never emailed automatically.
 
 type SubmitState =
   | { kind: "idle" }
   | { kind: "sending" }
+  | { kind: "sent"; reference: string }
   | { kind: "error"; message: string; code?: string };
 
 export interface BasketViewProps {
   /** The signed-in role, or null when anonymous. */
   signedInRole: UserRole | null;
+  /** Prefill for the contact block (from the account). */
+  defaults?: { name?: string | null; email?: string | null; phone?: string | null; company?: string | null };
 }
 
-export function BasketView({ signedInRole }: BasketViewProps) {
+export function BasketView({ signedInRole, defaults }: BasketViewProps) {
   const router = useRouter();
   const hydrated = useBasketHydrated();
   const items = useQuoteBasketStore((state) => state.items);
@@ -38,20 +41,37 @@ export function BasketView({ signedInRole }: BasketViewProps) {
   const [deadline, setDeadline] = useState("");
   const [artworkNotes, setArtworkNotes] = useState("");
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [contactName, setContactName] = useState(defaults?.name ?? "");
+  const [contactEmail, setContactEmail] = useState(defaults?.email ?? "");
+  const [contactPhone, setContactPhone] = useState(defaults?.phone ?? "");
+  const [company, setCompany] = useState(defaults?.company ?? "");
+  const [requirements, setRequirements] = useState("");
+  const [specNotes, setSpecNotes] = useState<Record<string, string>>({});
   const [submitState, setSubmitState] = useState<SubmitState>({ kind: "idle" });
 
   const groups = groupBasketBySupplier(items);
   const supplierCount = groups.length;
 
   async function submit() {
-    if (items.length === 0 || submitState.kind === "sending") return;
+    if (items.length === 0 || submitState.kind === "sending" || submitState.kind === "sent") return;
     setSubmitState({ kind: "sending" });
 
     const form = new FormData();
     form.set(
       "payload",
       JSON.stringify({
-        items: items.map((item) => ({ productId: item.product.id, quantity: item.quantity })),
+        items: items.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          specNotes: specNotes[item.product.id]?.trim() || undefined,
+        })),
+        contact: {
+          name: contactName.trim(),
+          email: contactEmail.trim(),
+          phone: contactPhone.trim() || undefined,
+          company: company.trim() || undefined,
+        },
+        notes: requirements.trim() || undefined,
         deadline: deadline || undefined,
         artworkNotes: artworkNotes.trim() ? artworkNotes.trim() : undefined,
       }),
@@ -61,7 +81,9 @@ export function BasketView({ signedInRole }: BasketViewProps) {
     try {
       const response = await fetch("/api/quotes", { method: "POST", body: form });
       if (response.status === 201) {
-        const body = (await response.json()) as { quoteRequest: { id: string } };
+        const body = (await response.json()) as { quoteRequest: { id: string; reference?: string } };
+        // Show the confirmation first so the emptied basket never flashes.
+        setSubmitState({ kind: "sent", reference: body.quoteRequest.reference ?? "" });
         clear();
         router.push(`/account/requests/${body.quoteRequest.id}?submitted=1`);
         return;
@@ -80,6 +102,8 @@ export function BasketView({ signedInRole }: BasketViewProps) {
         artwork_too_large: "That artwork file is over the 10 MB limit. Try a smaller file.",
         artwork_upload_failed: "The artwork file could not be uploaded. Try again or submit without it.",
         unknown_products: "A product in your basket is no longer available. Refresh and try again.",
+        invalid_payload: "Check your name and email address, then try again.",
+        contact_required: "Add an email address so we can reply to you.",
       };
       setSubmitState({
         kind: "error",
@@ -92,15 +116,23 @@ export function BasketView({ signedInRole }: BasketViewProps) {
     }
   }
 
+  if (submitState.kind === "sent") {
+    return (
+      <div data-testid="basket-sent">
+        <BasketBand title="Request sent" subtitle={`Reference ${submitState.reference} — opening your request…`} />
+      </div>
+    );
+  }
+
   if (hydrated && items.length === 0) {
     return (
       <div data-testid="basket-empty">
-        <BasketBand title="Quote Basket" subtitle="One request, sent to every supplier you add." />
+        <BasketBand title="Quote Basket" subtitle="Add products from any supplier and send one request — the Aekovera team gets quotes for you." />
         <div className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-lg bg-well px-8 py-14 text-center">
             <p className="font-semiwide text-2xl font-light text-ink">Your quote basket is empty</p>
             <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-              Add packaging products from any supplier, then send one request to all of them.
+              Add packaging products from any supplier, then send one request. We contact every supplier for you.
             </p>
             <Link
               href="/results"
@@ -123,7 +155,7 @@ export function BasketView({ signedInRole }: BasketViewProps) {
     <div>
       <BasketBand
         title="Quote Basket"
-        subtitle={`One request, ${suppliersLabel} — fill the form once and every supplier in your basket receives it.`}
+        subtitle={`One request covering ${suppliersLabel}. The Aekovera team contacts each supplier for you and tracks the replies.`}
         count={items.length}
       />
 
@@ -134,7 +166,7 @@ export function BasketView({ signedInRole }: BasketViewProps) {
               <Link href="/auth/sign-in?next=%2Fbasket" className="font-medium underline decoration-orange underline-offset-4">
                 Sign in
               </Link>{" "}
-              to send your request — your basket is saved on this device.
+              to send your request — your basket is saved on this device and moves to your account when you sign in.
             </p>
           ) : null}
           {signedInRole !== null && signedInRole !== "BRAND" ? (
@@ -158,7 +190,21 @@ export function BasketView({ signedInRole }: BasketViewProps) {
                 </div>
                 <div>
                   {group.items.map((item) => (
-                    <BasketLine key={item.product.id} item={item} onQuantityChange={setQuantity} onRemove={removeItem} />
+                    <div key={item.product.id}>
+                      <BasketLine item={item} onQuantityChange={setQuantity} onRemove={removeItem} />
+                      <label className="sr-only" htmlFor={`spec-${item.product.id}`}>
+                        Specification notes for {item.product.title}
+                      </label>
+                      <input
+                        id={`spec-${item.product.id}`}
+                        data-testid="basket-spec-notes"
+                        value={specNotes[item.product.id] ?? ""}
+                        onChange={(event) => setSpecNotes((prev) => ({ ...prev, [item.product.id]: event.target.value }))}
+                        placeholder="Specification notes for this item (colour, closure, finish…) — optional"
+                        maxLength={1000}
+                        className="-mt-2 mb-4 w-full border-b border-line bg-transparent py-2 text-sm text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none"
+                      />
+                    </div>
                   ))}
                 </div>
               </section>
@@ -174,10 +220,81 @@ export function BasketView({ signedInRole }: BasketViewProps) {
             void submit();
           }}
         >
-          <h2 className="font-semiwide text-xl font-light tracking-tight text-ink">Request details</h2>
-          <p className="mt-1 text-xs text-ink-muted">Sent identically to every supplier in your basket.</p>
+          <h2 className="text-xl font-semibold tracking-tight text-ink">Request details</h2>
+          <p className="mt-1 text-xs text-ink-muted">
+            Goes to the Aekovera team, who contact each supplier and reply to you. Suppliers don&rsquo;t see your contact
+            details.
+          </p>
 
           <div className="mt-6 space-y-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="basket-name" className={labelClass}>
+                  Your name
+                </label>
+                <input
+                  id="basket-name"
+                  required
+                  autoComplete="name"
+                  value={contactName}
+                  onChange={(event) => setContactName(event.target.value)}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label htmlFor="basket-company" className={labelClass}>
+                  Company <span className="font-normal text-ink-faint">(optional)</span>
+                </label>
+                <input
+                  id="basket-company"
+                  autoComplete="organization"
+                  value={company}
+                  onChange={(event) => setCompany(event.target.value)}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label htmlFor="basket-email" className={labelClass}>
+                  Email
+                </label>
+                <input
+                  id="basket-email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={contactEmail}
+                  onChange={(event) => setContactEmail(event.target.value)}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label htmlFor="basket-phone" className={labelClass}>
+                  Phone <span className="font-normal text-ink-faint">(optional)</span>
+                </label>
+                <input
+                  id="basket-phone"
+                  type="tel"
+                  autoComplete="tel"
+                  value={contactPhone}
+                  onChange={(event) => setContactPhone(event.target.value)}
+                  className={inputClass}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="basket-requirements" className={labelClass}>
+                Requirements <span className="font-normal text-ink-faint">(optional)</span>
+              </label>
+              <textarea
+                id="basket-requirements"
+                data-testid="basket-requirements"
+                rows={3}
+                value={requirements}
+                onChange={(event) => setRequirements(event.target.value)}
+                placeholder="e.g. Food-grade, ship to Austin TX, samples first"
+                className={`${inputClass} placeholder:text-ink-faint`}
+              />
+            </div>
             <div>
               <label htmlFor="basket-deadline" className={labelClass}>
                 Needed by <span className="font-normal text-ink-faint">(optional)</span>
@@ -236,7 +353,7 @@ export function BasketView({ signedInRole }: BasketViewProps) {
             disabled={submitState.kind === "sending"}
             className="mt-6 h-12 w-full bg-action px-5 text-sm font-medium text-on-orange transition-colors hover:bg-action-strong disabled:opacity-60"
           >
-            {submitState.kind === "sending" ? "Sending…" : `Send request to ${suppliersLabel}`}
+            {submitState.kind === "sending" ? "Sending…" : `Request quotes (${suppliersLabel})`}
           </button>
         </form>
       </div>

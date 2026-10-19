@@ -27,7 +27,9 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     links: [
       { label: "All suppliers", href: "/suppliers" },
       { label: "Partners", href: "/partners" },
-      { label: "List your company", href: "/supplier/claim" },
+      { label: "List your company", href: "/list-your-company" },
+      { label: "Fetch products from my site", href: "/list-your-company?type=fetch" },
+      { label: "Become a partner", href: "/partners/apply" },
     ],
   },
   { title: "Account", links: [{ label: "Sign in", href: "/auth/sign-in" }] },

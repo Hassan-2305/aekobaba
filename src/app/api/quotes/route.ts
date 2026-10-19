@@ -1,17 +1,20 @@
 import { jsonError, requireApiRole } from "@/lib/auth/api";
+import { getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { deliverOutbox } from "@/lib/notify/outbox";
 import { artworkUploader, MAX_ARTWORK_BYTES, type ArtworkFile } from "@/lib/quotes/storage";
-import { createQuoteRequest } from "@/lib/quotes/submit";
 import { quoteSubmitSchema } from "@/lib/quotes/validation";
+import { submitRfq } from "@/lib/rfq/submit";
 
-// POST /api/quotes — Quote Basket submission (build spec C9/C11).
+// POST /api/quotes — the buyer submits their Quote Basket as one RFQ.
 //
-// Multipart form: `payload` (JSON string: items, deadline, artworkNotes) plus
-// the optional `artwork` file. Auth-gated per the role model: BRAND users
-// send quote requests — anonymous callers get 401 (the client redirects to
-// sign-in with the basket preserved in localStorage), other roles 403.
-// Identity comes from the session; the fan-out and MOQ warnings live in
-// src/lib/quotes/submit.ts.
+// Multipart form: `payload` (JSON: items, contact, deadline, notes,
+// artworkNotes) plus the optional `artwork` file. BRAND accounts only:
+// anonymous → 401 (the client sends them to sign-in; the basket survives),
+// other roles → 403. The request, its lines, per-supplier tracking rows and
+// the team email are written in one transaction (src/lib/rfq/submit.ts);
+// the email is delivered after commit and retried from the outbox if the
+// provider is down. Suppliers are never emailed automatically.
 
 const SUBMIT_FAILURE_STATUS = {
   empty_items: 400,
@@ -49,6 +52,16 @@ export async function POST(request: Request) {
   const parsed = quoteSubmitSchema.safeParse(rawPayload);
   if (!parsed.success) return jsonError(400, "invalid_payload");
 
+  // Contact details: what the buyer typed, falling back to the verified
+  // session email so the team always has a way to reach them.
+  const session = await getServerSessionUser();
+  const sessionEmail = session?.email ?? "";
+  const contact = parsed.data.contact ?? {
+    name: sessionEmail.split("@")[0] || "Customer",
+    email: sessionEmail,
+  };
+  if (!contact.email) return jsonError(400, "contact_required");
+
   const artwork = await parseArtwork(form.get("artwork"));
   let artworkFileUrl: string | null = null;
   if (artwork) {
@@ -58,34 +71,39 @@ export async function POST(request: Request) {
     try {
       artworkFileUrl = await uploader(artwork);
     } catch (uploadError) {
-      // Surface the storage failure — the brand must know their artwork did
-      // not attach, never submit silently without it.
+      // The buyer must know their artwork did not attach — never submit silently without it.
       console.error("[aekobaba] artwork upload failed", uploadError);
       return jsonError(502, "artwork_upload_failed");
     }
   }
 
-  const result = await createQuoteRequest(db, {
+  const result = await submitRfq(db, {
     supabaseUserId: auth.supabaseUserId,
     items: parsed.data.items,
+    contact,
     deadline: parsed.data.deadline ? new Date(`${parsed.data.deadline}T00:00:00Z`) : null,
+    notes: parsed.data.notes ?? null,
     artworkNotes: parsed.data.artworkNotes ?? null,
     artworkFileUrl,
   });
 
   if (!result.ok) {
-    const status = SUBMIT_FAILURE_STATUS[result.reason];
     return Response.json(
       { error: result.reason, unknownProductIds: result.unknownProductIds },
-      { status },
+      { status: SUBMIT_FAILURE_STATUS[result.reason] },
     );
   }
 
+  // Best-effort immediate delivery; the outbox keeps it if this fails.
+  await deliverOutbox(db, { ids: [result.outboxId] }).catch((error) =>
+    console.error("[aekobaba] team notification delivery failed", error),
+  );
+
   return Response.json(
     {
-      quoteRequest: { id: result.request.id, status: result.request.status },
-      itemCount: result.request.itemCount,
-      supplierCount: result.request.supplierCount,
+      quoteRequest: { id: result.id, reference: result.reference, status: "SENT" },
+      itemCount: result.itemCount,
+      supplierCount: result.supplierCount,
       warnings: result.warnings,
     },
     { status: 201 },

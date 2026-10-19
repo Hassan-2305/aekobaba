@@ -6,6 +6,15 @@ import { z } from "zod";
 export const quoteItemInputSchema = z.object({
   productId: z.string().min(1),
   quantity: z.number().int().positive().max(10_000_000),
+  /** Per-line specification notes (colour, finish, closure…). */
+  specNotes: z.string().trim().max(1000).optional(),
+});
+
+export const quoteContactSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  email: z.email().max(200),
+  phone: z.string().trim().max(40).optional(),
+  company: z.string().trim().max(160).optional(),
 });
 
 export const quoteSubmitSchema = z.object({
@@ -13,4 +22,8 @@ export const quoteSubmitSchema = z.object({
   /** The date the brand needs packaging by (YYYY-MM-DD from the date input). */
   deadline: z.iso.date().optional(),
   artworkNotes: z.string().trim().max(2000).optional(),
+  /** Buyer contact details for this request (required for the mediated flow). */
+  contact: quoteContactSchema.optional(),
+  /** Requirements for the whole request. */
+  notes: z.string().trim().max(4000).optional(),
 });

@@ -25,6 +25,8 @@ export async function PATCH(
 ) {
   const auth = await requireApiRole("SUPPLIER");
   if (auth.kind === "deny") return jsonError(auth.status, auth.code);
+  // Requests are mediated by the Aekovera team (see /supplier/inbox).
+  if (process.env.SUPPLIER_DIRECT_LEADS !== "on") return jsonError(403, "mediated_by_team");
 
   const { itemId } = await params;
 

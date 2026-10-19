@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { SupplierInbox, SupplierInboxUnclaimed, type InboxView } from "@/components/supplier/inbox-view";
+import { WorkspaceShell } from "@/components/workspace/shell";
 import { getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { listSupplierLeads, type InboxLeadGroup } from "@/lib/supplier/inbox";
@@ -40,6 +41,19 @@ export default async function SupplierInboxPage({
     : null;
 
   if (!supplier || !user) return <SupplierInboxUnclaimed />;
+
+  // Aekobaba mediates every request: the Aekovera team contacts suppliers by
+  // email. Direct in-app leads stay off until SUPPLIER_DIRECT_LEADS=on.
+  if (process.env.SUPPLIER_DIRECT_LEADS !== "on") {
+    return (
+      <WorkspaceShell area="supplier" active="inbox" title="Lead inbox" subtitle={supplier.name}>
+        <p className="max-w-xl rounded-md border border-line bg-well px-5 py-4 text-sm leading-relaxed text-ink">
+          Buyer requests for your products are handled by the Aekovera team, who will email you at your business address
+          with each request and its reference. Reply to that email and the team takes it from there.
+        </p>
+      </WorkspaceShell>
+    );
+  }
 
   const groups: InboxLeadGroup[] = await listSupplierLeads(db, user.id);
 

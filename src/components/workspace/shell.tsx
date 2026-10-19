@@ -9,7 +9,15 @@ import type { ReactNode } from "react";
 
 type Area = "supplier" | "admin";
 
-export type WorkspaceSection = "inbox" | "claim" | "suppliers" | "categories" | "inquiries";
+export type WorkspaceSection =
+  | "inbox"
+  | "claim"
+  | "suppliers"
+  | "categories"
+  | "inquiries"
+  | "quotes"
+  | "applications"
+  | "notifications";
 
 const NAV: Record<Area, { id: WorkspaceSection; href: string; label: string; hint: string }[]> = {
   supplier: [
@@ -27,6 +35,24 @@ const NAV: Record<Area, { id: WorkspaceSection; href: string; label: string; hin
     },
   ],
   admin: [
+    {
+      id: "quotes",
+      href: "/admin/quotes",
+      label: "Quote requests",
+      hint: "RFQs, outreach, samples",
+    },
+    {
+      id: "applications",
+      href: "/admin/applications",
+      label: "Supplier applications",
+      hint: "Listings, product fetch, partners",
+    },
+    {
+      id: "notifications",
+      href: "/admin/notifications",
+      label: "Email outbox",
+      hint: "Team notifications",
+    },
     {
       id: "inquiries",
       href: "/admin/inquiries",

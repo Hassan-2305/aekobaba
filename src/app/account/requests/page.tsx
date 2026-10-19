@@ -3,9 +3,7 @@ import type { Metadata } from "next";
 
 import { requireBrandPage } from "@/lib/auth/page-guards";
 import { db } from "@/lib/db";
-import { toQuoteRequestSummaryVM, type QuoteRequestSummaryVM } from "@/lib/quotes/view-models";
-
-import { QuoteRequestStatusPill } from "@/components/quotes/status-pill";
+import { label } from "@/lib/rfq/statuses";
 
 // "My requests" — the brand's sent quote requests with per-item status
 // summary (spec deliverable 4). Server-rendered from Prisma; the detail page
@@ -14,6 +12,7 @@ import { QuoteRequestStatusPill } from "@/components/quotes/status-pill";
 export const metadata: Metadata = {
   title: "My quote requests — Aekobaba",
 };
+export const dynamic = "force-dynamic";
 
 function formatDate(iso: string): string {
   return new Date(iso).toISOString().slice(0, 10);
@@ -27,12 +26,20 @@ export default async function QuoteRequestsPage() {
     include: { items: { include: { product: { include: { supplier: true } } } } },
     take: 50,
   });
-  const requests: QuoteRequestSummaryVM[] = rows.map(toQuoteRequestSummaryVM);
+  const requests = rows.map((row) => ({
+    id: row.id,
+    reference: row.reference,
+    stage: row.stage,
+    createdAt: row.createdAt.toISOString(),
+    deadline: row.deadline ? row.deadline.toISOString() : null,
+    itemCount: row.items.length,
+    supplierNames: [...new Set(row.items.map((item) => item.product.supplier.name))],
+  }));
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-12 sm:px-8">
       <h1 className="font-semiwide text-3xl font-light tracking-tight text-ink sm:text-4xl">My quote requests</h1>
-      <p className="mt-1 text-sm text-ink-muted">Every request you have sent, with supplier responses.</p>
+      <p className="mt-1 text-sm text-ink-muted">Every request you have sent. The Aekovera team updates the status as suppliers reply.</p>
 
       {requests.length === 0 ? (
         <div data-testid="requests-empty" className="mt-10 rounded-md border border-line bg-card p-8 text-center">
@@ -55,7 +62,7 @@ export default async function QuoteRequestsPage() {
                     data-testid="request-link"
                     className="text-sm font-medium text-accent hover:underline"
                   >
-                    Request sent {formatDate(request.createdAt)}
+                    {request.reference ?? "Request"} · sent {formatDate(request.createdAt)}
                   </Link>
                   <p className="mt-0.5 text-xs text-ink-muted">
                     {request.itemCount} {request.itemCount === 1 ? "item" : "items"} ·{" "}
@@ -64,7 +71,7 @@ export default async function QuoteRequestsPage() {
                     {request.deadline ? ` · needed by ${formatDate(request.deadline)}` : ""}
                   </p>
                 </div>
-                <QuoteRequestStatusPill status={request.status} />
+                <span className="rounded-full bg-well px-3 py-1 text-xs font-medium text-ink">{label(request.stage)}</span>
               </div>
             </li>
           ))}

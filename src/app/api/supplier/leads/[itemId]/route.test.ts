@@ -40,9 +40,18 @@ beforeEach(() => {
     emailVerified: true,
   });
   mocks.getCurrentUserRole.mockResolvedValue("SUPPLIER");
+  process.env.SUPPLIER_DIRECT_LEADS = "on";
 });
 
 describe("PATCH /api/supplier/leads/[itemId]", () => {
+  it("refuses direct answers while requests are mediated by the team (default)", async () => {
+    delete process.env.SUPPLIER_DIRECT_LEADS;
+    const res = await patch("item_1", { action: "quoted" });
+    expect(res.status).toBe(403);
+    expect(await res.json()).toEqual({ error: "mediated_by_team" });
+    expect(mocks.respondToLeadItem).not.toHaveBeenCalled();
+  });
+
   it("returns 401 when signed out", async () => {
     mocks.getServerSessionUser.mockResolvedValue(null);
     const res = await patch("item_1", { action: "quoted" });
