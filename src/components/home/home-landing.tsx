@@ -17,7 +17,7 @@ import {
 import { CATEGORY_GROUPS, CATEGORY_MENU } from "@/lib/catalog/menu";
 import { partnerFirst, type PartnerProfile } from "@/lib/catalog/partners";
 import type { CategoryVM, ProductVM } from "@/lib/catalog/view-models";
-import { HeaderTabs, SpotlightCarousel, TabbedPanels } from "./home-islands";
+import { HeaderTabs, SpotlightCarousel } from "./home-islands";
 
 // Home — v12 marketplace design (Oct 2026). Sections, top to bottom:
 //
@@ -59,6 +59,20 @@ const FAQ: [string, string][] = [
   ["How do sponsored listings work?", "Partners pay for labelled placement and a branded storefront. Payment never changes a supplier’s tier, prices or ranking in organic results."],
 ];
 
+const POPULAR_SEARCHES: [string, string][] = [
+  ["Glass bottles", "/results?category=glass-bottles"],
+  ["Pouches", "/results?group=flexible"],
+  ["Jars", "/results?q=jar"],
+  ["Labels", "/results?group=labels"],
+  ["Caps & closures", "/results?group=closures"],
+];
+
+const HERO_POINTS: [string, string, "shield" | "tag" | "box"][] = [
+  ["Vetted suppliers", "Trusted and verified manufacturers", "shield"],
+  ["Real published prices", "Every price comes with a source", "tag"],
+  ["Wide range", "From bottles to labels and beyond", "box"],
+];
+
 /** The product sets on the "Popular right now" tabs, by category group. */
 const POPULAR_SETS: { label: string; groups: string[]; href: string }[] = [
   { label: "Containers", groups: ["containers", "closures"], href: "/results?group=containers" },
@@ -89,7 +103,10 @@ export function HomeLanding({ categories, products, partner, now = new Date() }:
   // Hero still life: two category packshots + two partner photos, and a real
   // price sticker from the first partner listing.
   const partnerShots = (partner?.products ?? []).filter((p) => p.primaryImage).slice(0, 2);
-  const sticker = partner?.products.find((p) => p.basePrice !== null) ?? null;
+  const sticker =
+    partner?.products.find((p) => p.basePrice !== null && p.moq !== null && unitPrice(p)) ??
+    partner?.products.find((p) => p.basePrice !== null) ??
+    null;
   const stickerUnit = sticker ? unitPrice(sticker) : null;
 
   // How-it-works examples, all real listings.
@@ -118,14 +135,10 @@ export function HomeLanding({ categories, products, partner, now = new Date() }:
     .filter((p, i, all) => all.findIndex((q) => q.supplier.slug === p.supplier.slug) === i)
     .slice(0, 3);
 
-  // Category box: one tab per group, its categories as tiles.
-  const groupTabs = CATEGORY_GROUPS.map((g) => ({
-    label: g.name,
-    tiles: g.slugs
-      .map((slug) => ({ slug, name: CATEGORY_MENU.find((c) => c.slug === slug)?.name ?? slug, n: count.get(slug) ?? 0 }))
-      .sort((a, b) => b.n - a.n)
-      .slice(0, 6),
-  }));
+  // Explore packaging: the six fullest categories (empty ones fill in as "Coming soon").
+  const exploreTiles = CATEGORY_MENU.map((c) => ({ slug: c.slug, name: c.name, n: count.get(c.slug) ?? 0 }))
+    .sort((a, b) => b.n - a.n)
+    .slice(0, 6);
 
   const setProducts = POPULAR_SETS.map((set) => {
     const slugs = new Set(CATEGORY_GROUPS.filter((g) => set.groups.includes(g.id)).flatMap((g) => g.slugs));
@@ -147,43 +160,87 @@ export function HomeLanding({ categories, products, partner, now = new Date() }:
   return (
     <div>
       {/* ─── Hero ───────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-line bg-well px-4 pb-10 pt-10 lg:px-14 lg:pt-[72px]">
-        <div aria-hidden className="pointer-events-none absolute inset-0 hidden xl:block">
-          <span className="absolute left-[60px] top-14 block h-[300px] w-[140px]">
-            <Image src={cutout("/products/glass-bottle.png")!} alt="" fill sizes="140px" className="object-contain drop-shadow-[0_22px_20px_rgba(24,26,33,.18)]" />
-          </span>
-          <span className="absolute left-[210px] top-[250px] block h-[150px] w-[120px]">
-            <Image src={cutout("/products/plastic-jar.png")!} alt="" fill sizes="120px" className="object-contain drop-shadow-[0_22px_20px_rgba(24,26,33,.18)]" />
-          </span>
-          {partnerShots.map((p, i) => (
-            <span key={p.id} className={`absolute block h-[200px] w-[150px] ${i === 0 ? "right-[200px] top-[60px]" : "right-[70px] top-[200px]"}`}>
-              <Image src={cutout(p.primaryImage!.url)!} alt="" fill sizes="150px" className="object-contain drop-shadow-[0_22px_20px_rgba(24,26,33,.18)]" />
-            </span>
-          ))}
-          {sticker && stickerUnit ? (
-            <div className="absolute right-[230px] top-[280px] -rotate-3 rounded-[6px] bg-paper px-2.5 py-2 text-xs shadow-[0_8px_20px_-6px_rgba(24,26,33,.25)]">
-              <div className="font-mono text-[10px] text-ink-muted">
-                PUBLISHED · {formatCaptureDate(sticker.sourceCapturedAt).replace(/ \d{4}$/, "").toUpperCase()}
-              </div>
-              <b className="text-base">{formatUnitMoney(stickerUnit.amount, stickerUnit.currency)}</b> / {stickerUnit.unit}
-            </div>
-          ) : null}
-        </div>
+      <section className="relative overflow-hidden bg-[linear-gradient(90deg,#ECE8E2_0%,#F4F2EE_32%,#F6F4F1_50%,#F4F2EE_68%,#ECE8E2_100%)] px-4 pb-8 pt-10 lg:px-8 lg:pt-[72px]">
+        {/* Soft window light + table surface */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_30%,rgba(255,255,255,.75),transparent_70%)]" />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-[linear-gradient(180deg,transparent,rgba(226,221,214,.55))]" />
 
-        <div className="relative mx-auto flex max-w-[760px] flex-col items-start text-left sm:items-center sm:text-center">
-          <h1 className="text-[44px] font-bold leading-[0.96] tracking-[-0.05em] sm:text-6xl lg:text-[80px] lg:leading-[0.95] lg:tracking-[-0.055em]">
+        {/* Still life (xl+): left group, right group, handwritten notes */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 hidden xl:block">
+          <Image src="/hero/leaf-shadow.webp" alt="" width={1100} height={800} className="absolute -right-24 -top-10 w-[620px] opacity-60 mix-blend-multiply" />
+          <div className="absolute left-0 top-[142px] aspect-[520/430] w-[min(28vw,520px)]">
+            <Still src="/hero/stone-front.webp" className="left-0 top-[63%] h-[33%] w-[20%] rounded-r-[3px] shadow-[0_18px_24px_-12px_rgba(60,50,40,.35)]" texture />
+            <Still src="/hero/stone-top.webp" className="left-[49%] top-[84%] h-[8%] w-[47%] rounded-[2px] shadow-[0_12px_18px_-10px_rgba(60,50,40,.35)]" texture />
+            <Still src="/hero/still-stand-up-pouch.webp" className="left-[50%] top-[4%] h-[80%] w-[43.5%]" />
+            <Still src="/hero/still-glass-bottle.webp" className="left-[12.5%] top-[1%] h-[92%] w-[26%]" />
+            <Still src="/hero/still-amber-jar.webp" className="left-[40%] top-[60%] h-[39%] w-[28%]" />
+          </div>
+          <div className="absolute right-0 top-[102px] aspect-[438/465] w-[min(28vw,438px)]">
+            <Still src="/hero/still-glass-bottle.webp" className="left-[1%] top-[1%] h-[94%] w-[32%]" />
+            <Still src="/hero/still-corrugated-box.webp" className="left-[44.5%] top-[52.7%] h-[47.3%] w-[55.5%]" />
+            <Still src="/hero/still-metal-can.webp" className="left-[24%] top-[59%] h-[40%] w-[29%]" />
+          </div>
+
+          <p className="absolute left-[7.3vw] top-[58px] -rotate-[11deg] font-hand text-[22px] leading-[1.15] text-[#5b5650]">
+            Bottles, pouches,
+            <br />
+            &nbsp;&nbsp;jars and more
+          </p>
+          <svg className="absolute left-[10vw] top-[122px] text-[#5b5650]" width="40" height="58" viewBox="0 0 40 58" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+            <path d="M32 2c4 18-4 38-26 50" />
+            <path d="M6 52l2-12M6 52l11-3" />
+          </svg>
+          <p className="absolute right-[4.6vw] top-[62px] -rotate-[11deg] text-right font-hand text-[22px] leading-[1.15] text-[#5b5650]">
+            Real prices
+            <br />
+            from supplier pages
+          </p>
+          <svg className="absolute right-[5.6vw] top-[106px] text-[#5b5650]" width="22" height="56" viewBox="0 0 22 56" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+            <path d="M8 2c10 14 10 32 4 50" />
+            <path d="M12 52l-6-9M12 52l6-9" />
+          </svg>
+        </div>
+        {sticker && stickerUnit ? (
+          <Link
+            href={`/products/${sticker.id}`}
+            data-testid="hero-price-card"
+            className="absolute right-[4.5vw] top-[172px] z-10 hidden w-[234px] rounded-xl bg-paper/95 px-6 pb-4 pt-5 text-ink shadow-[0_14px_36px_-14px_rgba(60,50,40,.35)] backdrop-blur hover:shadow-[0_18px_40px_-14px_rgba(60,50,40,.45)] xl:block"
+          >
+            <span title={sticker.title} className="block truncate text-[14px] font-medium leading-snug">{sticker.title}</span>
+            <span className="mt-1.5 flex items-center gap-1.5 text-[13px] text-ink-muted">
+              {sticker.supplier.name}
+              <svg aria-hidden width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+            </span>
+            <span className="mt-3 block">
+              <b className="text-[24px] font-bold tracking-[-0.02em]">{formatUnitMoney(stickerUnit.amount, stickerUnit.currency)}</b>
+              <span className="text-[15px] font-medium"> / {stickerUnit.unit}</span>
+            </span>
+            <span className="mt-3.5 grid grid-cols-[88px_1fr] gap-y-1.5 border-t border-line pt-3.5 text-[13px]">
+              <span className="text-ink-muted">MOQ</span>
+              <span className="truncate font-medium">{formatMoqShort(sticker.moq, sticker.moqUnit)}</span>
+              <span className="text-ink-muted">Last verified</span>
+              <span className="font-medium">{formatCaptureDate(sticker.sourceCapturedAt)}</span>
+            </span>
+          </Link>
+        ) : null}
+
+        <div className="relative mx-auto flex max-w-[800px] flex-col items-center text-center">
+          <p className="text-[12px] font-medium uppercase tracking-[0.2em] text-orange sm:text-[13px]">
+            Packaging sourcing, simplified
+          </p>
+          <h1 className="mt-4 text-[44px] font-bold leading-[0.95] tracking-[-0.05em] sm:mt-5 sm:text-6xl lg:text-[72px] lg:leading-[0.92]">
             All your packaging.
             <br />
-            <span className="font-light">One place.</span>
+            <span className="text-orange">One place.</span>
           </h1>
-          <p className="mt-4 max-w-[620px] text-base leading-[1.55] text-ink-body sm:mt-[22px] sm:text-[19px]">
+          <p className="mt-5 max-w-[600px] text-base leading-[1.5] text-ink-muted sm:mt-6 sm:text-[19px]">
             Discover vetted suppliers, compare real prices and minimum order quantities, and find
             packaging that fits your business — without jumping between websites.
           </p>
           <form
             action="/results"
             role="search"
-            className="mt-6 flex h-[60px] w-full max-w-[760px] items-center rounded-xl border-2 border-ink bg-paper py-1.5 pl-3.5 pr-1.5 shadow-[0_0_0_4px_#FFF1E5] sm:mt-9 sm:h-[76px] sm:rounded-[40px] sm:py-2 sm:pl-[22px] sm:pr-2 sm:shadow-[0_18px_40px_-18px_rgba(24,26,33,.35)]"
+            className="mt-7 flex h-[60px] w-full max-w-[792px] items-center rounded-full border-2 border-ink bg-paper py-1.5 pl-5 pr-1.5 shadow-[0_14px_34px_-20px_rgba(24,26,33,.35)] sm:mt-9 sm:h-[68px] sm:pl-6"
           >
             <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
             <label htmlFor="hero-search" className="sr-only">
@@ -194,46 +251,65 @@ export function HomeLanding({ categories, products, partner, now = new Date() }:
               name="q"
               type="search"
               placeholder="Search bottles, pouches, jars, labels…"
-              className="ml-3 min-w-0 flex-1 bg-transparent text-base text-ink outline-none sm:text-[19px]"
+              className="ml-3 min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-ink-faint sm:text-[18px]"
             />
-            <button type="submit" className="h-[46px] flex-none rounded-lg bg-orange px-4 text-base font-semibold text-on-orange hover:bg-orange-hi sm:h-[58px] sm:rounded-[30px] sm:px-[30px] sm:text-[17px]">
+            <button type="submit" className="h-[46px] flex-none rounded-full bg-orange px-5 text-base font-semibold text-white hover:bg-orange-hi sm:h-[52px] sm:px-9 sm:text-[17px]">
               Search
             </button>
           </form>
-          <Link href="/results" className="mt-4 text-[15px] font-medium text-orange-ink hover:text-orange">
-            Not sure what you need? Browse all {totalProducts} products →
-          </Link>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+            <span className="text-sm text-ink-muted">Popular searches:</span>
+            {POPULAR_SEARCHES.map(([label, href]) => (
+              <Link key={label} href={href} className="flex h-[38px] items-center rounded-full bg-paper px-5 text-sm font-medium text-ink shadow-[0_1px_2px_rgba(24,26,33,.06),0_0_0_1px_rgba(24,26,33,.05)] hover:shadow-[0_0_0_1px_#181A21]">
+                {label}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <div className="relative mx-auto mt-8 max-w-[1100px] rounded-2xl border border-line-strong bg-paper lg:mt-11">
-          <TabbedPanels
-            testId="category-box"
-            tabs={groupTabs.map((t) => t.label)}
-            panels={groupTabs.map((t) => (
-              <div key={t.label} className="grid grid-cols-3 border-t border-line sm:grid-cols-6">
-                {t.tiles.map((tile) => {
-                  const img = categoryImageAsset(tile.slug);
-                  return (
-                    <Link
-                      key={tile.slug}
-                      href={`/results?category=${encodeURIComponent(tile.slug)}`}
-                      data-testid="explore-card"
-                      data-entry={tile.slug}
-                      className={`flex flex-col items-center gap-2 px-2.5 py-4 text-ink hover:bg-[#FAFAFB] ${tile.n ? "" : "opacity-60"}`}
-                    >
-                      <span className="relative flex h-[72px] w-full items-center justify-center">
-                        {img ? (
-                          <Image src={cutout(img)!} alt="" fill sizes="96px" className="object-contain" />
-                        ) : null}
-                      </span>
-                      <span className="text-center text-[13px] font-semibold leading-tight">{tile.name}</span>
-                      <span className="font-mono text-[11px] text-ink-muted">{tile.n ? plural(tile.n, "product") : "Coming soon"}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            ))}
-          />
+        <ul className="relative mx-auto mt-10 flex max-w-[1010px] flex-col gap-5 sm:mt-12 lg:flex-row lg:items-center lg:justify-center lg:gap-0">
+          {HERO_POINTS.map(([title, body, icon], i) => (
+            <li key={title} className={`flex items-center gap-4 lg:px-8 ${i ? "lg:border-l lg:border-[#DDD7CF]" : ""}`}>
+              <span className="flex h-[58px] w-[58px] flex-none items-center justify-center rounded-full bg-[#FBE4D2] text-orange">
+                <HeroIcon name={icon} />
+              </span>
+              <span className="text-left">
+                <span className="block text-[15px] font-semibold text-ink">{title}</span>
+                <span className="mt-0.5 block text-sm text-ink-muted lg:whitespace-nowrap">{body}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div data-testid="category-box" className="relative mx-auto mt-8 max-w-[1556px] rounded-2xl bg-paper/95 px-4 pb-4 pt-5 shadow-[0_10px_40px_-18px_rgba(60,50,40,.3)] sm:mt-9 sm:px-7 sm:pb-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-[15px] font-semibold uppercase tracking-[0.02em] text-ink">Explore packaging</h2>
+            <Link href="/results" className="text-[15px] font-semibold text-orange hover:text-orange-ink">
+              Browse all {totalProducts} products →
+            </Link>
+          </div>
+          <div className="no-scrollbar -mx-1 mt-4 flex gap-4 overflow-x-auto px-1 lg:grid lg:grid-cols-6 lg:overflow-visible">
+            {exploreTiles.map((tile) => {
+              const img = categoryImageAsset(tile.slug);
+              return (
+                <Link
+                  key={tile.slug}
+                  href={`/results?category=${encodeURIComponent(tile.slug)}`}
+                  data-testid="explore-card"
+                  data-entry={tile.slug}
+                  className={`flex min-h-[100px] min-w-[220px] items-center gap-4 rounded-xl border border-line bg-paper px-4 py-3 text-ink hover:border-ink lg:min-w-0 ${tile.n ? "" : "opacity-60"}`}
+                >
+                  <span className="relative block h-[72px] w-[60px] flex-none">
+                    {img ? <Image src={cutout(img)!} alt="" fill sizes="60px" className="object-contain" /> : null}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold leading-tight">{tile.name}</span>
+                    <span className="mt-1.5 block text-sm text-ink-muted">{tile.n ? plural(tile.n, "product") : "Coming soon"}</span>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -520,5 +596,54 @@ function BasketPreview({ products }: { products: ProductVM[] }) {
         Request quotes from {products.length} suppliers →
       </Link>
     </div>
+  );
+}
+
+/** One still-life packshot in the hero, positioned by percentages of its group. */
+function Still({ src, className, texture = false }: { src: string; className: string; texture?: boolean }) {
+  return (
+    <span className={`absolute block ${texture ? "overflow-hidden" : ""} ${className}`}>
+      <Image
+        src={src}
+        alt=""
+        fill
+        sizes="(min-width: 1280px) 260px, 1px"
+        className={texture ? "object-cover" : "object-contain object-bottom drop-shadow-[0_18px_16px_rgba(60,50,40,.22)]"}
+      />
+    </span>
+  );
+}
+
+function HeroIcon({ name }: { name: "shield" | "tag" | "box" }) {
+  const common = {
+    width: 26,
+    height: 26,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+  if (name === "shield")
+    return (
+      <svg {...common}>
+        <path d="M12 3 5 6v5c0 4.4 3 8.3 7 9.5 4-1.2 7-5.1 7-9.5V6l-7-3Z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+    );
+  if (name === "tag")
+    return (
+      <svg {...common}>
+        <path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9Z" />
+        <circle cx="8" cy="8" r="1.5" />
+      </svg>
+    );
+  return (
+    <svg {...common}>
+      <path d="M21 8 12 3 3 8v8l9 5 9-5V8Z" />
+      <path d="m3 8 9 5 9-5M12 13v8M7.5 5.5l9 5" />
+    </svg>
   );
 }

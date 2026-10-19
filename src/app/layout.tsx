@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Caveat, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DEFAULT_THEME } from "@/lib/theme";
 
@@ -31,6 +31,13 @@ const geist = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Handwritten notes in the home hero.
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500"],
 });
 
 export const metadata: Metadata = {
@@ -81,7 +88,7 @@ export default function RootLayout({
   return (
     // v12 is a single light theme.
     <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
-      <body className={`${geist.variable} ${geistMono.variable} min-h-screen bg-paper text-ink antialiased`}>
+      <body className={`${geist.variable} ${geistMono.variable} ${caveat.variable} min-h-screen bg-paper text-ink antialiased`}>
         <div className="flex min-h-screen flex-col">
           <SiteHeader />
           <main className="flex-1">{children}</main>
