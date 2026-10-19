@@ -12,7 +12,9 @@ export function accountLinks(role: UserRole | null): { label: string; href: stri
     ];
   if (role === "SUPPLIER") return [{ label: "Supplier workspace", href: "/supplier" }];
   return [
-    { label: "My quote requests", href: "/account/requests" },
+    { label: "My account", href: "/account" },
+    { label: "My quote requests", href: "/account#requests" },
+    { label: "Product requests", href: "/account#product-requests" },
     { label: "Quote Basket", href: "/basket" },
   ];
 }

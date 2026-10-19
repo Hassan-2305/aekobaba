@@ -68,7 +68,7 @@ set search_path = public
 as $$
   select role::text
   from public."User"
-  where "supabaseUserId" = auth.uid()
+  where "supabaseUserId" = auth.uid()::text
     and role is not null;
 $$;
 

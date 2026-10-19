@@ -43,8 +43,8 @@ export default async function QuoteRequestDetailPage({
 
   return (
     <div className="mx-auto max-w-4xl px-5 pb-24 pt-12 sm:px-8">
-      <Link href="/account/requests" className="text-sm text-ink-muted hover:text-ink">
-        ← My quote requests
+      <Link href="/account#requests" className="text-sm text-ink-muted hover:text-ink">
+        ← My account
       </Link>
       {submitted ? (
         <p role="status" className="mt-4 rounded-md border border-success-ink/30 bg-success-tint px-4 py-3 text-sm text-success-deep">
