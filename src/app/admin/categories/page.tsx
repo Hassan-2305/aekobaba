@@ -5,6 +5,7 @@ import { CategoryManager } from "@/components/admin/category-manager";
 import { WorkspaceShell } from "@/components/workspace/shell";
 import { getServerSessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { requireAdminPage } from "@/lib/auth/admin";
 
 export const metadata: Metadata = {
   title: "Categories · Aekobaba",
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 export default async function AdminCategoriesPage() {
   const session = await getServerSessionUser();
   if (!session) redirect("/auth/sign-in?next=%2Fadmin%2Fcategories");
+  await requireAdminPage("/admin/categories");
 
   const [categories, productCounts, childCounts] = await Promise.all([
     db.category.findMany({

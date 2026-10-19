@@ -253,6 +253,8 @@ model QuoteRequestSupplier {
   lastContactAt    DateTime?
   lastReplyAt      DateTime?
   lastReplySummary String?
+  /// The supplier quote the buyer can see (set when the team shares one).
+  sharedQuoteId    String?
   nextAction       String?
   nextActionDue    DateTime?
   assignedToId     String?
@@ -665,6 +667,7 @@ enum MeetingStatus {
 
 enum OutboxStatus {
   PENDING
+  SENDING
   SENT
   FAILED
 }

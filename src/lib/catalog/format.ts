@@ -228,6 +228,26 @@ export function formatMoqShort(moq: number | null, moqUnit: string | null): stri
   return `${moq.toLocaleString("en-US")} ${unit}`;
 }
 
+/** MOQ units that name a selling pack rather than single items. */
+// Only when the unit *is* a pack ("25 cases"), not when it merely mentions one ("24 jars (1 case)").
+const PACK_MOQ_UNIT = /^\s*(case|cases|carton|cartons|ream|reams|pack|packs|bundle|bundles|sleeve|sleeves|bale|bales)\b/i;
+
+/**
+ * How many single items one MOQ unit holds: a minimum of "25 cases" on a
+ * listing priced "per case of 4 jugs" is 100 jugs. 1 when the MOQ is already
+ * counted in items or the pack size isn't published.
+ */
+export function moqPackSize(p: Pick<ProductVM, "moqUnit" | "basePrice" | "priceBasis" | "priceUnit">): number {
+  if (!p.moqUnit || !PACK_MOQ_UNIT.test(p.moqUnit)) return 1;
+  const unit = unitPrice(p);
+  return unit && unit.packSize > 1 ? unit.packSize : 1;
+}
+
+/** The published minimum expressed in single items (quantities are counted in items). */
+export function moqInUnits(p: Pick<ProductVM, "moq" | "moqUnit" | "basePrice" | "priceBasis" | "priceUnit">): number | null {
+  return p.moq === null ? null : p.moq * moqPackSize(p);
+}
+
 /** "14 days" / "Not published" for lead time. */
 export function formatLeadTime(leadTimeDays: number | null): string {
   if (leadTimeDays === null) return NOT_PUBLISHED;

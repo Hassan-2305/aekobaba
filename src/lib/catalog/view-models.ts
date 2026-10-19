@@ -147,51 +147,24 @@ export interface ProductWithRelations {
  */
 export function materialFamily(material: string): string {
   const m = material.toLowerCase();
-  if (m.includes("not specified")) return "Not specified";
-  if (m.includes("glass")) return "Glass";
-  if (m.includes("corrugat")) return "Corrugated";
+  const has = (...words: string[]) => words.some((w) => m.includes(w));
+  const word = (re: RegExp) => re.test(m);
+  if (has("not specified")) return "Not specified";
+  if (has("compostable", "biodegradable", "bagasse", "molded pulp", "moulded pulp") || word(/\bpla\b/)) return "Compostable";
+  // Paper first: "glassine paper" is paper, "kraft paper laminate" is paper-based.
+  if (has("kraft", "paper", "cardboard", "cardstock", "glassine", "tissue", "paperboard", "chipboard")) return "Paper & Board";
+  if (has("glass")) return "Glass";
+  if (has("corrugat")) return "Corrugated";
   if (
-    m.includes("plastic") ||
-    m.includes("polythene") ||
-    m.includes("polyethylene") ||
-    m.includes("ldpe") ||
-    m.includes("vinyl") ||
-    m.includes("cellophane") ||
-    m.includes("nylon") ||
-    m.includes("laminate") ||
-    m.includes("foil")
+    has("plastic", "polythene", "polyethylene", "polypropylene", "polystyrene", "polyester", "vinyl", "cellophane", "nylon", "laminate", "foil", "foam", "film", "bopp", "resin") ||
+    word(/\b(pet|petg|hdpe|ldpe|lldpe|mdpe|pp|ps|pvc|pe|pcr|rpet|abs|eps)\b/)
   ) {
     return "Plastic & Film";
   }
-  if (
-    m.includes("kraft") ||
-    m.includes("paper") ||
-    m.includes("cardboard") ||
-    m.includes("glassine") ||
-    m.includes("tissue")
-  ) {
-    return "Paper & Board";
-  }
-  if (
-    m.includes("aluminum") ||
-    m.includes("aluminium") ||
-    m.includes("tin") ||
-    m.includes("steel") ||
-    m.includes("metal")
-  ) {
-    return "Metal";
-  }
-  if (
-    m.includes("compostable") ||
-    m.includes("biodegradable") ||
-    m.includes("bagasse") ||
-    m.includes("pla")
-  ) {
-    return "Compostable";
-  }
-  // Unrecognized: the first word before any parenthetical, as published.
-  const firstWord = material.split(/[\s(/]/)[0].trim();
-  return firstWord.length > 0 ? firstWord : "Other";
+  if (has("aluminum", "aluminium", "steel", "metal", "tinplate") || word(/\btin\b/)) return "Metal";
+  if (has("phenolic", "urea")) return "Plastic & Film";
+  if (has("cork", "wood", "bamboo")) return "Wood & Cork";
+  return "Other";
 }
 
 function toNumber(value: { toNumber(): number } | number | null): number | null {

@@ -2393,7 +2393,7 @@
           "categorySlug": "glass-jars",
           "priceType": "EXACT",
           "basePrice": 13.15,
-          "priceBasis": "per jar (USD), cap sold separately",
+          "priceBasis": "per case of 12 jars (USD), cap sold separately",
           "priceUnit": null,
           "moq": null,
           "moqUnit": null,
@@ -3310,7 +3310,7 @@
           ]
         },
         {
-          "title": "4 oz White PP Plastic Straight Sided Jars (Tall) - Cap Not Included) — 2811B07-BWHT",
+          "title": "4 oz White PP Plastic Straight Sided Jars (Tall, Cap Not Included) — 2811B07-BWHT",
           "description": "Verbatim (2026-10-19): \"Your VIP Price: $0.7\" (each). \"Cap Size: 58-400 (sold separately)\"; \"FDA Food Contact Compliant, Molded in the USA\"; \"BPA NI*\". Spec sheet: Capacity: 4 oz (120 ml); Cap Size: 58-400; Neck Finish: Continuous Thread; Height: 2.6 in; Case Qty: 324; Color: White.",
           "material": "White PP plastic",
           "categorySlug": "plastic-jars",
@@ -6163,7 +6163,7 @@
           "priceType": "EXACT",
           "basePrice": 16.0,
           "priceBasis": "per carton of 24 jars (USD)",
-          "priceUnit": 0.8,
+          "priceUnit": null,
           "moq": null,
           "moqUnit": null,
           "leadTimeDays": null,
@@ -6481,7 +6481,7 @@
           "priceType": "EXACT",
           "basePrice": 7.8,
           "priceBasis": "per carton of 12 bottles (USD)",
-          "priceUnit": 0.6,
+          "priceUnit": null,
           "moq": null,
           "moqUnit": null,
           "leadTimeDays": null,
@@ -7293,7 +7293,7 @@
           ]
         },
         {
-          "title": "1 (128oz) Gallon Natual HDPE Wide Mouth Jar Round - 89-400 Neck (SKU 18340061)",
+          "title": "1 (128oz) Gallon Natural HDPE Wide Mouth Jar Round - 89-400 Neck (SKU 18340061)",
           "description": "Verbatim (2026-10-19): \"$2.10 (Per Piece) 4 Pieces per Carton $8.40 (Per Carton)\" per carton of 4. Volume pricing per carton: 48+ cartons $7.88, 96+ cartons $7.80, 288+ cartons $7.24. Versatile Storage Solution for Diverse Applications",
           "material": "Natural HDPE plastic",
           "categorySlug": "plastic-jars",
@@ -7444,18 +7444,7 @@
           "samplePolicyVerified": false,
           "sourceUrl": "https://www.bottlestore.com/white-plastic-paild-lid-for-3-5-5-5-gallon-drums.html",
           "sourceCapturedAt": "2026-10-19",
-          "quantityBreaks": [
-            {
-              "minQty": 1,
-              "maxQty": 2,
-              "unitPrice": 440.0
-            },
-            {
-              "minQty": 3,
-              "maxQty": null,
-              "unitPrice": 2.25
-            }
-          ],
+          "quantityBreaks": [],
           "images": [
             {
               "url": "/suppliers/bottlestore-com/bottlestore-com-n34.webp",
@@ -7734,7 +7723,7 @@
           "leadTimeDays": null,
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
-          "sourceUrl": "https://www.specialtybottle.com/glass-bottles/amber-boston-rounds/4oz-bra4",
+          "sourceUrl": "https://www.specialtybottle.com/glass-bottles/amber-boston-rounds/larger-sizes/8oz-bra8",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [
             {
@@ -9573,58 +9562,6 @@
           ]
         },
         {
-          "title": "Clear Flat Cello Bags",
-          "description": "Verbatim (2026-09-21): \"From $6.80\" — per-pack 'From' price; lowest listed option.",
-          "material": "Cellophane (clear)",
-          "categorySlug": "pouches-bags",
-          "subcategory": "Flat / lay-flat pouch",
-          "priceType": "FROM",
-          "basePrice": 6.8,
-          "priceBasis": "per pack, from-price (USD; pack size varies by option)",
-          "priceUnit": null,
-          "moq": null,
-          "moqUnit": null,
-          "leadTimeDays": null,
-          "stockOrCustom": "STOCK",
-          "samplePolicyVerified": false,
-          "sourceUrl": "https://www.papermart.com/",
-          "sourceCapturedAt": "2026-09-21",
-          "quantityBreaks": [],
-          "images": [
-            {
-              "url": "/suppliers/paper-mart/paper-mart-1.webp",
-              "alt": "Clear Flat Cello Bags",
-              "credit": "Paper Mart product photo"
-            }
-          ]
-        },
-        {
-          "title": "Flat Glassine Bags (1000/Pack)",
-          "description": "Verbatim (2026-09-21): \"From $24.42\" — per-1000-pack 'From' price.",
-          "material": "Glassine paper",
-          "categorySlug": "pouches-bags",
-          "subcategory": "Flat / lay-flat pouch",
-          "priceType": "FROM",
-          "basePrice": 24.42,
-          "priceBasis": "per 1000-pack, from-price (USD)",
-          "priceUnit": null,
-          "moq": null,
-          "moqUnit": null,
-          "leadTimeDays": null,
-          "stockOrCustom": "STOCK",
-          "samplePolicyVerified": false,
-          "sourceUrl": "https://www.papermart.com/",
-          "sourceCapturedAt": "2026-09-21",
-          "quantityBreaks": [],
-          "images": [
-            {
-              "url": "/suppliers/paper-mart/paper-mart-2.webp",
-              "alt": "Flat Glassine Bags (1000/Pack)",
-              "credit": "Paper Mart product photo"
-            }
-          ]
-        },
-        {
           "title": "Window Cake & Bakery Boxes (200/Pack) — 10\" L X 10\" W X 2-1/2\" D (SKU 8514233)",
           "description": "Verbatim (2026-10-19): \"Regular price $158.73\" per pack of 200 boxes. Showcase and protect your baked creations with window cake and bakery boxes. Product visibility: wide clear top window showcases contents.",
           "material": "Paperboard",
@@ -10544,7 +10481,7 @@
           "leadTimeDays": null,
           "stockOrCustom": "STOCK",
           "samplePolicyVerified": false,
-          "sourceUrl": "https://www.burchbottle.com/2oz-Amber-Straight-Sided-Jar-53-400",
+          "sourceUrl": "https://www.burchbottle.com/4oz-Amber-Straight-Sided-Jar-58-400",
           "sourceCapturedAt": "2026-09-21",
           "quantityBreaks": [],
           "images": [
@@ -12208,7 +12145,7 @@
         },
         {
           "title": "48mm Natural Polypropylene 5 Hole Sifter (SKU 2DS0483SG)",
-          "description": "Verbatim (2026-10-19): \"$0.10 / Each\" each. Case Pack: 3500; neck finish: 485; cap style: Spice Caps & Sifters; Cap Size (mm): 48. Stock number 2DS0483SGÂ is a 48mm plastic sifter with 5 holes.",
+          "description": "Verbatim (2026-10-19): \"$0.10 / Each\" each. Case Pack: 3500; neck finish: 485; cap style: Spice Caps & Sifters; Cap Size (mm): 48. Stock number 2DS0483SG is a 48mm plastic sifter with 5 holes.",
           "material": "Natural polypropylene (PP) plastic",
           "categorySlug": "closures",
           "subcategory": "Sifter fitment",
@@ -12582,7 +12519,7 @@
           ]
         },
         {
-          "title": "8 x 7-1/2 x 2-1/4 Foam Hinged Food Carryout Containter - 3 Compartments 200/Case (SKU K11272)",
+          "title": "8 x 7-1/2 x 2-1/4 Foam Hinged Food Carryout Container - 3 Compartments 200/Case (SKU K11272)",
           "description": "Verbatim (2026-10-19): \"$67.25/Case\" per case of 200 containers. Item # K11272. Page lists 'Buy More, Save More' case pricing.",
           "material": "Foam (polystyrene)",
           "categorySlug": "thermoforms",
@@ -13406,7 +13343,7 @@
           "material": "Vinyl (full-color)",
           "categorySlug": "labels",
           "subcategory": "Sticker (die-cut, roll)",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 60,
           "priceBasis": "configurator default quantity (USD; 50 stickers at $1.20 each)",
           "priceUnit": 1.2,
@@ -13432,7 +13369,7 @@
           "material": "Not specified",
           "categorySlug": "pouches-bags",
           "subcategory": "Stand-up pouch",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 18,
           "priceBasis": "configurator default quantity (USD; 10 pouches at $1.80 each)",
           "priceUnit": 1.8,
@@ -13458,7 +13395,7 @@
           "material": "Kraft paper (water-activated, reinforced)",
           "categorySlug": "brand-accessories",
           "subcategory": "Packaging tape",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 19,
           "priceBasis": "configurator default quantity (USD; $0.19 per foot)",
           "priceUnit": 0.19,
@@ -13707,7 +13644,7 @@
           "description": "Verbatim (2026-09-21): \"$4.58 / each\" (per box). Configurator default quantity 252 (Subtotal $1,154.16); \"No Minimums\", quantity-1 proofs available.",
           "material": "Not specified",
           "categorySlug": "mailers",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 4.58,
           "priceBasis": "per box at configurator default quantity of 252 (USD)",
           "priceUnit": null,
@@ -13732,7 +13669,7 @@
           "description": "Verbatim (2026-09-21): \"$1.91 / each\" (per box). Configurator default quantity (Subtotal $481.32); 5 sizes offered; \"No Minimums\". Captured from Exa's index of the first-party page.",
           "material": "Not specified",
           "categorySlug": "mailers",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 1.91,
           "priceBasis": "per box at configurator default quantity (USD)",
           "priceUnit": null,
@@ -13875,7 +13812,7 @@
           "material": "Corrugated (kraft, standard strength)",
           "categorySlug": "corrugated",
           "subcategory": "RSC shipper case",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 610,
           "priceBasis": "total for 100 boxes at configurator defaults (USD)",
           "priceUnit": 6.1,
@@ -13922,7 +13859,7 @@
           "material": "Vinyl (waterproof)",
           "categorySlug": "labels",
           "subcategory": "Sticker (die-cut, roll)",
-          "priceType": "EXACT",
+          "priceType": "CALCULATOR",
           "basePrice": 27,
           "priceBasis": "per order at the 29-piece starting tier (USD)",
           "priceUnit": null,
@@ -15850,7 +15787,7 @@
           "title": "202 Diameter B64 LOE Silver Aluminum Can End 5,040/Case - Ball (SKU 360273)",
           "description": "Verbatim (2026-10-19): \"1 Case $390.00 / Case ( $0.08 Piece) 5,040 Items Per Case.\" per case. These silver aluminum can ends by Ball Corporation are made in the United States. They have a 202 diameter B64 LOE and are sold by the case with 5,040-ends in each case and packed in 9 Sleeves with 560 per sleeve. Availability: Item is currently estimated to ship within 1 - 2 weeks.",
           "material": "Silver aluminum",
-          "categorySlug": "closures",
+          "categorySlug": "metal-cans",
           "subcategory": "Beverage can end",
           "priceType": "EXACT",
           "basePrice": 390.0,
@@ -16238,7 +16175,7 @@
           ]
         },
         {
-          "title": "3.75 Clear Glass Square Jars w/ Gold Metal Lug Caps (Item #4066-01)",
+          "title": "3.75 oz Clear Glass Square Jars w/ Gold Metal Lug Caps (Item #4066-01)",
           "description": "Verbatim (2026-10-19): \"12/cs $16.08 ( $1.34 each)\" per case of 12. Purchase square glass jars with gold metal plastisol lug caps for an appealing packaging choice for a range of products. The square glass jars include flat panels for stylishly labeling and wide openings to access products within easily. Shown out of stock on capture date.",
           "material": "Clear glass jar, gold metal lug cap",
           "categorySlug": "glass-jars",
@@ -17051,7 +16988,7 @@
       "website": "https://www.containerandpackaging.com",
       "location": "US (Boise, ID)",
       "legalIdentity": null,
-      "status": "QUOTE_ONLY",
+      "status": "LISTED",
       "isPartner": false,
       "sourceUrl": "https://www.containerandpackaging.com",
       "sourceCapturedAt": "2026-10-06",
@@ -18434,7 +18371,7 @@
       "website": "https://www.thepkglab.com",
       "location": "US (Brooklyn Park, MN)",
       "legalIdentity": null,
-      "status": "QUOTE_ONLY",
+      "status": "DISABLED",
       "isPartner": false,
       "sourceUrl": "https://www.thepkglab.com/",
       "sourceCapturedAt": "2026-10-06",

@@ -166,6 +166,13 @@ export function filtersToQueryString(filters: ResultsFilters): string {
 /** Build a /results URL from a filter patch applied to the current state. */
 export function buildResultsUrl(current: ResultsFilters, patch: Partial<ResultsFilters>): string {
   const next = { ...current, ...patch };
+  // Spec facets (capacity, neck finish…) belong to a category's panel. Moving
+  // to another category/group drops them, so no filter stays active but hidden.
+  const scopeChanged =
+    ("category" in patch && patch.category !== current.category) || ("group" in patch && patch.group !== current.group);
+  if (scopeChanged && !("spec" in patch)) {
+    next.spec = Object.fromEntries(SPEC_KEYS.map((key) => [key, null])) as SpecSelection;
+  }
   const qs = filtersToQueryString(next);
   return qs ? `/results?${qs}` : "/results";
 }
@@ -188,10 +195,39 @@ export function effectiveCategorySlugs(filters: ResultsFilters, resolved: Resolv
   return resolved ? resolved.categorySlugs : null;
 }
 
+// ─── Text search ─────────────────────────────────────────────────────────────
+
+const STOPWORDS = new Set(["a", "an", "and", "the", "for", "of", "with", "in", "to", "on", "by", "per"]);
+
+/** Search words from the query, lower-cased and singularised ("jars" → "jar"). */
+export function searchTokens(q: string | null | undefined): string[] {
+  return (q ?? "")
+    .toLowerCase()
+    .split(/[^a-z0-9.]+/)
+    .filter((t) => t && !STOPWORDS.has(t))
+    .map((t) => (t.length > 4 && t.endsWith("es") && /(ches|shes|xes|sses)$/.test(t) ? t.slice(0, -2) : t.length > 3 && t.endsWith("s") && !t.endsWith("ss") ? t.slice(0, -1) : t));
+}
+
+/** Every search word appears in the product's title, material, type, category, supplier or description. */
+export function matchesSearchText(p: ProductVM, tokens: string[]): boolean {
+  if (tokens.length === 0) return true;
+  const haystack = [p.title, p.material, p.subcategory ?? "", p.categoryName, p.supplier.name, p.description ?? ""]
+    .join(" ")
+    .toLowerCase();
+  return tokens.every((t) => haystack.includes(t));
+}
+
 /** Apply the typed filters to a product list. Pure. */
 export function applyFilters(products: ProductVM[], filters: ResultsFilters, resolved: ResolvedQuery | null): ProductVM[] {
-  const categorySlugs = effectiveCategorySlugs(filters, resolved);
+  // The typed words must match the listing. When they don't match any text but
+  // name a category ("coffee" → coffee bags), the category alias stands in.
+  const tokens = searchTokens(filters.q);
+  const textHits = tokens.length ? products.filter((p) => matchesSearchText(p, tokens)) : [];
+  const useText = tokens.length > 0 && (textHits.length > 0 || !resolved);
+  const textIds = useText ? new Set(textHits.map((p) => p.id)) : null;
+  const categorySlugs = effectiveCategorySlugs(filters, useText ? null : resolved);
   return products.filter((p) => {
+    if (textIds && !textIds.has(p.id)) return false;
     if (categorySlugs !== null && !categorySlugs.includes(p.categorySlug)) return false;
     if (filters.maxMoq !== null && (p.moq === null || p.moq > filters.maxMoq)) return false;
     if (filters.priceType && p.priceType !== filters.priceType) return false;

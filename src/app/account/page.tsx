@@ -47,8 +47,10 @@ export default async function AccountPage() {
       take: 50,
       include: { _count: { select: { items: true } }, suppliers: { select: { supplier: { select: { name: true } } } } },
     }),
+    // Product-page requests are matched by email, so only a verified address
+    // may claim them (otherwise anyone could sign up with someone else's email).
     db.inquiry.findMany({
-      where: { email: { equals: email, mode: "insensitive" } },
+      where: session.emailVerified ? { email: { equals: email, mode: "insensitive" } } : { id: "__none__" },
       orderBy: { createdAt: "desc" },
       take: 50,
       select: { id: true, kind: true, status: true, quantity: true, createdAt: true, product: { select: { id: true, title: true, supplier: { select: { name: true } } } } },

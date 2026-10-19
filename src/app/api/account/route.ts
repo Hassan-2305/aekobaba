@@ -25,13 +25,22 @@ export async function PATCH(request: Request) {
   const { name, phone, company, website } = parsed.data;
 
   await db.$transaction(async (tx) => {
-    await tx.user.update({ where: { id: user.id }, data: { name: name || null, phone: phone || null } });
+    await tx.user.update({
+      where: { id: user.id },
+      data: {
+        ...(name !== undefined ? { name: name || null } : {}),
+        ...(phone !== undefined ? { phone: phone || null } : {}),
+      },
+    });
     if (company !== undefined || website !== undefined) {
       const existing = await tx.brandProfile.findUnique({ where: { userId: user.id } });
       if (existing) {
         await tx.brandProfile.update({
           where: { userId: user.id },
-          data: { companyName: company || existing.companyName, website: website || null },
+          data: {
+            ...(company ? { companyName: company } : {}),
+            ...(website !== undefined ? { website: website || null } : {}),
+          },
         });
       } else if (company) {
         await tx.brandProfile.create({ data: { userId: user.id, companyName: company, website: website || null } });

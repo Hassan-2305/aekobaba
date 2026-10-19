@@ -9,6 +9,7 @@ function fakeDb(rows: (OutboxMessage & { id: string; status: string; attempts: n
     updates,
     notificationOutbox: {
       findMany: vi.fn(async () => rows),
+      updateMany: vi.fn(async () => ({ count: 1 })),
       update: vi.fn(async ({ where, data }: { where: { id: string }; data: Record<string, unknown> }) => {
         updates.push({ id: where.id, data });
         return {};

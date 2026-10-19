@@ -8,7 +8,7 @@ import { SponsoredTag } from "@/components/catalog/tier-badge";
 import { cutoutFor } from "@/components/catalog/product-picture";
 import { useBasketHydrated } from "@/lib/basket/use-basket";
 import { useQuoteBasketStore } from "@/lib/basket/store";
-import { formatUnitMoney, unitPrice } from "@/lib/catalog/format";
+import { formatMoney, formatUnitMoney, priceCurrency, unitPrice } from "@/lib/catalog/format";
 import { compareRows, missingCount } from "@/lib/compare/rows";
 import { COMPARE_MAX, useCompareHydrated, useCompareStore } from "@/lib/compare/store";
 
@@ -26,6 +26,7 @@ export function CompareTray() {
   const open = useCompareStore((s) => s.open);
   const setOpen = useCompareStore((s) => s.setOpen);
   const remove = useCompareStore((s) => s.remove);
+  const clearAll = useCompareStore((s) => s.clear);
   const basket = useQuoteBasketStore((s) => s.items);
   const addProduct = useQuoteBasketStore((s) => s.addProduct);
   const [diffOnly, setDiffOnly] = useState(false);
@@ -107,6 +108,8 @@ export function CompareTray() {
                           <span className="text-base font-semibold">{formatUnitMoney(unitPrice(p)!.amount, unitPrice(p)!.currency)}</span>
                           <span className="text-[13px] text-ink-muted">/ {unitPrice(p)!.unit}</span>
                         </>
+                      ) : p.basePrice !== null ? (
+                        <span className="text-sm font-semibold">{formatMoney(p.basePrice, priceCurrency(p.priceBasis))} per pack</span>
                       ) : (
                         <span className="text-sm font-semibold">Ask the supplier</span>
                       )}
@@ -214,6 +217,14 @@ export function CompareTray() {
             ),
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => clearAll()}
+          aria-label="Clear the comparison"
+          className="h-[46px] flex-none rounded-md px-3 text-sm font-medium text-on-chrome-muted underline-offset-4 hover:text-on-chrome hover:underline"
+        >
+          Clear
+        </button>
         <button
           type="button"
           data-testid="compare-toggle"

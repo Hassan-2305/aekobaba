@@ -8,9 +8,11 @@ import {
   filtersToQueryString,
   hasAnyLeadTimeData,
   parseFilters,
+  searchTokens,
   sortProducts,
   supplierRegion,
 } from "./filters";
+import { resolveSearchQuery } from "./aliases";
 import { baseFilters, makeProduct } from "./test-fixtures";
 
 // Spec C5: left-rail filters in the plan's priority order, facet counts that
@@ -219,5 +221,25 @@ describe("hasAnyLeadTimeData", () => {
   it("detects whether any product publishes a lead time", () => {
     expect(hasAnyLeadTimeData([makeProduct({ leadTimeDays: null })])).toBe(false);
     expect(hasAnyLeadTimeData([makeProduct({ leadTimeDays: 7 })])).toBe(true);
+  });
+});
+
+describe("text search", () => {
+  const amberJar = { ...makeProduct({ categorySlug: "glass-jars", categoryName: "Glass Jars" }), title: "4 oz Amber Glass Straight Sided Jars" };
+  const clearJar = { ...makeProduct({ categorySlug: "glass-jars", categoryName: "Glass Jars" }), title: "8 oz Clear Glass Mason Jars" };
+  const bottle = { ...makeProduct({ categorySlug: "glass-bottles", categoryName: "Glass Bottles" }), title: "16 oz Amber Boston Round" };
+  const all = [amberJar, clearJar, bottle];
+  const run = (q: string) => applyFilters(all, { ...parseFilters({}), q }, resolveSearchQuery(q)).map((p) => p.title);
+
+  it("singularises and drops filler words", () => {
+    expect(searchTokens("Amber jars for the sauces")).toEqual(["amber", "jar", "sauce"]);
+  });
+  it("filters by the words typed, not only by category", () => {
+    expect(run("amber")).toEqual([amberJar.title, bottle.title]);
+    expect(run("amber jars")).toEqual([amberJar.title]);
+    expect(run("boston round")).toEqual([bottle.title]);
+  });
+  it("shows nothing for words that match no listing and no category", () => {
+    expect(run("zebra")).toEqual([]);
   });
 });

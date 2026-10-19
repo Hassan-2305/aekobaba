@@ -8,11 +8,13 @@ import { POST } from "./route";
 
 const mocks = vi.hoisted(() => ({
   getServerSessionUser: vi.fn(),
+  getCurrentUserRole: vi.fn(),
   claimListing: vi.fn(),
 }));
 
 vi.mock("@/lib/auth/session", () => ({
   getServerSessionUser: mocks.getServerSessionUser,
+  getCurrentUserRole: mocks.getCurrentUserRole,
 }));
 
 vi.mock("@/lib/supplier/claim", () => ({
@@ -36,6 +38,7 @@ beforeEach(() => {
     email: "owner@jars.example",
     emailVerified: true,
   });
+  mocks.getCurrentUserRole.mockResolvedValue("BRAND");
 });
 
 describe("POST /api/supplier/claim", () => {

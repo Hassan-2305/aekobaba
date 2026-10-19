@@ -65,7 +65,10 @@ export default async function QuoteRequestDetailPage({
       <div className="mt-8 space-y-5">
         {request.suppliers.map((line) => {
           const items = request.items.filter((i) => i.product.supplierId === line.supplier.id);
-          const shared = quoteVisibleToCustomer(line.commercialStatus) ? line.quotes[0] : null;
+          // Only the quote the team shared — later revisions stay internal until re-shared.
+          const shared = quoteVisibleToCustomer(line.commercialStatus)
+            ? (line.sharedQuoteId ? line.quotes.find((q) => q.id === line.sharedQuoteId) : line.quotes[0]) ?? null
+            : null;
           return (
             <section key={line.id} className="rounded-xl border border-line-strong bg-paper p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">

@@ -2,6 +2,7 @@ import type { PrismaClient } from "@prisma/client";
 
 import { enqueueEmail } from "@/lib/notify/outbox";
 import { newRequestEmail } from "@/lib/notify/templates";
+import { moqPackSize } from "@/lib/catalog/format";
 import { assessMoq } from "@/lib/quotes/moq";
 
 import { isUniqueViolation, makeReference } from "./reference";
@@ -49,7 +50,17 @@ export async function submitRfq(db: PrismaClient, input: RfqSubmitInput): Promis
 
   const products = await db.product.findMany({
     where: { id: { in: items.map((i) => i.productId) } },
-    select: { id: true, title: true, moq: true, moqUnit: true, supplierId: true, supplier: { select: { name: true } } },
+    select: {
+      id: true,
+      title: true,
+      moq: true,
+      moqUnit: true,
+      basePrice: true,
+      priceBasis: true,
+      priceUnit: true,
+      supplierId: true,
+      supplier: { select: { name: true } },
+    },
   });
   const known = new Map(products.map((p) => [p.id, p]));
   const unknown = items.filter((i) => !known.has(i.productId)).map((i) => i.productId);
@@ -57,7 +68,13 @@ export async function submitRfq(db: PrismaClient, input: RfqSubmitInput): Promis
 
   const warnings = items.flatMap((item) => {
     const p = known.get(item.productId)!;
-    const message = assessMoq(item.quantity, p.moq, p.moqUnit).message;
+    const pack = moqPackSize({
+      moqUnit: p.moqUnit,
+      basePrice: p.basePrice === null ? null : Number(p.basePrice),
+      priceBasis: p.priceBasis,
+      priceUnit: p.priceUnit === null ? null : Number(p.priceUnit),
+    });
+    const message = assessMoq(item.quantity, p.moq, p.moqUnit, pack).message;
     return message ? [{ productId: item.productId, message }] : [];
   });
   const supplierIds = [...new Set(products.map((p) => p.supplierId))];

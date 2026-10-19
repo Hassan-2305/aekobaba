@@ -86,7 +86,12 @@ export function compareRows(products: ProductVM[], now: Date = new Date()): Comp
       label: "Unit price",
       cells: products.map((p) => {
         const u = unit(p);
-        if (!u || p.basePrice === null) return miss("Ask the supplier", "No published price");
+        if (p.basePrice === null) return miss("Ask the supplier", "No published price");
+        if (!u)
+          return cell(
+            `${formatMoney(p.basePrice, cur(p))} ${shortBasis(p.priceBasis) ?? ""}`.trim(),
+            "Pack size not published — per-item price unknown",
+          );
         return cell(
           `${formatUnitMoney(u.amount, u.currency)} / ${u.unit}`,
           `${u.currency}${p.priceType === "FROM" ? " · from-price" : ""}`,

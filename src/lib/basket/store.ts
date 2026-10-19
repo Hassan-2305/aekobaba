@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import { moqInUnits } from "@/lib/catalog/format";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
 // The Quote Basket store (build spec C8). Anonymous by design: the basket
@@ -58,8 +59,14 @@ function browserStorageOrNoop(): Storage {
   } satisfies Storage;
 }
 
+/** Whole units between 1 and 10M — what the quote API accepts. */
+export function clampQuantity(quantity: number): number {
+  if (!Number.isFinite(quantity)) return 1;
+  return Math.min(10_000_000, Math.max(1, Math.round(quantity)));
+}
+
 function defaultQuantity(product: ProductVM): number {
-  return product.moq ?? 1;
+  return moqInUnits(product) ?? 1;
 }
 
 export const useQuoteBasketStore = create<QuoteBasketState>()(
@@ -75,7 +82,7 @@ export const useQuoteBasketStore = create<QuoteBasketState>()(
             return {
               items: state.items.map((item) =>
                 item.product.id === product.id
-                  ? { ...item, product, quantity: quantity ?? item.quantity }
+                  ? { ...item, product, quantity: quantity === undefined ? item.quantity : clampQuantity(quantity) }
                   : item,
               ),
             };
@@ -83,7 +90,7 @@ export const useQuoteBasketStore = create<QuoteBasketState>()(
           return {
             items: [
               ...state.items,
-              { product, quantity: quantity ?? defaultQuantity(product), addedAt: new Date().toISOString() },
+              { product, quantity: clampQuantity(quantity ?? defaultQuantity(product)), addedAt: new Date().toISOString() },
             ],
           };
         }),
@@ -93,7 +100,7 @@ export const useQuoteBasketStore = create<QuoteBasketState>()(
           // submission payload, where it would fail validation after the
           // visitor filled the form.
           items: state.items.map((item) =>
-            item.product.id === productId ? { ...item, quantity: Math.max(1, quantity) } : item,
+            item.product.id === productId ? { ...item, quantity: clampQuantity(quantity) } : item,
           ),
         })),
       removeItem: (productId) =>

@@ -40,6 +40,12 @@ async function callbackUrlFor(next: string): Promise<string> {
 }
 
 async function requestOrigin(): Promise<string> {
+  // Prefer the configured public address: request headers can be spoofed,
+  // and email links must always point at the real site.
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured && !configured.includes("localhost")) return configured.replace(/\/$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "").replace(/\/$/, "")}`;
   const headerList = await headers();
   const host =
     headerList.get("x-forwarded-host") ??

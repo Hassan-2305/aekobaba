@@ -17,6 +17,8 @@ vi.mock("@/lib/auth/session", () => ({
   getCurrentUserRole: mocks.getCurrentUserRole,
 }));
 
+vi.mock("@/lib/db", () => ({ db: { user: { findUnique: vi.fn().mockResolvedValue({ id: "user_1" }) } } }));
+
 vi.mock("@/lib/supplier/inbox", () => ({
   respondToLeadItem: mocks.respondToLeadItem,
 }));
@@ -82,7 +84,7 @@ describe("PATCH /api/supplier/leads/[itemId]", () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ item: { id: "item_1", status: "QUOTED" } });
     expect(mocks.respondToLeadItem).toHaveBeenCalledWith(expect.anything(), {
-      ownerUserId: "sb_1",
+      ownerUserId: "user_1", // the User row id, not the Supabase subject
       itemId: "item_1",
       action: "quoted",
     });

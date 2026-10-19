@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/brand/site-footer";
 import { CompareTray } from "@/components/compare/compare-tray";
 import { BasketSync } from "@/components/quotes/basket-sync";
 import { ChromeGate } from "@/components/brand/chrome-gate";
+import { getServerSessionUser } from "@/lib/auth/session";
 
 // Absolute base for Open Graph / Twitter image URLs. Order: the configured
 // canonical URL, then Vercel's production domain, then this deployment's own
@@ -82,11 +83,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Which account the browser basket syncs with (null for visitors).
+  const basketUserKey = (await getServerSessionUser().catch(() => null))?.supabaseUserId ?? null;
   return (
     // v12 is a single light theme.
     <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning>
@@ -103,7 +106,7 @@ export default function RootLayout({
         <ChromeGate>
           <CompareTray />
         </ChromeGate>
-        <BasketSync />
+        <BasketSync userKey={basketUserKey} />
       </body>
     </html>
   );

@@ -37,7 +37,7 @@ export function CardActions({ product, unitLabel }: { product: ProductVM; unitLa
         }`}
       >
         {inBasket
-          ? `✓ In Quote Basket · ${line!.quantity.toLocaleString("en-US")} ${unitLabel}${line!.quantity === 1 ? "" : "s"}`
+          ? `✓ In Quote Basket · ${line!.quantity.toLocaleString("en-US")} ${line!.quantity === 1 ? unitLabel : pluralUnit(unitLabel)}`
           : "Add to Quote Basket"}
       </button>
       <div className="flex items-center gap-2">
@@ -68,4 +68,11 @@ export function CardActions({ product, unitLabel }: { product: ProductVM; unitLa
       </div>
     </div>
   );
+}
+
+/** "box" → "boxes", "pouch" → "pouches", "ft" stays "ft". */
+function pluralUnit(unit: string): string {
+  if (unit === "ft" || unit.endsWith("s")) return unit;
+  if (/(x|ch|sh)$/.test(unit)) return `${unit}es`;
+  return `${unit}s`;
 }

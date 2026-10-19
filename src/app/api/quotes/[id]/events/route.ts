@@ -2,6 +2,7 @@ import { Client } from "pg";
 
 import { jsonError } from "@/lib/auth/api";
 import { notificationToEvent } from "@/lib/quotes/notifications";
+import { devAuthEnabled } from "@/lib/auth/dev-auth";
 
 // GET /api/quotes/[id]/events — dev realtime bridge for the brand's request
 // page. Streams SSE frames from the `aekobaba_quote_items` Postgres NOTIFY
@@ -19,6 +20,9 @@ import { notificationToEvent } from "@/lib/quotes/notifications";
 const NOTIFY_CHANNEL = "aekobaba_quote_items";
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  // Dev-only bridge: it holds a raw Postgres connection per listener and
+  // checks no session, so it must never be reachable on a deployed site.
+  if (!devAuthEnabled()) return jsonError(404, "not_found");
   const { id: requestId } = await params;
 
   const connectionString = process.env.DATABASE_URL;

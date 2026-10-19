@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
 import { InquiryDialog, type InquiryDialogHandle } from "./inquiry-dialog";
-import { formatMoney, formatUnitMoney } from "@/lib/catalog/format";
+import { formatMoney, formatMoqShort, formatUnitMoney, moqInUnits } from "@/lib/catalog/format";
 import { defaultQuantity, priceAtQuantity, type VariantVM } from "@/lib/catalog/related";
 import { useQuoteBasketStore } from "@/lib/basket/store";
 import type { ProductVM } from "@/lib/catalog/view-models";
+import { QuantityInput } from "./quantity-input";
 
 // Configure before asking: pick a variant, a quantity and options, see what
 // the published price comes to, then send it all as one quote request (or
@@ -51,7 +52,8 @@ export function ProductConfigurator({
 
   const groups = useMemo(() => optionGroups(product), [product]);
   const estimate = priceAtQuantity(product, quantity);
-  const belowMoq = product.moq !== null && quantity < product.moq;
+  const minimumItems = moqInUnits(product);
+  const belowMoq = minimumItems !== null && quantity < minimumItems;
   const variant = variants.find((v) => v.active);
 
   const summary = () => {
@@ -106,18 +108,17 @@ export function ProductConfigurator({
       <div className={`grid gap-4 sm:grid-cols-[minmax(0,180px)_1fr] ${variants.length > 1 ? "mt-6" : ""}`}>
         <label className="block">
           <span className="tag text-ink-faint">Quantity</span>
-          <input
-            type="number"
-            min={1}
-            inputMode="numeric"
+          <QuantityInput
             value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
-            data-testid="config-quantity"
+            onCommit={setQuantity}
+            testId="config-quantity"
             className="mt-1.5 block h-11 w-full border border-line bg-paper px-3 text-sm text-ink tabular-nums focus:border-ink focus:outline-none"
           />
           {belowMoq ? (
             <span className="mt-1 block text-xs text-warning-ink">
-              Below the {product.moq!.toLocaleString("en-US")} minimum — you can still ask.
+              Below the {formatMoqShort(product.moq, product.moqUnit)}
+              {minimumItems !== product.moq ? ` (${minimumItems!.toLocaleString("en-US")} items)` : ""} minimum — you can
+              still ask.
             </span>
           ) : null}
         </label>

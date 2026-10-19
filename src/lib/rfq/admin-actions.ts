@@ -44,12 +44,12 @@ export const adminQuoteActionSchema = z.discriminatedUnion("action", [
     channel: z.enum(["EMAIL", "PHONE", "OTHER"]).default("EMAIL"),
     subject: optText(300),
     summary: z.string().trim().min(1).max(4000),
-    occurredAt: z.iso.datetime({ local: true }).optional(),
+    occurredAt: z.iso.datetime({ offset: true }).optional(),
   }),
   z.object({
     action: z.literal("recordQuote"),
     lineId: z.string().min(1),
-    currency: z.string().trim().length(3).default("USD"),
+    currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "ISO currency code").default("USD"),
     leadTimeDays: z.number().int().positive().max(1000).nullable().optional(),
     validUntil: optDate,
     terms: optText(500),
@@ -85,6 +85,9 @@ export const adminQuoteActionSchema = z.discriminatedUnion("action", [
 export type AdminQuoteAction = z.infer<typeof adminQuoteActionSchema>;
 
 export type ActionResult = { ok: true } | { ok: false; status: 404 | 400; error: string };
+
+/** Stages the team closed by hand — automatic transitions never reopen them. */
+const CLOSED_STAGES = new Set(["COMPLETED", "CANCELLED"]);
 
 const toDate = (v: string | null | undefined) => (v === undefined ? undefined : v === null ? null : new Date(`${v}T00:00:00Z`));
 
@@ -144,11 +147,31 @@ export async function applyAdminQuoteAction(
       if (action.nextActionDue !== undefined) changes.push(`due ${action.nextActionDue ?? "—"}`);
       if (action.assignedToId !== undefined) changes.push(action.assignedToId ? "assignee changed" : "unassigned");
       if (action.internalNotes !== undefined) changes.push("notes updated");
-      const stageBump = request.stage === "NEW" && (action.outreachStatus ?? "NOT_CONTACTED") !== "NOT_CONTACTED";
+      const outreachChanged = action.outreachStatus !== undefined && action.outreachStatus !== line.outreachStatus;
+      const sharingNow =
+        action.commercialStatus === "SHARED_WITH_CUSTOMER" && line.commercialStatus !== "SHARED_WITH_CUSTOMER";
+      // Sharing pins the newest recorded quote: later revisions stay internal
+      // until the team shares again.
+      let sharedQuoteId: string | undefined;
+      if (sharingNow) {
+        const latest = await db.supplierQuote.findFirst({
+          where: { quoteRequestSupplierId: line.id },
+          orderBy: { receivedAt: "desc" },
+          select: { id: true },
+        });
+        if (!latest) return { ok: false, status: 400, error: "no_quote_to_share" };
+        sharedQuoteId = latest.id;
+        changes.push("latest quote shared with the customer");
+      }
+      const open = !CLOSED_STAGES.has(request.stage);
+      const stageBump = open && request.stage === "NEW" && outreachChanged && action.outreachStatus !== "NOT_CONTACTED";
       await db.$transaction([
-        db.quoteRequestSupplier.update({ where: { id: line.id }, data }),
-        ...(stageBump ? [db.quoteRequest.update({ where: { id: requestId }, data: { stage: "IN_PROGRESS" } })] : []),
-        ...(action.commercialStatus === "SHARED_WITH_CUSTOMER"
+        db.quoteRequestSupplier.update({
+          where: { id: line.id },
+          data: { ...data, ...(sharedQuoteId ? { sharedQuoteId } : {}) },
+        }),
+        ...(stageBump && !sharingNow ? [db.quoteRequest.update({ where: { id: requestId }, data: { stage: "IN_PROGRESS" } })] : []),
+        ...(sharingNow && open
           ? [db.quoteRequest.update({ where: { id: requestId }, data: { stage: "QUOTES_SHARED", status: "RESPONDED" } })]
           : []),
         db.quoteActivity.create({
@@ -276,7 +299,7 @@ export async function applyAdminQuoteAction(
       if (action.sampleStatus === "DISPATCHED" && !item.sampleDispatchedAt) data.sampleDispatchedAt = now;
       if (action.sampleStatus === "DELIVERED") {
         if (!item.sampleDeliveredAt) data.sampleDeliveredAt = now;
-        if (!item.customerFeedback && action.customerFeedback === undefined) data.customerFeedback = "AWAITING_FEEDBACK";
+        if (!item.customerFeedback && !action.customerFeedback) data.customerFeedback = "AWAITING_FEEDBACK";
       }
       const changes: string[] = [];
       if (action.sampleStatus && action.sampleStatus !== item.sampleStatus)

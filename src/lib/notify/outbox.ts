@@ -27,6 +27,8 @@ export function emailConfigured(): boolean {
 }
 
 export interface OutboxMessage {
+  /** Outbox row id (set when delivering a stored row). */
+  id?: string;
   kind: string;
   toEmail: string;
   subject: string;
@@ -62,7 +64,11 @@ export const resendSender: Sender = async (message) => {
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        ...(message.id ? { "Idempotency-Key": `aekobaba-outbox-${message.id}` } : {}),
+      },
       body: JSON.stringify({
         from,
         to: [message.toEmail],
@@ -82,9 +88,15 @@ export const resendSender: Sender = async (message) => {
 
 type OutboxDb = Pick<PrismaClient, "notificationOutbox">;
 
+/** A SENDING claim older than this is assumed abandoned (crashed request) and retried. */
+const STALE_CLAIM_MS = 10 * 60 * 1000;
+
 /**
  * Try to deliver outbox rows: the given ids, or every PENDING/FAILED row under
- * the attempt cap. Never throws — each row records its own outcome.
+ * the attempt cap. Each row is first claimed (PENDING/FAILED → SENDING) so the
+ * immediate send, the admin retry and the cron job can never deliver the same
+ * email twice; Resend also gets the row id as an idempotency key. Never
+ * throws — each row records its own outcome.
  */
 export async function deliverOutbox(
   db: OutboxDb,
@@ -93,33 +105,52 @@ export async function deliverOutbox(
   const sender = options.sender ?? resendSender;
   if (!options.sender && !emailConfigured()) return { sent: 0, failed: 0, skipped: options.ids?.length ?? 0 };
 
-  const rows = await db.notificationOutbox.findMany({
-    where: {
-      ...(options.ids ? { id: { in: options.ids } } : {}),
-      status: { in: ["PENDING", "FAILED"] },
-      attempts: { lt: MAX_ATTEMPTS },
-    },
-    orderBy: { createdAt: "asc" },
-    take: options.limit ?? 25,
-  });
+  const staleBefore = new Date(Date.now() - STALE_CLAIM_MS);
+  const deliverable = {
+    attempts: { lt: MAX_ATTEMPTS },
+    OR: [{ status: { in: ["PENDING", "FAILED"] as ("PENDING" | "FAILED")[] } }, { status: "SENDING" as const, updatedAt: { lt: staleBefore } }],
+  };
 
   let sent = 0;
   let failed = 0;
-  for (const row of rows) {
-    const result = await sender(row);
-    if (result.ok) {
-      sent++;
-      await db.notificationOutbox.update({
-        where: { id: row.id },
-        data: { status: "SENT", sentAt: new Date(), attempts: { increment: 1 }, lastError: null },
+  try {
+    const rows = await db.notificationOutbox.findMany({
+      where: { ...(options.ids ? { id: { in: options.ids } } : {}), ...deliverable },
+      orderBy: { createdAt: "asc" },
+      take: options.limit ?? 25,
+    });
+
+    for (const row of rows) {
+      // Claim the row; if another worker got there first, skip it.
+      const claimed = await db.notificationOutbox.updateMany({
+        where: { id: row.id, ...deliverable },
+        data: { status: "SENDING" },
       });
-    } else {
-      failed++;
-      await db.notificationOutbox.update({
-        where: { id: row.id },
-        data: { status: "FAILED", attempts: { increment: 1 }, lastError: result.error },
-      });
+      if (claimed.count !== 1) continue;
+
+      const result = await sender(row);
+      try {
+        if (result.ok) {
+          sent++;
+          await db.notificationOutbox.update({
+            where: { id: row.id },
+            data: { status: "SENT", sentAt: new Date(), attempts: { increment: 1 }, lastError: null },
+          });
+        } else {
+          failed++;
+          await db.notificationOutbox.update({
+            where: { id: row.id },
+            data: { status: "FAILED", attempts: { increment: 1 }, lastError: result.error },
+          });
+        }
+      } catch (error) {
+        // The send happened but the bookkeeping failed; the row stays SENDING
+        // and the idempotency key stops a duplicate when it's retried later.
+        console.error("[aekobaba] outbox status update failed", error);
+      }
     }
+  } catch (error) {
+    console.error("[aekobaba] outbox delivery failed", error);
   }
   return { sent, failed, skipped: 0 };
 }

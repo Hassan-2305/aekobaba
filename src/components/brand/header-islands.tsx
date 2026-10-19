@@ -10,6 +10,7 @@ import { formatUnitMoney, unitPrice } from "@/lib/catalog/format";
 import { useCompareHydrated, useCompareStore } from "@/lib/compare/store";
 
 import { SignOutButton } from "./account-menu";
+import { QuantityInput } from "@/components/catalog/quantity-input";
 
 // Interactive pieces of the v12 header: the "Browse packaging" mega menu,
 // the Compare count, the Quote Basket popover and the mobile drawer. The
@@ -252,11 +253,10 @@ export function BasketButton({ compact = false }: { compact?: boolean }) {
                             {u ? `${formatUnitMoney(u.amount, u.currency)} / ${u.unit} published` : "Price on request"}
                           </p>
                         </div>
-                        <input
+                        <QuantityInput
                           value={quantity}
-                          onChange={(e) => setQuantity(product.id, Number(e.target.value.replace(/[^0-9]/g, "")) || 1)}
-                          inputMode="numeric"
-                          aria-label={`Quantity for ${product.title}`}
+                          onCommit={(n) => setQuantity(product.id, n)}
+                          ariaLabel={`Quantity for ${product.title}`}
                           className="h-9 w-[76px] rounded-[6px] border-[1.5px] border-line-strong px-2 text-right text-sm font-medium tabular-nums"
                         />
                         <button type="button" onClick={() => removeItem(product.id)} aria-label="Remove from basket" className="h-8 w-8 rounded-[6px] text-base text-ink-muted hover:bg-well">

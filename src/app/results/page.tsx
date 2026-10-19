@@ -25,6 +25,8 @@ export default async function ResultsPage({ searchParams }: ResultsPageProps) {
   const filters = parseFilters(params);
   const resolved = filters.q ? resolveSearchQuery(filters.q) : null;
   const allProducts = await getAllProducts();
+  const rawPage = Array.isArray(params.page) ? params.page[0] : params.page;
+  const page = Math.max(1, Math.floor(Number(rawPage)) || 1);
 
-  return <ResultsView filters={filters} resolved={resolved} allProducts={allProducts} />;
+  return <ResultsView filters={filters} resolved={resolved} allProducts={allProducts} page={page} />;
 }

@@ -16,10 +16,17 @@ export interface MoqAssessment {
  * MOQ (null — "Ask the supplier") can never warn: there is no published
  * minimum to be below.
  */
-export function assessMoq(quantity: number, moq: number | null, moqUnit: string | null): MoqAssessment {
-  if (moq === null || quantity >= moq) return { belowMoq: false, message: null };
+export function assessMoq(
+  quantity: number,
+  moq: number | null,
+  moqUnit: string | null,
+  /** Items per MOQ unit when the minimum is counted in packs (see moqPackSize). */
+  itemsPerMoqUnit = 1,
+): MoqAssessment {
+  if (moq === null || quantity >= moq * itemsPerMoqUnit) return { belowMoq: false, message: null };
+  const inItems = itemsPerMoqUnit > 1 ? ` (${(moq * itemsPerMoqUnit).toLocaleString("en-US")} items)` : "";
   return {
     belowMoq: true,
-    message: `Below the supplier's published minimum of ${formatMoq(moq, moqUnit)}. You can still send — the supplier decides.`,
+    message: `Below the supplier's published minimum of ${formatMoq(moq, moqUnit)}${inItems}. You can still send — the supplier decides.`,
   };
 }

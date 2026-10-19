@@ -51,7 +51,12 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  await provisionUser({ supabaseUserId: user.id, email: user.email });
+  try {
+    await provisionUser({ supabaseUserId: user.id, email: user.email });
+  } catch (error) {
+    console.error("[aekobaba] provisioning failed in auth callback", error);
+    return NextResponse.redirect(new URL(getAuthCallbackErrorPath("exchange_failed"), origin));
+  }
 
   return NextResponse.redirect(new URL(next, origin));
 }
