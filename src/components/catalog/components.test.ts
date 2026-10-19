@@ -141,36 +141,7 @@ describe("ReviewScore", () => {
 });
 
 describe("ProductCard — image-led results card", () => {
-  it("leads with the representative packshot, alt text labelled 'representative'", () => {
-    const product = makeProduct();
-    const html = render(createElement(ProductCard, { product }));
 
-    expect(html).toContain("aspect-square");
-    const alt = html.match(/alt="([^"]*)"/);
-    expect(alt?.[1]).toContain("representative");
-  });
-
-  it("keeps every evidence element on the card (provenance regression guard)", () => {
-    const product = makeProduct();
-    const html = render(createElement(ProductCard, { product }));
-
-    expect(html).toContain(product.title);
-    expect(html).toContain('href="/suppliers/test-supplier"');
-    expect(html).toContain('data-testid="tier-badge"');
-    expect(html).toContain("$1.23");
-    expect(html).toContain("Min order:");
-    expect(html).toContain("500 units");
-    expect(html).toContain("Lead time:");
-    expect(html).toContain("14 days");
-    expect(html).toContain("Material:");
-    expect(html).toContain("4.5 (214)");
-    expect(html).toContain("via Trustpilot");
-    // The dated "Verified from supplier's page" line was removed on request;
-    // the rating still links out to the review platform.
-    expect(html).not.toContain('data-testid="provenance-line"');
-    expect(html).toContain('href="https://www.trustpilot.com/review/supplier.example"');
-    expect(html).not.toContain("Verified from");
-  });
 
   it("collapses the price to 'Ask the supplier' with no numerals on the card", () => {
     const html = render(createElement(ProductCard, { product: makeProduct({ basePrice: null }) }));
@@ -186,13 +157,6 @@ describe("ProductCard — image-led results card", () => {
     ).toBeGreaterThanOrEqual(2);
   });
 
-  it("renders a neutral placeholder instead of an img when a product has no image", () => {
-    const html = render(
-      createElement(ProductCard, { product: makeProduct({ primaryImage: null }) }),
-    );
-    expect(html).not.toContain("<img");
-    expect(html).toContain("No image available");
-  });
 });
 
 describe("QuantityBreakTable", () => {
@@ -231,15 +195,6 @@ describe("Berlin demo review fixes", () => {
     expect(old.replace(/<!-- -->/g, "")).toContain("15 days old");
   });
 
-  it("hides unpublished MOQ / lead time cells behind one muted line", () => {
-    const html = render(
-      createElement(ProductCard, { product: makeProduct({ moq: null, leadTimeDays: null }) }),
-    ).replace(/<!-- -->/g, "");
-    expect(html).not.toContain("Min order:");
-    expect(html).not.toContain("Lead time:");
-    expect(html).toContain("MOQ and lead time not published");
-    expect(html).not.toContain("Ask the supplier");
-  });
 
   it("labels the rating as a supplier rating", () => {
     const html = render(
@@ -264,17 +219,6 @@ describe("Berlin demo review fixes", () => {
 });
 
 describe("Partner program labels", () => {
-  it("labels illustrations only — supplier images carry no label", () => {
-    const representative = render(createElement(ProductCard, { product: makeProduct({}) }));
-    expect(representative).toContain("Illustrative image");
-    const photo = render(
-      createElement(ProductCard, {
-        product: makeProduct({ primaryImage: { url: "/partners/berlin-packaging/33512.webp", alt: "Bottle" } }),
-      }),
-    );
-    expect(photo).not.toContain("Illustrative image");
-    expect(photo).not.toContain("Supplier photo");
-  });
 
   it("links the supplier rating to the review platform", () => {
     const html = render(
@@ -290,30 +234,56 @@ describe("Partner program labels", () => {
     expect(html).toContain('target="_blank"');
   });
 
-  it("labels partner-supplied values instead of passing them off as captured", () => {
-    const product = {
-      ...makeProduct({ moq: 240, leadTimeDays: 5 }),
-      partnerFacts: {
-        supplierName: "Berlin Packaging",
-        suppliedAt: "2026-10-10T00:00:00Z",
-        moq: true,
-        leadTime: true,
-        casePack: 240,
-      },
-    };
-    const html = render(createElement(ProductCard, { product })).replace(/<!-- -->/g, "");
-    expect(html).toContain("MOQ, lead time, case of 240 supplied by Berlin Packaging, 10 Oct 2026");
-  });
 });
 
-describe("Partner ribbon", () => {
-  it("marks partner cards with the orange ribbon and nothing else", () => {
-    const base = makeProduct();
-    const partner = { ...base, supplier: { ...base.supplier, isPartner: true } };
-    const html = render(createElement(ProductCard, { product: partner }));
-    expect(html).toContain('data-testid="partner-ribbon"');
-    expect(html).toContain("Aekobaba Partner");
-    expect(html).toContain('data-partner="true"');
-    expect(render(createElement(ProductCard, { product: base }))).not.toContain("partner-ribbon");
+
+describe("ProductCard (v12)", () => {
+  const now = new Date("2026-10-19T00:00:00Z");
+
+  it("shows supplier + tier, published price with currency, MOQ, freshness and source", () => {
+    const product = makeProduct({ moq: 500 });
+    const html = render(createElement(ProductCard, { product, now })).replace(/<!-- -->/g, "");
+    expect(html).toContain(product.title);
+    expect(html).toContain('href="/suppliers/test-supplier"');
+    expect(html).toContain('data-testid="tier-badge"');
+    expect(html).toContain("Published price · USD");
+    expect(html).toContain("$1.23");
+    expect(html).toContain("Excludes shipping, tax and setup");
+    expect(html).toContain("Minimum order");
+    expect(html).toContain("500 units");
+    expect(html).toContain("Checked 18 Sep · 31 days ago");
+    expect(html).toContain("bg-stale");
+    expect(html).toContain(`href="${product.sourceUrl}"`);
+    expect(html).toContain("Verified supplier");
+    expect(html).toContain("representative image");
+  });
+
+  it("marks unpublished MOQ, and shows a placeholder without an image", () => {
+    const html = render(
+      createElement(ProductCard, { product: makeProduct({ moq: null, primaryImage: null, images: [] }), now }),
+    );
+    expect(html).toContain("Not published");
+    expect(html).toContain("Supplier photo pending");
+    expect(html).not.toContain("<img");
+  });
+
+  it("labels partner listings SPONSORED and partner-supplied MOQ as supplied", () => {
+    const base = makeProduct({ moq: 240 });
+    const partner = {
+      ...base,
+      supplier: { ...base.supplier, isPartner: true },
+      partnerFacts: { supplierName: "Berlin Packaging", suppliedAt: "2026-10-10T00:00:00Z", moq: true, leadTime: false, casePack: null },
+    };
+    const html = render(createElement(ProductCard, { product: partner, now })).replace(/<!-- -->/g, "");
+    expect(html).toContain('data-testid="sponsored-tag"');
+    expect(html).toContain("MOQ supplied by Berlin Packaging, 10 Oct 2026");
+    expect(render(createElement(ProductCard, { product: base, now }))).not.toContain("sponsored-tag");
+  });
+
+  it("offers Add to Quote Basket, Compare and Details", () => {
+    const html = render(createElement(ProductCard, { product: makeProduct(), now }));
+    expect(html).toContain('data-testid="card-add-basket"');
+    expect(html).toContain('data-testid="card-compare"');
+    expect(html).toContain("Details →");
   });
 });

@@ -218,7 +218,7 @@ export function SupplierInbox({ supplier, groups, view, now, preview = null }: S
                         <div className="md:justify-self-end">
                           {item.status === "SENT" && preview ? (
                             <span className="flex gap-2" title="Preview — answer from your own inbox">
-                              <span className="inline-flex h-9 items-center bg-orange px-4 text-xs font-medium text-white opacity-80">
+                              <span className="inline-flex h-9 items-center bg-orange px-4 text-xs font-medium text-on-orange opacity-80">
                                 Mark quoted
                               </span>
                               <span className="inline-flex h-9 items-center border border-line px-4 text-xs font-medium text-ink-muted">

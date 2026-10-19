@@ -18,6 +18,7 @@ import type { ProductVM } from "./view-models";
 import { effectiveUnitPrice } from "./format";
 import type { ResolvedQuery } from "./aliases";
 import { isFoodGrade } from "./tags";
+import { CATEGORY_GROUPS } from "./menu";
 import {
   ALWAYS_SPEC_KEYS,
   BUDGET_BUCKETS,
@@ -64,6 +65,8 @@ export interface ResultsFilters {
   material: string | null;
   /** Explicit category slug from the menu/tree. */
   category: string | null;
+  /** Category group id (header category row), e.g. "containers". */
+  group: string | null;
   /** Supplier region code ("US", "UK", "EU", "IN", "CN") — see supplierRegion. */
   location: string | null;
   /** Only products whose supplier says food grade / food contact. */
@@ -115,6 +118,9 @@ export function parseFilters(searchParams: ResultsSearchParams): ResultsFilters 
     stockOrCustom: parseStockOrCustom(firstValue(searchParams.stock)),
     material: firstValue(searchParams.material) || null,
     category: firstValue(searchParams.category) || null,
+    group: CATEGORY_GROUPS.some((g) => g.id === firstValue(searchParams.group))
+      ? (firstValue(searchParams.group) as string)
+      : null,
     location: firstValue(searchParams.location) || null,
     foodGrade: firstValue(searchParams.food) === "1",
     maxLeadDays: parseNonNegativeInt(firstValue(searchParams.maxLead)),
@@ -143,6 +149,7 @@ export function filtersToQueryString(filters: ResultsFilters): string {
   if (filters.stockOrCustom) params.set("stock", filters.stockOrCustom);
   if (filters.material) params.set("material", filters.material);
   if (filters.category) params.set("category", filters.category);
+  if (filters.group) params.set("group", filters.group);
   if (filters.location) params.set("location", filters.location);
   if (filters.foodGrade) params.set("food", "1");
   if (filters.maxLeadDays !== null) params.set("maxLead", String(filters.maxLeadDays));
@@ -173,6 +180,10 @@ export function effectiveCategorySlugs(filters: ResultsFilters, resolved: Resolv
   if (filters.category) {
     if (resolved && !resolved.categorySlugs.includes(filters.category)) return [];
     return [filters.category];
+  }
+  if (filters.group) {
+    const slugs = CATEGORY_GROUPS.find((g) => g.id === filters.group)?.slugs ?? [];
+    return resolved ? slugs.filter((s) => resolved.categorySlugs.includes(s)) : slugs;
   }
   return resolved ? resolved.categorySlugs : null;
 }

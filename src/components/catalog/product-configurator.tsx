@@ -182,7 +182,7 @@ export function ProductConfigurator({
           type="button"
           data-testid="get-quote"
           onClick={() => open("QUOTE")}
-          className="h-12 bg-orange px-5 text-sm font-medium text-white transition-colors hover:bg-orange-hi sm:col-span-1"
+          className="h-12 bg-orange px-5 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi sm:col-span-1"
         >
           Get a quote
         </button>

@@ -188,7 +188,7 @@ export function MyRequestsView() {
             </p>
             <Link
               href="/results"
-              className="mt-8 inline-flex h-11 items-center bg-orange px-6 text-sm font-medium text-white transition-colors hover:bg-orange-hi"
+              className="mt-8 inline-flex h-11 items-center bg-orange px-6 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
             >
               Browse packaging
             </Link>

@@ -73,7 +73,7 @@ export default async function PartnerDashboardPage({
           <div className="flex flex-wrap gap-3">
             <Link
               href={`/suppliers/${supplier.slug}/inbox-preview`}
-              className="inline-flex h-11 items-center bg-orange px-5 text-sm font-medium text-white transition-colors hover:bg-orange-hi"
+              className="inline-flex h-11 items-center bg-orange px-5 text-sm font-medium text-on-orange transition-colors hover:bg-orange-hi"
             >
               Open lead inbox
             </Link>

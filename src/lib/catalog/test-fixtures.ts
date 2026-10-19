@@ -95,6 +95,7 @@ export function baseFilters() {
     stockOrCustom: null,
     material: null,
     category: null,
+    group: null,
     location: null,
     maxLeadDays: null,
     cert: null,
