@@ -205,9 +205,13 @@ describe("shipped dataset (C3)", () => {
     expect(seed.suppliers.length).toBeGreaterThanOrEqual(15);
   });
 
-  it("lists only US-based suppliers, except partners", () => {
+  // Non-US suppliers that authorized their listing in writing (PackMojo,
+  // 2026-10-25: listing built from its own product info and photos).
+  const AUTHORIZED_NON_US = new Set(["packmojo"]);
+
+  it("lists only US-based suppliers, except partners and authorized listings", () => {
     for (const s of seed.suppliers) {
-      if (!s.isPartner) expect(s.location).toMatch(/^US\b/);
+      if (!s.isPartner && !AUTHORIZED_NON_US.has(s.slug)) expect(s.location).toMatch(/^US\b/);
     }
   });
 

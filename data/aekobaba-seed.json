@@ -18813,6 +18813,792 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "packmojo",
+      "name": "PackMojo",
+      "website": "https://packmojo.com",
+      "location": "China (vetted production partners; ships factory-direct worldwide)",
+      "legalIdentity": "PackMojo Limited",
+      "status": "LISTED",
+      "isPartner": false,
+      "sourceUrl": "https://packmojo.com/contact/",
+      "sourceCapturedAt": "2026-10-25",
+      "review": null,
+      "certifications": [],
+      "products": [
+        {
+          "title": "Standard Mailer Box — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.28–$7.75 per unit (USD) for Mailer Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Corrugated boxes with cherry locks on the front and dust flaps on the side.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-mb-s-0.webp",
+              "alt": "PackMojo Standard Mailer Boxes",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-mb-s-1.webp",
+              "alt": "PackMojo Standard Mailer Box",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Corrugated cardboard (E- or B-flute), white or kraft",
+          "categorySlug": "mailers",
+          "subcategory": "Mailer box",
+          "priceType": "FROM",
+          "basePrice": 0.28,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.28–$7.75",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/mailer-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Mailer Box with Adhesive — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.28–$7.75 per unit (USD) for Mailer Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Corrugated mailer boxes with cherry locks and dust flaps. It includes an adhesive to seal the lid and a perforated tear strip for easy opening.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-mb-ad-0.webp",
+              "alt": "PackMojo Mailer Box with Adhesive",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-mb-ad-1.webp",
+              "alt": "PackMojo Mailer Box with Adhesive",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Corrugated cardboard (E- or B-flute), white or kraft",
+          "categorySlug": "mailers",
+          "subcategory": "Mailer box",
+          "priceType": "FROM",
+          "basePrice": 0.28,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.28–$7.75",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/mailer-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Mailer Box without Flaps — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.28–$7.75 per unit (USD) for Mailer Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Corrugated boxes with a lid that tucks inside the box to close and does not include dust flaps on the side.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-mb-nw-0.webp",
+              "alt": "PackMojo Mailer Box without Flaps",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-mb-nw-1.webp",
+              "alt": "PackMojo Mailer Box without Flaps",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Corrugated cardboard (E- or B-flute), white or kraft",
+          "categorySlug": "mailers",
+          "subcategory": "Mailer box",
+          "priceType": "FROM",
+          "basePrice": 0.28,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.28–$7.75",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/mailer-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Mailer Box without Dust Flaps — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.28–$7.75 per unit (USD) for Mailer Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Corrugated boxes with cherry locks on the front and and no dust flaps on the side.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-mb-ndf-0.webp",
+              "alt": "PackMojo Mailer Box without Dust Flaps",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-mb-ndf-1.webp",
+              "alt": "PackMojo Mailer Box without Dust Flaps",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Corrugated cardboard (E- or B-flute), white or kraft",
+          "categorySlug": "mailers",
+          "subcategory": "Mailer box",
+          "priceType": "FROM",
+          "basePrice": 0.28,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.28–$7.75",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/mailer-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Folding Carton (Straight Tuck End) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.24–$3.68 per unit (USD) for Folding Carton Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Paperboard packaging boxes with top and bottom tuck ends that close towards the same side of the box.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-fc-ste-0.webp",
+              "alt": "PackMojo Folding Carton Straight Tuck End",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-fc-ste-1.webp",
+              "alt": "PackMojo Folding Carton Straight Tuck End",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard, full-colour print",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Folding carton",
+          "priceType": "FROM",
+          "basePrice": 0.24,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.24–$3.68",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/folding-carton-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Folding Carton (Reverse Tuck End) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.24–$3.68 per unit (USD) for Folding Carton Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Paperboard packaging boxes with reversed top and bottom tuck ends.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-fc-rte-0.webp",
+              "alt": "PackMojo Folding Carton Reverse Tuck End",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-fc-rte-1.webp",
+              "alt": "PackMojo Folding Carton Reverse Tuck End",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard, full-colour print",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Folding carton",
+          "priceType": "FROM",
+          "basePrice": 0.24,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.24–$3.68",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/folding-carton-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Folding Carton (Snap Lock) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.24–$3.68 per unit (USD) for Folding Carton Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Paperboard packaging boxes with a tuck top and a 1-2-3 bottom that can be folded and locked into place.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-fc-slb-0.webp",
+              "alt": "PackMojo Folding Carton Snap Lock Bottom",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-fc-slb-1.webp",
+              "alt": "PackMojo Folding Carton Snap Lock Bottom",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard, full-colour print",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Folding carton",
+          "priceType": "FROM",
+          "basePrice": 0.24,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.24–$3.68",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/folding-carton-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Folding Carton (Auto Bottom) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.24–$3.68 per unit (USD) for Folding Carton Box (all styles), eligible from 100 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. Paperboard packaging boxes with a tuck top and a secured bottom that can be automatically popped and locked into place.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-fc-alb-0.webp",
+              "alt": "PackMojo Folding Carton Auto Bottom",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-fc-alb-1.webp",
+              "alt": "PackMojo Folding Carton Auto Bottom",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard, full-colour print",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Folding carton",
+          "priceType": "FROM",
+          "basePrice": 0.24,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.24–$3.68",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/folding-carton-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Rigid Box (Full Cover Lid) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.88–$2.96 per unit (USD) for Rigid Box (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. A premium two-piece rigid box made with durable chipboard. Features a separate lid that completely covers the base for a clean, seamless look.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-rb-fc-0.webp",
+              "alt": "PackMojo Full Cover Rigid Box",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-rb-fc-1.webp",
+              "alt": "PackMojo Full Cover Rigid Box",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Rigid greyboard wrapped in printed paper",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Rigid box",
+          "priceType": "FROM",
+          "basePrice": 0.88,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.88–$2.96",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/rigid-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Rigid Box (Partial Cover Lid) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.88–$2.96 per unit (USD) for Rigid Box (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. A two-piece lid and base rigid box made with durable chipboard. This premium box comes with a separate lid and base where the lid only partially covers the base.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-rb-pc-0.webp",
+              "alt": "PackMojo Partial Cover Lid Rigid Box",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-rb-pc-1.webp",
+              "alt": "PackMojo Partial Cover Lid Rigid Box",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Rigid greyboard wrapped in printed paper",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Rigid box",
+          "priceType": "FROM",
+          "basePrice": 0.88,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.88–$2.96",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/rigid-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Shoulder and Neck Rigid Box — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.88–$2.96 per unit (USD) for Rigid Box (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. A two-piece lid and base rigid box made with durable chipboard where a tray is glued inside the base and protrudes out (the neck) from the base (the shoulder). The lid can cover the neck fully or partially.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-rb-sn-0.webp",
+              "alt": "PackMojo Shoulder and Neck Rigid Box",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-rb-sn-1.webp",
+              "alt": "PackMojo Shoulder and Neck Rigid Box",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Rigid greyboard wrapped in printed paper",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Rigid box",
+          "priceType": "FROM",
+          "basePrice": 0.88,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.88–$2.96",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/rigid-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Magnetic Lid Rigid Box — Custom Printed",
+          "description": "PackMojo publishes a price range of $1.67–$4.63 per unit (USD) for Magnetic Closure Boxes (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. These rigid boxes made with durable chipboard include a base with an attached lid that is secured using magnets.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-rb-ml-0.webp",
+              "alt": "PackMojo Magnetic Lid Rigid Box",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-rb-ml-1.webp",
+              "alt": "PackMojo Magnetic Lid Rigid Box",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Rigid greyboard wrapped in printed paper, magnetic closure",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Magnetic closure rigid box",
+          "priceType": "FROM",
+          "basePrice": 1.67,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $1.67–$4.63",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/magnetic-closure-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Collapsible Magnetic Lid Rigid Box — Custom Printed",
+          "description": "PackMojo publishes a price range of $1.67–$4.63 per unit (USD) for Magnetic Closure Boxes (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. The collapsible version of our magnetic lid rigid boxes. These rigid boxes are made with durable chipboard and include a base with an attached lid that is secured using magnets.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-rb-cml-0.webp",
+              "alt": "PackMojo Collapsible Magnetic Lid Rigid Box",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Rigid greyboard wrapped in printed paper, magnetic closure",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Magnetic closure rigid box",
+          "priceType": "FROM",
+          "basePrice": 1.67,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $1.67–$4.63",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/magnetic-closure-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Resealable Stand-Up Pouch — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.26–$1.99 per unit (USD) for Custom Pouches (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 10000 units per variation. Resealable stand-up pouches provide a practical and stylish packaging solution, featuring a sturdy bottom gusset that allows them to stand upright while offering an airtight seal to keep your products fresh and protected.",
+          "moq": 10000,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-cp-rsp-0.webp",
+              "alt": "PackMojo Custom Resealable Pouches",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-cp-rsp-1.webp",
+              "alt": "PackMojo Custom Resealable Pouches",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Laminated flexible film, resealable zipper",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceType": "FROM",
+          "basePrice": 0.26,
+          "priceBasis": "per pouch, from (USD); varies by size, material, print and quantity — published range $0.26–$1.99",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/custom-pouches/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Display Box (With Dust Flaps) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.12–$5.00 per unit (USD) for Display Box (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 100 units per variation. Paperboard boxes with a spacious front opening and foldable lid allows this box to easily form the assembled display for an unobstructed view to showcase your items.",
+          "moq": 100,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-db-df-0.webp",
+              "alt": "PackMojo Display Box With Dust Flaps",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-db-df-1.webp",
+              "alt": "PackMojo Display Box With Dust Flaps",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Corrugated cardboard (E- or B-flute), full-colour print",
+          "categorySlug": "corrugated",
+          "subcategory": "Display box",
+          "priceType": "FROM",
+          "basePrice": 0.12,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.12–$5.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/display-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Display Box (Without Dust Flaps) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.12–$5.00 per unit (USD) for Display Box (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. Paperboard packaging boxes with a perforated removable top section and foldable lid allow this box to quickly and easily form an open-style display box.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-db-nf-0.webp",
+              "alt": "PackMojo Display Box Without Dust Flaps",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-db-nf-1.webp",
+              "alt": "PackMojo Display Box Without Dust Flaps",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Corrugated cardboard (E- or B-flute), full-colour print",
+          "categorySlug": "corrugated",
+          "subcategory": "Display box",
+          "priceType": "FROM",
+          "basePrice": 0.12,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.12–$5.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/display-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Sleeves (With Adhesive) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.10–$2.00 per unit (USD) for Packaging Sleeves (all styles), eligible from 500 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 500 units per variation. These sleeves come with an adhesive so that you can seal them around your boxes or products. Available with score lines for easy folding or without score lines for maximum flexibility.",
+          "moq": 500,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-slv-ad-0.webp",
+              "alt": "PackMojo Custom Packaging Sleeves with Adhesive",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Printed paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Packaging sleeve",
+          "priceType": "FROM",
+          "basePrice": 0.1,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.10–$2.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/packaging-sleeves/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Sleeves (Pre-glued) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.10–$2.00 per unit (USD) for Packaging Sleeves (all styles), eligible from 500 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 500 units per variation. Pre-glued packaging sleeves are perfect for sliding over plain boxes or wrapping individual products.",
+          "moq": 500,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-slv-gl-0.webp",
+              "alt": "PackMojo Custom Pre-glued Sleeves",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-slv-gl-1.webp",
+              "alt": "PackMojo Custom Pre-glued Sleeves",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Printed paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Packaging sleeve",
+          "priceType": "FROM",
+          "basePrice": 0.1,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.10–$2.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/packaging-sleeves/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Sleeves (Flat) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.10–$2.00 per unit (USD) for Packaging Sleeves (all styles), eligible from 500 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 500 units per variation. Decide how you want to wrap and and seal your sleeves around your products or boxes. Available with score lines for easy folding or without score lines for maximum flexibility.",
+          "moq": 500,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-slv-fl-0.webp",
+              "alt": "PackMojo Custom Packaging Sleeves, Flat (no scores)",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Printed paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Packaging sleeve",
+          "priceType": "FROM",
+          "basePrice": 0.1,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.10–$2.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/packaging-sleeves/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Foldable Tray and Sleeve Box (Thin Walls) — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.25–$4.00 per unit (USD) for Tray and Sleeve Boxes (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. Foldable two piece paperboard tray and sleeve boxes made with thin single-layer walls.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-ts-std-0.webp",
+              "alt": "PackMojo Foldable Tray and Sleeve Box with Thin Walls",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-ts-std-1.webp",
+              "alt": "PackMojo Foldable Tray and Sleeve Box with Thin Walls",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Printed paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Tray and sleeve box",
+          "priceType": "FROM",
+          "basePrice": 0.25,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.25–$4.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/tray-and-sleeve-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Foldable Lid & Base Box — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.25–$4.00 per unit (USD) for Foldable Lid and Base Boxes (all styles), eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 300 units per variation. Foldable two piece paperboard product boxes with separate lid and base structures.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-fld-lb-0.webp",
+              "alt": "Foldable Lid and Base Box Mockup PackMojo",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Printed paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Lid and base box",
+          "priceType": "FROM",
+          "basePrice": 0.25,
+          "priceBasis": "per box, from (USD); varies by size, material, print and quantity — published range $0.25–$4.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/foldable-lid-and-base-boxes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Cardboard Insert — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.50–$5.00 per unit (USD) for Box Insert (all styles), eligible from 500 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 500 units per variation. Ideal for products needing a sturdy solution, these inserts provide a snug fit and can be printed to enhance the unboxing experience.",
+          "moq": 500,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-ins-cbd-0.webp",
+              "alt": "PackMojo Custom Box Inserts",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-ins-cbd-1.webp",
+              "alt": "PackMojo Custom Box Inserts",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard or corrugated cardboard, cut to fit",
+          "categorySlug": "corrugated",
+          "subcategory": "Box insert",
+          "priceType": "FROM",
+          "basePrice": 0.5,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.50–$5.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/custom-box-inserts/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Box Liner Insert — Custom Printed",
+          "description": "PackMojo publishes a price range of $0.50–$5.00 per unit (USD) for Box Insert (all styles), eligible from 500 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. MOQ for this style: 500 units per variation. Ideal for items needing extra structural support, these inserts line the inner walls of your box to create a cushioned barrier.",
+          "moq": 500,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-ins-liner-0.webp",
+              "alt": "PackMojo Box Liner Insert",
+              "credit": "PackMojo product photo"
+            },
+            {
+              "url": "/suppliers/packmojo/pm-ins-liner-1.webp",
+              "alt": "PackMojo Box Liner Insert",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard or corrugated cardboard",
+          "categorySlug": "corrugated",
+          "subcategory": "Box liner insert",
+          "priceType": "FROM",
+          "basePrice": 0.5,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.50–$5.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/box-liner-inserts/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Box Dividers",
+          "description": "PackMojo publishes a price range of $0.15–$4.00 per unit (USD) for Custom Box Dividers, eligible from 300 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. Get custom box dividers and partitions for boxes to keep your products organized inside your packaging boxes. Fully customizable with MOQ from 300 units.",
+          "moq": 300,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-custom-box-dividers.webp",
+              "alt": "Custom Box Dividers",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard or corrugated cardboard",
+          "categorySlug": "corrugated",
+          "subcategory": "Box divider",
+          "priceType": "FROM",
+          "basePrice": 0.15,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.15–$4.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/custom-box-dividers/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Printed Cardboard Tubes",
+          "description": "PackMojo publishes a price range of $2.00–$7.00 per unit (USD) for Cardboard Tubes, eligible from 1000 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. Custom printed cardboard tubes for premium product packaging. Fully customizable in size, finish and design, made with sturdy eco friendly paperboard.",
+          "moq": 1000,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-cardboard-tubes.webp",
+              "alt": "Custom Printed Cardboard Tubes",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Paperboard tube, printed",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Cardboard tube",
+          "priceType": "FROM",
+          "basePrice": 2.0,
+          "priceBasis": "per tube, from (USD); varies by size, material, print and quantity — published range $2.00–$7.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/cardboard-tubes/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        },
+        {
+          "title": "Custom Printed Stickers & Labels",
+          "description": "PackMojo publishes a price range of $0.08–$2.00 per unit (USD) for Stickers, eligible from 500 units (captured 2026-10-25). Pricing varies by specification and quantity: size, material, print, finish and order quantity all change the unit price, so the \"from\" figure is the lowest published price, not a quote. The exact price comes from PackMojo's online configurator or a quote. Enhance your custom boxes with custom packaging stickers for your brand. Fully customizable with MOQ from 500 units.",
+          "moq": 500,
+          "images": [
+            {
+              "url": "/suppliers/packmojo/pm-custom-stickers.webp",
+              "alt": "Custom Printed Stickers & Labels",
+              "credit": "PackMojo product photo"
+            }
+          ],
+          "material": "Printed sticker stock",
+          "categorySlug": "labels",
+          "subcategory": "Custom sticker / label",
+          "priceType": "FROM",
+          "basePrice": 0.08,
+          "priceBasis": "per unit, from (USD); varies by size, material, print and quantity — published range $0.08–$2.00",
+          "priceUnit": null,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://packmojo.com/custom-packaging/custom-stickers/",
+          "sourceCapturedAt": "2026-10-25",
+          "quantityBreaks": []
+        }
+      ]
     }
   ]
 }
