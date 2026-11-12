@@ -2,9 +2,10 @@ import {
   formatMoney,
   formatPerUnit,
   formatPriceLine,
+  formatPriceRange,
   formatUnitMoney,
   priceCurrency,
-  priceTypeLabel,
+  priceLabel,
   shortBasis,
   unitPrice,
 } from "@/lib/catalog/format";
@@ -19,12 +20,17 @@ import type { ProductVM } from "@/lib/catalog/view-models";
 // with the currency code beside non-dollar prices — never silently converted.
 // The normalized per-unit figure divides a pack price by the pack size the
 // supplier states, so $9.15 for a case of 24 compares against $0.60 a bottle.
+//
+// Ranges: a supplier's published low–high range shows as such, with the note
+// that the price varies by specification and quantity. An ESTIMATE is
+// Aekobaba's own researched range for a product the supplier does not price —
+// it is always labelled as an estimate and never presented as the supplier's.
 
 export function PriceDisplay({
   product,
   size = "md",
 }: {
-  product: Pick<ProductVM, "basePrice" | "priceBasis" | "priceUnit" | "priceType">;
+  product: Pick<ProductVM, "basePrice" | "priceBasis" | "priceUnit" | "priceType" | "priceMax">;
   size?: "md" | "lg";
 }) {
   const priceClass = `font-semiwide font-medium tracking-tight text-ink tabular-nums ${
@@ -47,13 +53,41 @@ export function PriceDisplay({
   }
 
   const currency = priceCurrency(product.priceBasis);
+  const range = formatPriceRange(product);
+  if (range) {
+    const estimate = product.priceType === "ESTIMATE";
+    return (
+      <div data-testid={estimate ? "estimated-price" : "published-price"}>
+        <p className="tag text-ink-faint">
+          {priceLabel(product)}
+          {currency !== "USD" ? <span className="ml-2 text-ink-muted">Prices in {currency}</span> : null}
+        </p>
+        <p data-testid="price-line" className={`mt-2 ${priceClass}`}>
+          {range}
+          {estimate ? (
+            <span className="ml-2 inline-block rounded-full bg-well px-2 py-0.5 align-middle text-[11px] font-medium tracking-normal text-ink-muted">
+              Estimated
+            </span>
+          ) : null}
+        </p>
+        {shortBasis(product.priceBasis) ? (
+          <p className="mt-1 text-xs text-ink-muted">{shortBasis(product.priceBasis)}</p>
+        ) : null}
+        <p data-testid="range-note" className="mt-2 text-xs leading-relaxed text-ink-muted">
+          {estimate
+            ? "Aekobaba estimate, researched from competitors’ published bulk prices — not a price published by this supplier. Pricing varies by specification and quantity; request a quote for the actual price."
+            : "Range published by the supplier. Pricing varies by specification and quantity — size, material, print and order size decide where your price falls. Request a quote for your exact spec."}
+        </p>
+      </div>
+    );
+  }
   const unit = unitPrice(product);
   const perUnit =
     unit && unit.packSize !== 1 ? formatPerUnit(unit.amount, unit.currency, unit.unit) : null;
   return (
     <div data-testid="published-price">
       <p className="tag text-ink-faint">
-        {priceTypeLabel(product.priceType)}
+        {priceLabel(product)}
         {currency !== "USD" ? <span className="ml-2 text-ink-muted">Prices in {currency}</span> : null}
       </p>
       <p data-testid="price-line" className={`mt-2 ${priceClass}`}>
@@ -80,6 +114,20 @@ export function PriceTagInline({ product }: { product: ProductVM }) {
   const currency = priceCurrency(product.priceBasis);
   const unit = unitPrice(product);
   const basis = shortBasis(product.priceBasis);
+  const range = formatPriceRange(product);
+  if (range) {
+    return (
+      <span data-testid="price-tag" className="block min-w-0">
+        <span className="font-semiwide text-lg font-medium leading-none tracking-tight text-ink tabular-nums">
+          {range}
+          {unit ? <span className="ml-0.5 text-xs font-normal text-ink-muted">/ {unit.unit}</span> : null}
+        </span>
+        <span className="mt-1 block truncate text-xs text-ink-muted">
+          {product.priceType === "ESTIMATE" ? "Estimated" : "Published range"} · varies by spec &amp; quantity
+        </span>
+      </span>
+    );
+  }
   const from = product.priceType === "FROM" ? (
     <span className="mr-1 text-xs font-normal text-ink-muted">From</span>
   ) : null;

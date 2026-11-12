@@ -100,6 +100,8 @@ model Product {
   basePrice            Decimal?           @db.Decimal(12, 4)
   priceBasis           String?
   priceUnit            Decimal?           @db.Decimal(12, 4)
+  /// Upper end of a price range: a supplier's published high price (FROM), or the top of an ESTIMATE.
+  priceMax             Decimal?           @db.Decimal(12, 4)
   moq                  Int?
   moqUnit              String?
   leadTimeDays         Int?
@@ -539,6 +541,8 @@ enum PriceType {
   CALCULATOR
   FROM
   QUOTE_ONLY
+  /// Aekobaba's researched estimate range (basePrice–priceMax) for an unpriced product — never a supplier price.
+  ESTIMATE
 }
 
 enum StockOrCustom {

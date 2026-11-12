@@ -29,7 +29,7 @@ const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "lowercase-hyphen slug
 /** Where a fact came from. Required inline on suppliers, products, reviews, and certifications. */
 const provenance = { sourceUrl, sourceCapturedAt: isoDate } as const;
 
-export const priceTypeSchema = z.enum(["EXACT", "CALCULATOR", "FROM", "QUOTE_ONLY"]);
+export const priceTypeSchema = z.enum(["EXACT", "CALCULATOR", "FROM", "QUOTE_ONLY", "ESTIMATE"]);
 export type PriceType = z.infer<typeof priceTypeSchema>;
 
 export const stockOrCustomSchema = z.enum(["STOCK", "CUSTOM"]);
@@ -89,6 +89,11 @@ export const productSchema = z
     priceBasis: z.string().min(1).nullable(),
     /** Per-unit figure the source page itself states, shown next to the basis. */
     priceUnit: z.number().positive().nullable(),
+    /**
+     * Top of a price range, in the same basis as basePrice: the supplier's
+     * published high price on a FROM listing, or the top of an ESTIMATE.
+     */
+    priceMax: z.number().positive().nullable().optional(),
     /** null ⇒ the supplier publishes no MOQ — "Ask the supplier". */
     moq: z.number().int().positive().nullable(),
     moqUnit: z.string().min(1).nullable(),
@@ -130,6 +135,27 @@ export const productSchema = z
         code: "custom",
         path: ["basePrice"],
         message: "a QUOTE_ONLY product must not carry a basePrice",
+      });
+    }
+    if (product.priceType === "ESTIMATE" && (product.basePrice === null || product.priceMax == null)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["priceMax"],
+        message: "an ESTIMATE is a range — it needs both basePrice and priceMax",
+      });
+    }
+    if (product.priceType === "ESTIMATE" && !/estimate/i.test(product.priceBasis ?? "")) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["priceBasis"],
+        message: "an ESTIMATE's priceBasis must say it is an estimate",
+      });
+    }
+    if (product.priceMax != null && (product.basePrice === null || product.priceMax < product.basePrice)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["priceMax"],
+        message: "priceMax must sit at or above basePrice",
       });
     }
     for (let i = 1; i < product.quantityBreaks.length; i++) {

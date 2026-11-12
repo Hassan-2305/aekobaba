@@ -111,7 +111,7 @@ export function packFromBasis(priceBasis: string | null): { size: number; unit: 
 }
 
 const SINGLE_UNIT =
-  /^per (?:custom |sample )?(bottle|jar|piece|box|pouch|bucket|roll|unit|tube|bag|cap|pump|can|tin)\b/i;
+  /^per (?:custom |sample )?(bottle|jar|piece|box|pouch|bucket|roll|unit|tube|bag|cap|pump|can|tin|sheet|tag)\b/i;
 
 /**
  * The comparable figure: what one unit costs, in the published currency.
@@ -261,6 +261,37 @@ export function formatBreakRange(minQty: number, maxQty: number | null): string 
   return `${min}–${maxQty.toLocaleString("en-US")}`;
 }
 
+// ─── Price ranges ────────────────────────────────────────────────────────────
+
+/**
+ * A price shown as a low–high range: a supplier's published range (FROM with
+ * a high price) or an Aekobaba ESTIMATE. Ranges are never ranked against
+ * fixed prices.
+ */
+export function isPriceRange(p: Pick<ProductVM, "basePrice" | "priceMax">): boolean {
+  // priceMax may be undefined on a basket persisted before ranges existed.
+  return p.basePrice !== null && p.priceMax != null && p.priceMax > p.basePrice;
+}
+
+/** "$0.28–$7.75" in the published currency; null when the product is not a range. */
+export function formatPriceRange(p: Pick<ProductVM, "basePrice" | "priceMax" | "priceBasis">): string | null {
+  if (!isPriceRange(p)) return null;
+  const currency = priceCurrency(p.priceBasis);
+  return `${formatUnitMoney(p.basePrice as number, currency)}–${formatUnitMoney(p.priceMax as number, currency)}`;
+}
+
+/** The eyebrow over a price: estimates and published ranges say so plainly. */
+export function priceLabel(p: Pick<ProductVM, "priceType" | "basePrice" | "priceMax">): string {
+  if (p.priceType === "ESTIMATE") return "Estimated price";
+  if (p.priceType === "FROM" && isPriceRange(p)) return "Published price range";
+  return priceTypeLabel(p.priceType);
+}
+
+/** True when a price should not be ranked as a fixed figure (from-prices, ranges, estimates). */
+export function isIndicativePrice(p: Pick<ProductVM, "priceType" | "basePrice" | "priceMax">): boolean {
+  return p.priceType === "FROM" || p.priceType === "ESTIMATE" || isPriceRange(p);
+}
+
 /** "From $0.39" badge for FROM price type; null for the others. */
 export function priceTypeLabel(priceType: string): string {
   switch (priceType) {
@@ -272,6 +303,8 @@ export function priceTypeLabel(priceType: string): string {
       return "Calculator quote";
     case "QUOTE_ONLY":
       return "Quote only";
+    case "ESTIMATE":
+      return "Estimated price";
     default:
       return priceType;
   }

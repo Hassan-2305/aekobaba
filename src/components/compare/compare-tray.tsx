@@ -45,8 +45,8 @@ export function CompareTray() {
   const priceNote =
     units.size > 1
       ? "Units or currencies differ · prices ranked only within the same unit and currency"
-      : items.some((p) => p.priceType === "FROM")
-        ? "From-prices aren’t ranked against fixed prices"
+      : items.some((p) => p.priceType === "FROM" || p.priceType === "ESTIMATE")
+        ? "From-prices, ranges and estimates aren’t ranked against fixed prices"
         : "Same unit and currency · lowest price highlighted";
   const slots = [...items, ...Array.from({ length: COMPARE_MAX - n }, () => null)];
   const thumb = (url: string | undefined) => (url ? (cutoutFor(url) ?? url) : null);

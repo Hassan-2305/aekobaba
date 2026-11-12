@@ -20,6 +20,8 @@ interface FixtureOverrides {
   cert?: string | null;
   samplePolicyVerified?: boolean;
   priceUnit?: number | null;
+  priceMax?: number | null;
+  priceBasis?: string | null;
   reviewScore?: number | null;
   reviewCount?: number;
   status?: ProductVM["supplier"]["status"];
@@ -49,8 +51,9 @@ export function makeProduct(overrides: FixtureOverrides = {}): ProductVM {
     subcategory: null,
     priceType: overrides.priceType ?? "EXACT",
     basePrice: overrides.basePrice === undefined ? 1.23 : overrides.basePrice,
-    priceBasis: "per jar",
+    priceBasis: overrides.priceBasis === undefined ? "per jar" : overrides.priceBasis,
     priceUnit: overrides.priceUnit === undefined ? null : overrides.priceUnit,
+    priceMax: overrides.priceMax === undefined ? null : overrides.priceMax,
     moq: overrides.moq === undefined ? 500 : overrides.moq,
     moqUnit: "units",
     leadTimeDays: overrides.leadTimeDays === undefined ? 14 : overrides.leadTimeDays,

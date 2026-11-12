@@ -86,6 +86,7 @@ async function upsertProduct(
     basePrice: product.basePrice,
     priceBasis: product.priceBasis,
     priceUnit: product.priceUnit,
+    priceMax: product.priceMax ?? null,
     moq: product.moq,
     moqUnit: product.moqUnit,
     leadTimeDays: product.leadTimeDays,

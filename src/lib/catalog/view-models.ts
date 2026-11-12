@@ -8,7 +8,7 @@ import { partnerFactsFor, type PartnerFactsVM } from "./partner-facts";
 import { extractSpecs, type ProductSpecs } from "./specs";
 
 export type SupplierStatusValue = "PENDING" | "LISTED" | "RECOMMENDED" | "QUOTE_ONLY" | "DISABLED";
-export type PriceTypeValue = "EXACT" | "CALCULATOR" | "FROM" | "QUOTE_ONLY";
+export type PriceTypeValue = "EXACT" | "CALCULATOR" | "FROM" | "QUOTE_ONLY" | "ESTIMATE";
 export type StockOrCustomValue = "STOCK" | "CUSTOM";
 
 export interface SupplierSummaryVM {
@@ -54,6 +54,8 @@ export interface ProductVM {
   basePrice: number | null;
   priceBasis: string | null;
   priceUnit: number | null;
+  /** Top of a price range (published high price, or top of an Aekobaba estimate); null when not a range. */
+  priceMax: number | null;
   moq: number | null;
   moqUnit: string | null;
   leadTimeDays: number | null;
@@ -115,6 +117,7 @@ export interface ProductWithRelations {
   basePrice: { toNumber(): number } | null;
   priceBasis: string | null;
   priceUnit: { toNumber(): number } | null;
+  priceMax?: { toNumber(): number } | null;
   moq: number | null;
   moqUnit: string | null;
   leadTimeDays: number | null;
@@ -193,6 +196,7 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
     basePrice: toNumber(row.basePrice),
     priceBasis: row.priceBasis,
     priceUnit: toNumber(row.priceUnit),
+    priceMax: toNumber(row.priceMax ?? null),
     moq: supplied.moq,
     moqUnit: supplied.moqUnit,
     leadTimeDays: supplied.leadTimeDays,

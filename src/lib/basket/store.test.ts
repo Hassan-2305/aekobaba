@@ -38,6 +38,7 @@ function productVM(overrides: Partial<ProductVM> = {}): ProductVM {
     basePrice: 0.58,
     priceBasis: "per piece",
     priceUnit: 0.58,
+    priceMax: null,
     moq: 500,
     moqUnit: "piece",
     leadTimeDays: 7,

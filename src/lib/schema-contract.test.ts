@@ -89,6 +89,8 @@ describe("spec enums", () => {
       "CALCULATOR",
       "FROM",
       "QUOTE_ONLY",
+      // Aekobaba's researched estimate range — always labelled, never a supplier price.
+      "ESTIMATE",
     ]);
     expect(lines(block("enum", "StockOrCustom"))).toEqual(["STOCK", "CUSTOM"]);
     expect(lines(block("enum", "QuoteStatus"))).toEqual(["DRAFT", "SENT", "RESPONDED", "CLOSED"]);

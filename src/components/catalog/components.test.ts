@@ -51,6 +51,37 @@ describe("PriceDisplay — the truth rule (C2)", () => {
     );
     expect(calc).toContain("Calculator quote");
   });
+
+  it("shows a published range with the varies-by-spec note, not as an estimate", () => {
+    const product = makeProduct({
+      priceType: "FROM",
+      basePrice: 0.28,
+      priceMax: 7.75,
+      priceBasis: "per box (USD); published range, varies by size, material, print and quantity",
+    });
+    const html = render(createElement(PriceDisplay, { product }));
+    expect(html).toContain("Published price range");
+    expect(html).toContain("$0.28–$7.75");
+    expect(html).toContain("varies by specification and quantity");
+    expect(html).not.toContain("Estimated");
+  });
+
+  it("labels an Aekobaba estimate as an estimate, never as the supplier's price", () => {
+    const product = makeProduct({
+      priceType: "ESTIMATE",
+      basePrice: 0.45,
+      priceMax: 1.2,
+      priceBasis: "per bag (USD); Aekobaba estimate",
+    });
+    const html = render(createElement(PriceDisplay, { product }));
+    expect(html).toContain('data-testid="estimated-price"');
+    expect(html).toContain("Estimated price");
+    expect(html).toContain("$0.45–$1.20");
+    expect(html).toContain("not a price published by this supplier");
+    const card = render(createElement(ProductCard, { product }));
+    expect(card).toContain("Estimated");
+    expect(card).toContain("not the supplier");
+  });
 });
 
 describe("PriceTagInline", () => {

@@ -84,7 +84,7 @@ export interface ResultsFilters {
 
 export type ResultsSearchParams = Record<string, string | string[] | undefined>;
 
-const PRICE_TYPES = ["EXACT", "CALCULATOR", "FROM", "QUOTE_ONLY"] as const;
+const PRICE_TYPES = ["EXACT", "CALCULATOR", "FROM", "QUOTE_ONLY", "ESTIMATE"] as const;
 
 function firstValue(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
@@ -310,6 +310,7 @@ const PRICE_TYPE_LABELS: Record<string, string> = {
   CALCULATOR: "Calculator quote",
   FROM: "From price",
   QUOTE_ONLY: "Quote only",
+  ESTIMATE: "Estimated range",
 };
 
 const STOCK_LABELS: Record<string, string> = { STOCK: "Stock", CUSTOM: "Custom" };

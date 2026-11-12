@@ -14,7 +14,9 @@ import {
   formatLeadTime,
   formatMoney,
   formatMoqShort,
+  formatPriceRange,
   formatUnitMoney,
+  isIndicativePrice,
   priceCurrency,
   shortBasis,
   unitPrice,
@@ -56,7 +58,7 @@ function lowestIds(products: ProductVM[], value: (p: ProductVM) => number | null
   const out = new Set<string>();
   const groups = new Map<string, ProductVM[]>();
   for (const p of products) {
-    if (value(p) === null || p.priceType === "FROM") continue;
+    if (value(p) === null || isIndicativePrice(p)) continue;
     const g = group(p);
     groups.set(g, [...(groups.get(g) ?? []), p]);
   }
@@ -91,6 +93,12 @@ export function compareRows(products: ProductVM[], now: Date = new Date()): Comp
           return cell(
             `${formatMoney(p.basePrice, cur(p))} ${shortBasis(p.priceBasis) ?? ""}`.trim(),
             "Pack size not published — per-item price unknown",
+          );
+        const range = formatPriceRange(p);
+        if (range)
+          return cell(
+            `${range} / ${u.unit}`,
+            `${u.currency} · ${p.priceType === "ESTIMATE" ? "Aekobaba estimate" : "published range"} · varies by spec & quantity`,
           );
         return cell(
           `${formatUnitMoney(u.amount, u.currency)} / ${u.unit}`,

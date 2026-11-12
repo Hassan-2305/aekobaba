@@ -10,6 +10,7 @@ import {
   formatMoney,
   formatMoq,
   formatMoqShort,
+  formatPriceRange,
   formatUnitMoney,
   priceCurrency,
   shortBasis,
@@ -42,6 +43,8 @@ export function ProductCard({ product, now }: { product: ProductVM; now?: Date }
   const days = captureAgeDays(product.sourceCapturedAt, now);
   const partner = product.supplier.isPartner;
   const unitLabel = unit?.unit ?? "unit";
+  const range = formatPriceRange(product);
+  const estimate = product.priceType === "ESTIMATE";
   const imageAlt = image
     ? isRepresentativeImage(image.url)
       ? `${image.alt ?? product.title} — representative image`
@@ -107,6 +110,27 @@ export function ProductCard({ product, now }: { product: ProductVM; now?: Date }
             <p className="tag text-ink-muted">Price on request</p>
             <p className="mt-1 text-[22px] font-semibold leading-tight tracking-[-0.03em]">Ask the supplier</p>
             <p className="mt-1.5 text-[13px] text-ink-muted">Quote-only listing · the supplier prices your quantity</p>
+          </div>
+        ) : range ? (
+          <div data-testid="price-tag" className="mt-3.5">
+            <p className="tag text-ink-muted">
+              {estimate ? "Estimated price" : "Published price range"} · {currency}
+            </p>
+            <p className="mt-1 flex items-baseline gap-1.5">
+              <span className="text-[24px] font-semibold leading-none tracking-[-0.035em] tabular-nums">{range}</span>
+              <span className="text-sm text-ink-muted">/ {unitLabel}</span>
+              {estimate ? (
+                <span className="ml-auto flex-none rounded-full bg-well px-2 py-0.5 text-[11px] font-medium text-ink-muted">
+                  Estimated
+                </span>
+              ) : null}
+            </p>
+            <p className="mt-1.5 truncate text-[13px] text-ink-muted">
+              {estimate ? "Aekobaba estimate · not the supplier’s price" : "Varies by specification and quantity"}
+            </p>
+            <p className="mt-0.5 text-[13px] text-ink-muted">
+              {estimate ? "Varies by specification and quantity" : "Excludes shipping, tax and setup"}
+            </p>
           </div>
         ) : (
           <div data-testid="price-tag" className="mt-3.5">

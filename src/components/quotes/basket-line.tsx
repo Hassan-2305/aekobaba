@@ -1,4 +1,4 @@
-import { formatMoq, formatPerUnit, formatPriceLine } from "@/lib/catalog/format";
+import { formatMoq, formatPerUnit, formatPriceLine, formatPriceRange, shortBasis } from "@/lib/catalog/format";
 import { moqPackSize } from "@/lib/catalog/format";
 import { assessMoq } from "@/lib/quotes/moq";
 import type { BasketItem } from "@/lib/basket/store";
@@ -43,7 +43,9 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
           {product.supplier.name} · {product.material} · {product.categoryName}
         </p>
         <p className="mt-2 text-sm text-ink tabular-nums">
-          {formatPriceLine(product.basePrice, product.priceBasis)}
+          {formatPriceRange(product)
+            ? `${formatPriceRange(product)} ${shortBasis(product.priceBasis) ?? ""}${product.priceType === "ESTIMATE" ? " · Aekobaba estimate" : ""}`.trim()
+            : formatPriceLine(product.basePrice, product.priceBasis)}
         </p>
         <p className="text-xs text-ink-muted tabular-nums">
           {formatPerUnit(product.priceUnit) ?? ""}
