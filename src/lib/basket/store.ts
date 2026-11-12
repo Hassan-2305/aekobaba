@@ -13,6 +13,8 @@ import type { ProductVM } from "@/lib/catalog/view-models";
 export interface BasketItem {
   product: ProductVM;
   quantity: number;
+  /** The size picked on the product page, when the listing has sizes. */
+  size?: string | null;
   addedAt: string;
 }
 
@@ -23,8 +25,9 @@ interface QuoteBasketState {
    * supplier's published MOQ when one exists; re-adding an existing line
    * keeps the quantity the visitor already chose.
    */
-  addProduct: (product: ProductVM, quantity?: number) => void;
+  addProduct: (product: ProductVM, quantity?: number, size?: string | null) => void;
   setQuantity: (productId: string, quantity: number) => void;
+  setSize: (productId: string, size: string | null) => void;
   removeItem: (productId: string) => void;
   clear: () => void;
 }
@@ -73,16 +76,21 @@ export const useQuoteBasketStore = create<QuoteBasketState>()(
   persist(
     (set) => ({
       items: [],
-      addProduct: (product, quantity) =>
+      addProduct: (product, quantity, size) =>
         set((state) => {
           const existing = state.items.find((item) => item.product.id === product.id);
           if (existing) {
-            // One record per real SKU: a second add refreshes the snapshot and
-            // only rewrites the quantity when one was explicitly passed.
+            // One record per listing: a second add refreshes the snapshot and
+            // only rewrites the quantity (or size) when one was explicitly passed.
             return {
               items: state.items.map((item) =>
                 item.product.id === product.id
-                  ? { ...item, product, quantity: quantity === undefined ? item.quantity : clampQuantity(quantity) }
+                  ? {
+                      ...item,
+                      product,
+                      quantity: quantity === undefined ? item.quantity : clampQuantity(quantity),
+                      size: size === undefined ? (item.size ?? null) : size,
+                    }
                   : item,
               ),
             };
@@ -90,7 +98,12 @@ export const useQuoteBasketStore = create<QuoteBasketState>()(
           return {
             items: [
               ...state.items,
-              { product, quantity: clampQuantity(quantity ?? defaultQuantity(product)), addedAt: new Date().toISOString() },
+              {
+                product,
+                quantity: clampQuantity(quantity ?? defaultQuantity(product)),
+                size: size ?? null,
+                addedAt: new Date().toISOString(),
+              },
             ],
           };
         }),
@@ -102,6 +115,10 @@ export const useQuoteBasketStore = create<QuoteBasketState>()(
           items: state.items.map((item) =>
             item.product.id === productId ? { ...item, quantity: clampQuantity(quantity) } : item,
           ),
+        })),
+      setSize: (productId, size) =>
+        set((state) => ({
+          items: state.items.map((item) => (item.product.id === productId ? { ...item, size } : item)),
         })),
       removeItem: (productId) =>
         set((state) => ({ items: state.items.filter((item) => item.product.id !== productId) })),

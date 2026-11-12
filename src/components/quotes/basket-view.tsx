@@ -9,6 +9,7 @@ import { useQuoteBasketStore } from "@/lib/basket/store";
 import { groupBasketBySupplier, useBasketHydrated } from "@/lib/basket/use-basket";
 
 import { BasketLine } from "./basket-line";
+import { lineSpecNotes } from "@/lib/catalog/sizes";
 
 // The Quote Basket page. Collecting and editing need no session (guests keep
 // the basket in this browser; signed-in buyers also have it saved to their
@@ -36,6 +37,7 @@ export function BasketView({ signedInRole, defaults }: BasketViewProps) {
   const items = useQuoteBasketStore((state) => state.items);
   const setQuantity = useQuoteBasketStore((state) => state.setQuantity);
   const removeItem = useQuoteBasketStore((state) => state.removeItem);
+  const setSize = useQuoteBasketStore((state) => state.setSize);
   const clear = useQuoteBasketStore((state) => state.clear);
 
   const [deadline, setDeadline] = useState("");
@@ -63,7 +65,7 @@ export function BasketView({ signedInRole, defaults }: BasketViewProps) {
         items: items.map((item) => ({
           productId: item.product.id,
           quantity: item.quantity,
-          specNotes: specNotes[item.product.id]?.trim() || undefined,
+          specNotes: lineSpecNotes(item.product, item.size, specNotes[item.product.id]),
         })),
         contact: {
           name: contactName.trim(),
@@ -194,7 +196,7 @@ export function BasketView({ signedInRole, defaults }: BasketViewProps) {
                 <div>
                   {group.items.map((item) => (
                     <div key={item.product.id}>
-                      <BasketLine item={item} onQuantityChange={setQuantity} onRemove={removeItem} />
+                      <BasketLine item={item} onQuantityChange={setQuantity} onRemove={removeItem} onSizeChange={setSize} />
                       <label className="sr-only" htmlFor={`spec-${item.product.id}`}>
                         Specification notes for {item.product.title}
                       </label>

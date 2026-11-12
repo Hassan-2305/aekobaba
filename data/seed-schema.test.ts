@@ -206,8 +206,9 @@ describe("shipped dataset (C3)", () => {
   });
 
   // Non-US suppliers that authorized their listing in writing (PackMojo,
-  // 2026-10-25: listing built from its own product info and photos).
-  const AUTHORIZED_NON_US = new Set(["packmojo"]);
+  // 2026-10-25: listing built from its own product info and photos; Econly,
+  // 2026-11-12: catalogue and website products, photos permitted).
+  const AUTHORIZED_NON_US = new Set(["packmojo", "econly"]);
 
   it("lists only US-based suppliers, except partners and authorized listings", () => {
     for (const s of seed.suppliers) {

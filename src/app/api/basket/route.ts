@@ -8,12 +8,18 @@ import { db } from "@/lib/db";
 // the browser; once signed in, the client merges it here and the database
 // becomes the source of truth (same basket on every device).
 //
-// GET → { items: [{ product: ProductVM, quantity, addedAt }] }
-// PUT { items: [{ productId, quantity }] } → replaces the basket
+// GET → { items: [{ product: ProductVM, quantity, size, addedAt }] }
+// PUT { items: [{ productId, quantity, size? }] } → replaces the basket
 
 const putSchema = z.object({
   items: z
-    .array(z.object({ productId: z.string().min(1), quantity: z.number().int().positive().max(10_000_000) }))
+    .array(
+      z.object({
+        productId: z.string().min(1),
+        quantity: z.number().int().positive().max(10_000_000),
+        size: z.string().trim().min(1).max(60).nullish(),
+      }),
+    )
     .max(200),
 });
 
@@ -37,7 +43,12 @@ export async function GET() {
   const catalog = new Map((await getAllProducts()).map((p) => [p.id, p]));
   const items = basket.items
     .filter((item) => catalog.has(item.productId))
-    .map((item) => ({ product: catalog.get(item.productId)!, quantity: item.quantity, addedAt: item.addedAt.toISOString() }));
+    .map((item) => ({
+      product: catalog.get(item.productId)!,
+      quantity: item.quantity,
+      size: item.size,
+      addedAt: item.addedAt.toISOString(),
+    }));
   return Response.json({ items });
 }
 
@@ -47,7 +58,7 @@ export async function PUT(request: Request) {
   const parsed = putSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return jsonError(400, "invalid_payload");
 
-  const byProduct = new Map(parsed.data.items.map((i) => [i.productId, i.quantity]));
+  const byProduct = new Map(parsed.data.items.map((i) => [i.productId, { quantity: i.quantity, size: i.size ?? null }]));
   const ids = [...byProduct.keys()];
   const existing = ids.length
     ? new Set((await db.product.findMany({ where: { id: { in: ids } }, select: { id: true } })).map((p) => p.id))
@@ -57,11 +68,11 @@ export async function PUT(request: Request) {
     const basket = await tx.basket.upsert({ where: { userId: user.id }, update: {}, create: { userId: user.id } });
     await tx.basketItem.deleteMany({ where: { basketId: basket.id, productId: { notIn: [...existing] } } });
     for (const productId of existing) {
-      const quantity = byProduct.get(productId)!;
+      const { quantity, size } = byProduct.get(productId)!;
       await tx.basketItem.upsert({
         where: { basketId_productId: { basketId: basket.id, productId } },
-        update: { quantity },
-        create: { basketId: basket.id, productId, quantity },
+        update: { quantity, size },
+        create: { basketId: basket.id, productId, quantity, size },
       });
     }
   });

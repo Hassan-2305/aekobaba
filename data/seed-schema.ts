@@ -105,6 +105,27 @@ export const productSchema = z
     ...provenance,
     quantityBreaks: z.array(quantityBreakSchema),
     /**
+     * Sizes of this one listing, shown as a size picker on the product page
+     * instead of a separate listing per size. Each size carries the specs,
+     * MOQ, photo and page the supplier publishes for it.
+     */
+    sizes: z
+      .array(
+        z.strictObject({
+          label: z.string().min(1).max(60),
+          sku: z.string().min(1).optional(),
+          specs: z.array(z.strictObject({ name: z.string().min(1), value: z.string().min(1) })),
+          moq: z.number().int().positive().nullable().optional(),
+          moqUnit: z.string().min(1).nullable().optional(),
+          image: z
+            .string()
+            .regex(/^\/(partners|suppliers)\/[a-z0-9-]+\/[A-Za-z0-9._-]+$/, "hosted supplier image path")
+            .optional(),
+          sourceUrl: sourceUrl.optional(),
+        }),
+      )
+      .optional(),
+    /**
      * Real product photography from the supplier, hosted under
      * /partners/<slug>/ (partner-supplied) or /suppliers/<slug>/ (copied from
      * the supplier's own product page, credited). When present these are the
@@ -157,6 +178,10 @@ export const productSchema = z
         path: ["priceMax"],
         message: "priceMax must sit at or above basePrice",
       });
+    }
+    const labels = (product.sizes ?? []).map((size) => size.label.toLowerCase());
+    if (new Set(labels).size !== labels.length) {
+      ctx.addIssue({ code: "custom", path: ["sizes"], message: "size labels must be unique within a listing" });
     }
     for (let i = 1; i < product.quantityBreaks.length; i++) {
       if (product.quantityBreaks[i].minQty <= product.quantityBreaks[i - 1].minQty) {

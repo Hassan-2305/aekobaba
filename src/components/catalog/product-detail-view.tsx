@@ -17,6 +17,7 @@ import {
 } from "@/lib/catalog/format";
 import type { PartnerFactsVM } from "@/lib/catalog/partner-facts";
 import type { VariantVM } from "@/lib/catalog/related";
+import { sizeSpecColumns, sizesOf } from "@/lib/catalog/sizes";
 import { isFoodGrade, productTags } from "@/lib/catalog/tags";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -70,6 +71,70 @@ function Section({ title, children, id }: { title: string; children: React.React
   );
 }
 
+/** Every size of the listing side by side — the product-page counterpart of the size picker. */
+function SizesTable({ product }: { product: ProductVM }) {
+  const sizes = sizesOf(product);
+  if (sizes.length < 2) return null;
+  const valueOf = (size: (typeof sizes)[number], name: string) => size.specs.find((row) => row.name === name)?.value ?? null;
+  // A spec every size shares (e.g. the material) reads once above the table, not on every row.
+  const shared = sizeSpecColumns(sizes).filter((name) => {
+    const first = valueOf(sizes[0], name);
+    return first !== null && sizes.every((size) => valueOf(size, name) === first);
+  });
+  const columns = sizeSpecColumns(sizes).filter((name) => !shared.includes(name));
+  const hasSku = sizes.some((size) => size.sku);
+  const hasMoq = sizes.some((size) => size.moq !== null);
+  const sameMoq = hasMoq && sizes.every((size) => size.moq === sizes[0].moq && size.moqUnit === sizes[0].moqUnit);
+  return (
+    <div className="mt-8" data-testid="sizes-table">
+      <h3 className="text-sm font-medium text-ink">All sizes ({sizes.length})</h3>
+      {shared.length > 0 || sameMoq ? (
+        <p className="mt-1 text-xs text-ink-muted">
+          Every size:{" "}
+          {[
+            ...shared.map((name) => `${name}: ${valueOf(sizes[0], name)}`),
+            sameMoq ? `minimum order ${formatMoq(sizes[0].moq, sizes[0].moqUnit)}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      ) : null}
+      <div className="mt-2 overflow-x-auto">
+        <table className="w-full whitespace-nowrap border-t border-line text-left text-xs tabular-nums">
+          <thead>
+            <tr className="border-b border-line text-ink-faint">
+              <th scope="col" className="py-2 pr-4 font-medium">Size</th>
+              {hasSku ? <th scope="col" className="py-2 pr-4 font-medium">Item no.</th> : null}
+              {columns.map((name) => (
+                <th key={name} scope="col" className="py-2 pr-4 font-medium">{name}</th>
+              ))}
+              {hasMoq && !sameMoq ? <th scope="col" className="py-2 font-medium">Minimum order</th> : null}
+            </tr>
+          </thead>
+          <tbody>
+            {sizes.map((size) => (
+              <tr key={size.label} className="border-b border-line align-top">
+                <th scope="row" className="py-2 pr-4 font-medium text-ink">{size.label}</th>
+                {hasSku ? <td className="py-2 pr-4 font-mono text-ink-muted">{size.sku ?? "—"}</td> : null}
+                {columns.map((name) => (
+                  <td key={name} className="py-2 pr-4 text-ink">
+                    {size.specs.find((row) => row.name === name)?.value ?? <span className="text-ink-faint">—</span>}
+                  </td>
+                ))}
+                {hasMoq && !sameMoq ? (
+                  <td className="py-2 text-ink">
+                    {size.moq !== null ? formatMoq(size.moq, size.moqUnit) : <span className="text-ink-faint">{NOT_PUBLISHED}</span>}
+                  </td>
+                ) : null}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 /** General guidance, not a supplier claim — labelled as such on the page. */
 const ARTWORK_GUIDE = [
   "Vector artwork (AI, EPS or PDF) with fonts outlined",
@@ -98,6 +163,7 @@ export function ProductDetailView({
   const leadValue =
     product.leadTimeDays !== null ? formatLeadTime(product.leadTimeDays) : (s.leadNote ?? NOT_PUBLISHED);
   const foodGrade = isFoodGrade(product);
+  const hasSizes = sizesOf(product).length > 0;
 
   return (
     <div className="mx-auto max-w-[1400px] px-5 pb-24 pt-8 sm:px-8 lg:px-12">
@@ -190,8 +256,9 @@ export function ProductDetailView({
         <Section title="Specification" id="specification">
           <dl className="border-t border-line text-sm" data-testid="product-specs">
             <Row label="Material">{product.material}</Row>
-            {s.capacity ? <Row label="Capacity">{s.capacity.label}</Row> : null}
-            {s.dimensions ? <Row label="Dimensions">{s.dimensions.label}</Row> : null}
+            {/* With sizes, capacity and dimensions differ per size — the sizes table below has them. */}
+            {s.capacity && !hasSizes ? <Row label="Capacity">{s.capacity.label}</Row> : null}
+            {s.dimensions && !hasSizes ? <Row label="Dimensions">{s.dimensions.label}</Row> : null}
             {s.thickness ? <Row label="Thickness">{s.thickness.label}</Row> : null}
             {s.neckFinish ? <Row label="Neck finish">{s.neckFinish}</Row> : null}
             {s.closures.length ? <Row label="Closure">{s.closures.join(", ")}</Row> : null}
@@ -215,6 +282,7 @@ export function ProductDetailView({
             Specs are taken from the supplier&rsquo;s own listing; anything not listed wasn&rsquo;t
             published — ask in your quote.
           </p>
+          <SizesTable product={product} />
         </Section>
 
         <Section title="Order terms" id="order-terms">

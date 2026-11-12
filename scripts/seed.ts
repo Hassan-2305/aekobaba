@@ -118,6 +118,25 @@ async function upsertProduct(
     });
   }
 
+  // Sizes of one listing (the product-page size picker) — replaced per
+  // product like the breaks, so a re-run converges on the dataset exactly.
+  await tx.productSize.deleteMany({ where: { productId: saved.id } });
+  if (product.sizes?.length) {
+    await tx.productSize.createMany({
+      data: product.sizes.map((size, sortOrder) => ({
+        productId: saved.id,
+        label: size.label,
+        sortOrder,
+        sku: size.sku ?? null,
+        specs: size.specs,
+        moq: size.moq ?? null,
+        moqUnit: size.moqUnit ?? null,
+        imageUrl: size.image ?? null,
+        sourceUrl: size.sourceUrl ?? null,
+      })),
+    });
+  }
+
   // The representative views (studio, detail, dark studio) per product,
   // assigned by the deterministic category mapping (the stable per-category
   // index rotates variants). Replace per product like the breaks — re-runs

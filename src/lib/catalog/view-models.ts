@@ -80,6 +80,23 @@ export interface ProductVM {
   partnerFacts?: PartnerFactsVM | null;
   /** Technical specs read from the listing's own text (see specs.ts). */
   specs: ProductSpecs;
+  /**
+   * Sizes of this one listing, smallest first (the product-page size
+   * picker). Optional: absent on single-size products and on basket
+   * snapshots saved before sizes existed.
+   */
+  sizes?: ProductSizeVM[];
+}
+
+/** One size of a listing, exactly as the supplier publishes it. */
+export interface ProductSizeVM {
+  label: string;
+  sku: string | null;
+  specs: { name: string; value: string }[];
+  moq: number | null;
+  moqUnit: string | null;
+  imageUrl: string | null;
+  sourceUrl: string | null;
 }
 
 export interface CategoryVM {
@@ -127,6 +144,15 @@ export interface ProductWithRelations {
   sourceCapturedAt: Date;
   quantityBreaks: { minQty: number; maxQty: number | null; unitPrice: { toNumber(): number } }[];
   images: { url: string; alt: string | null }[];
+  sizes?: {
+    label: string;
+    sku: string | null;
+    specs: unknown;
+    moq: number | null;
+    moqUnit: string | null;
+    imageUrl: string | null;
+    sourceUrl: string | null;
+  }[];
   supplier: {
     slug: string;
     name: string;
@@ -141,6 +167,16 @@ export interface ProductWithRelations {
     certifications: { name: string }[];
   };
   category: { slug: string; name: string };
+}
+
+/** A size's JSON spec rows, keeping only well-formed { name, value } pairs. */
+function specRows(value: unknown): { name: string; value: string }[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((row) =>
+    row && typeof row === "object" && typeof row.name === "string" && typeof row.value === "string"
+      ? [{ name: row.name, value: row.value }]
+      : [],
+  );
 }
 
 /**
@@ -211,6 +247,15 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
     })),
     images: row.images.map((image) => ({ url: image.url, alt: image.alt })),
     primaryImage: row.images[0] ? { url: row.images[0].url, alt: row.images[0].alt } : null,
+    sizes: (row.sizes ?? []).map((size) => ({
+      label: size.label,
+      sku: size.sku,
+      specs: specRows(size.specs),
+      moq: size.moq,
+      moqUnit: size.moqUnit,
+      imageUrl: size.imageUrl,
+      sourceUrl: size.sourceUrl,
+    })),
     supplier: {
       slug: row.supplier.slug,
       name: row.supplier.name,

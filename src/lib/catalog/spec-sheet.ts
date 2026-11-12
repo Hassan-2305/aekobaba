@@ -8,9 +8,12 @@ import {
   formatMoney,
   formatMoq,
   formatPriceLine,
+  formatPriceRange,
   NOT_PUBLISHED,
   priceCurrency,
+  shortBasis,
 } from "./format";
+import { sizesOf } from "./sizes";
 import { isFoodGrade } from "./tags";
 import type { ProductVM } from "./view-models";
 
@@ -34,7 +37,12 @@ export function specSheetRows(p: ProductVM): [string, string][] {
     ["Type", p.stockOrCustom === "STOCK" ? "Stock item" : "Custom manufacture"],
     ["Food contact", isFoodGrade(p) ? "Food grade / food contact (supplier's wording)" : NOT_PUBLISHED],
     ["Certifications", p.certificationNames.join(", ") || null],
-    ["Price", formatPriceLine(p.basePrice, p.priceBasis)],
+    [
+      "Price",
+      formatPriceRange(p)
+        ? `${formatPriceRange(p)} ${shortBasis(p.priceBasis) ?? ""}${p.priceType === "ESTIMATE" ? " (Aekobaba estimate, not the supplier's price)" : " (published range)"}`
+        : formatPriceLine(p.basePrice, p.priceBasis),
+    ],
     ...p.quantityBreaks.map(
       (b): [string, string] => [
         `Price tier ${b.maxQty === null ? `${b.minQty}+` : `${b.minQty}–${b.maxQty}`}`,
@@ -42,6 +50,16 @@ export function specSheetRows(p: ProductVM): [string, string][] {
       ],
     ),
     ["Minimum order", formatMoq(p.moq, p.moqUnit)],
+    ...sizesOf(p).map((size): [string, string] => [
+      `Size ${size.label}`,
+      [
+        size.sku ? `Item ${size.sku}` : null,
+        ...size.specs.map((row) => `${row.name}: ${row.value}`),
+        size.moq !== null ? `MOQ ${formatMoq(size.moq, size.moqUnit)}` : null,
+      ]
+        .filter(Boolean)
+        .join(" · ") || "—",
+    ]),
     ["Setup / tooling", s.setupNote ?? NOT_PUBLISHED],
     ["Production lead time", p.leadTimeDays !== null ? formatLeadTime(p.leadTimeDays) : (s.leadNote ?? NOT_PUBLISHED)],
     ["Samples", p.samplePolicyVerified ? "Available (published sample policy)" : NOT_PUBLISHED],

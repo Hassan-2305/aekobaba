@@ -34,6 +34,7 @@ const productInclude = {
   // Lowest sortOrder first — the seed writes exactly one primary image per
   // product, so the first row is the card/detail image.
   images: { orderBy: { sortOrder: "asc" } },
+  sizes: { orderBy: { sortOrder: "asc" } },
 } satisfies Prisma.ProductInclude;
 
 const cached = <A extends unknown[], R>(fn: (...args: A) => Promise<R>, key: string) =>

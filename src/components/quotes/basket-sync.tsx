@@ -53,7 +53,9 @@ export function reconcileBasket(
 }
 
 function payload(items: BasketItem[]) {
-  return JSON.stringify({ items: items.map((i) => ({ productId: i.product.id, quantity: i.quantity })) });
+  return JSON.stringify({
+    items: items.map((i) => ({ productId: i.product.id, quantity: i.quantity, size: i.size ?? null })),
+  });
 }
 
 async function put(body: string): Promise<boolean> {

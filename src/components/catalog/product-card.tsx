@@ -163,6 +163,14 @@ export function ProductCard({ product, now }: { product: ProductVM; now?: Date }
           </div>
         )}
 
+        {(product.sizes?.length ?? 0) > 1 ? (
+          <p data-testid="card-sizes" className="mt-3 truncate text-[13px] text-ink-muted">
+            {product.sizes!.length} sizes
+            {/^[\d#]/.test(product.sizes![0].label)
+              ? ` · ${product.sizes![0].label}–${product.sizes![product.sizes!.length - 1].label}`
+              : ""}
+          </p>
+        ) : null}
         <div className="mt-3.5 flex justify-between gap-3 border-t border-line pt-3 text-sm">
           <span className="text-ink-muted">Minimum order</span>
           <span

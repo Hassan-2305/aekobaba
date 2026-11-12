@@ -29,12 +29,15 @@ function titleParts(title: string): { option: string | null; sku: string | null 
  * then title, so a size ladder reads small to large.
  */
 export function variantsOf(product: ProductVM, all: ProductVM[]): VariantVM[] {
-  if (!product.subcategory) return [];
+  // A listing that carries its own sizes shows the size picker instead; it
+  // never joins (or shows) a family of sibling listings.
+  if (!product.subcategory || (product.sizes?.length ?? 0) > 0) return [];
   const family = all.filter(
     (p) =>
       p.supplier.slug === product.supplier.slug &&
       p.categorySlug === product.categorySlug &&
-      p.subcategory === product.subcategory,
+      p.subcategory === product.subcategory &&
+      (p.sizes?.length ?? 0) === 0,
   );
   if (family.length < 2) return [];
   return family

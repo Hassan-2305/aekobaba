@@ -1,6 +1,7 @@
 import { formatMoq, formatPerUnit, formatPriceLine, formatPriceRange, shortBasis } from "@/lib/catalog/format";
 import { moqPackSize } from "@/lib/catalog/format";
 import { assessMoq } from "@/lib/quotes/moq";
+import { sizeMoq, sizesOf } from "@/lib/catalog/sizes";
 import type { BasketItem } from "@/lib/basket/store";
 import { ProductPicture } from "@/components/catalog/product-picture";
 import { QuantityInput } from "@/components/catalog/quantity-input";
@@ -14,11 +15,15 @@ export interface BasketLineProps {
   item: BasketItem;
   onQuantityChange: (productId: string, quantity: number) => void;
   onRemove: (productId: string) => void;
+  /** Change the chosen size; the picker only renders when this is passed and the listing has sizes. */
+  onSizeChange?: (productId: string, size: string) => void;
 }
 
-export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps) {
+export function BasketLine({ item, onQuantityChange, onRemove, onSizeChange }: BasketLineProps) {
   const { product, quantity } = item;
-  const moq = assessMoq(quantity, product.moq, product.moqUnit, moqPackSize(product));
+  const sizes = sizesOf(product);
+  const minimum = sizeMoq(product, item.size);
+  const moq = assessMoq(quantity, minimum.moq, minimum.moqUnit, moqPackSize(product));
 
   const image = product.primaryImage;
 
@@ -42,6 +47,32 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
         <p className="mt-1 text-xs text-ink-faint">
           {product.supplier.name} · {product.material} · {product.categoryName}
         </p>
+        {sizes.length > 0 ? (
+          onSizeChange ? (
+            <label className="mt-2 flex items-center gap-2 text-xs text-ink-muted">
+              Size
+              <select
+                data-testid="basket-size"
+                value={item.size ?? ""}
+                onChange={(event) => onSizeChange(product.id, event.target.value)}
+                className="h-8 border border-line bg-paper px-2 text-xs text-ink focus:border-ink focus:outline-none"
+              >
+                <option value="" disabled>
+                  Choose a size
+                </option>
+                {sizes.map((size) => (
+                  <option key={size.label} value={size.label}>
+                    {size.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <p data-testid="basket-size" className="mt-2 text-xs text-ink-muted">
+              Size: {item.size ?? "not chosen"}
+            </p>
+          )
+        ) : null}
         <p className="mt-2 text-sm text-ink tabular-nums">
           {formatPriceRange(product)
             ? `${formatPriceRange(product)} ${shortBasis(product.priceBasis) ?? ""}${product.priceType === "ESTIMATE" ? " · Aekobaba estimate" : ""}`.trim()
@@ -49,8 +80,8 @@ export function BasketLine({ item, onQuantityChange, onRemove }: BasketLineProps
         </p>
         <p className="text-xs text-ink-muted tabular-nums">
           {formatPerUnit(product.priceUnit) ?? ""}
-          {product.priceUnit !== null && product.moq !== null ? " · " : ""}
-          {product.moq !== null ? `Minimum ${formatMoq(product.moq, product.moqUnit)}` : ""}
+          {product.priceUnit !== null && minimum.moq !== null ? " · " : ""}
+          {minimum.moq !== null ? `Minimum ${formatMoq(minimum.moq, minimum.moqUnit)}` : ""}
         </p>
         {moq.message ? (
           <p
