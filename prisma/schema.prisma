@@ -148,18 +148,22 @@ model QuantityBreak {
 /// Sizes live on the product page (no separate listing per size); each
 /// keeps its own specs, MOQ, photo and source page as the supplier publishes them.
 model ProductSize {
-  id        String  @id @default(cuid())
-  productId String
-  label     String
-  sortOrder Int     @default(0)
-  sku       String?
+  id             String   @id @default(cuid())
+  productId      String
+  label          String
+  sortOrder      Int      @default(0)
+  sku            String?
   /// Ordered spec rows: [{ "name": "Dimensions", "value": "150x123x60 mm" }, …]
-  specs     Json
-  moq       Int?
-  moqUnit   String?
-  imageUrl  String?
-  sourceUrl String?
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  specs          Json
+  moq            Int?
+  moqUnit        String?
+  imageUrl       String?
+  sourceUrl      String?
+  /// This size's published price at its smallest quantity, in the listing's price basis; null when unpriced.
+  basePrice      Decimal? @db.Decimal(12, 4)
+  /// This size's quantity tiers: [{ "minQty": 200, "maxQty": 349, "unitPrice": 1.17 }, …]
+  quantityBreaks Json?
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([productId, label])
   @@index([productId])

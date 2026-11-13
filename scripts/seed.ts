@@ -133,6 +133,8 @@ async function upsertProduct(
         moqUnit: size.moqUnit ?? null,
         imageUrl: size.image ?? null,
         sourceUrl: size.sourceUrl ?? null,
+        basePrice: size.basePrice ?? null,
+        quantityBreaks: size.quantityBreaks?.length ? size.quantityBreaks : undefined,
       })),
     });
   }

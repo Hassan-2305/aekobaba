@@ -31169,6 +31169,1288 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "print247",
+      "name": "Print247",
+      "website": "https://print247.us",
+      "location": "US (Rosenberg, TX)",
+      "legalIdentity": null,
+      "status": "LISTED",
+      "isPartner": false,
+      "sourceUrl": "https://print247.us/contact-us",
+      "sourceCapturedAt": "2026-11-13",
+      "review": null,
+      "certifications": [],
+      "products": [
+        {
+          "title": "Candy Mylar Bags 4×6×2 in",
+          "description": "Preserve your candy's crunch with our high-barrier candy Mylar bags 4x6x2\". Make your packaging highly functional and visually appealing with resealable zippers. Order in bulk at wholesale prices and grow your business with confidence. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 2,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days after artwork approval with free shipping. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Square Corners, Round Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Mylar bag",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.17,
+          "priceBasis": "per bag (USD)",
+          "sourceUrl": "https://print247.us/candy-mylar-bags-4x6x2",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.17
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.03
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.79
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 1999,
+              "unitPrice": 0.49
+            },
+            {
+              "minQty": 2000,
+              "maxQty": 4999,
+              "unitPrice": 0.45
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.35
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/candy-mylar-bags-4x6x2-0.webp",
+              "alt": "candy-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/candy-mylar-bags-4x6x2-1.webp",
+              "alt": "candy-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/candy-mylar-bags-4x6x2-2.webp",
+              "alt": "candy-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/candy-mylar-bags-4x6x2-3.webp",
+              "alt": "candy-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Child-Resistant Pouches 2.5×7 in",
+          "description": "Keep your vaping electronic devices functional and look chic on shelves with custom printed 2.5x7\" vape pen mylar bags from Print247. Personalize the outlook as per your product presentation and branding needs. Buy now. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 2,000, 3,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days after artwork approval. Free shipping (Print247). Finishes: Matte, Gloss.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "cr-cannabis",
+          "subcategory": "Child-resistant pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 0.82,
+          "priceBasis": "per pouch (USD)",
+          "sourceUrl": "https://print247.us/child-resistant-pouches-2-5x7",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 0.82
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 0.76
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.7
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 1999,
+              "unitPrice": 0.66
+            },
+            {
+              "minQty": 2000,
+              "maxQty": 2999,
+              "unitPrice": 0.5
+            },
+            {
+              "minQty": 3000,
+              "maxQty": null,
+              "unitPrice": 0.43
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/child-resistant-pouches-2-5x7-0.webp",
+              "alt": "custom-chips-box-45-x-6",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/child-resistant-pouches-2-5x7-1.webp",
+              "alt": "custom-chips-box-45-x-6",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/child-resistant-pouches-2-5x7-2.webp",
+              "alt": "custom-chips-box-45-x-6",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/child-resistant-pouches-2-5x7-3.webp",
+              "alt": "custom-chips-box-45-x-6",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Custom Printed Mylar Bags",
+          "description": "Print247 builds custom printed Mylar bags that seal out moisture and keep your items fresh. These pouches provide the exact defense your inventory needs to survive rough warehouse storage and retail display shelves. Available in 2 sizes (3×4×2 in, 3.5×5×2 in); each size has its own price table — pick a size on this page. Print247 publishes per-bag prices for set quantities of each size (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days after artwork approval. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Round Corners, Square Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Mylar bag",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "FROM",
+          "basePrice": 1.65,
+          "priceBasis": "per bag (USD); price varies by size and quantity",
+          "sourceUrl": "https://print247.us/custom-printed-3x4x2-mylar-bags",
+          "quantityBreaks": [],
+          "sizes": [
+            {
+              "label": "3×4×2 in",
+              "specs": [
+                {
+                  "name": "Thickness",
+                  "value": "110 micron / 4.331 mil thick"
+                },
+                {
+                  "name": "Gusset",
+                  "value": "2\" bottom gusset for stand-up capability and added fill volume"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-printed-3x4x2-mylar-bags-0.webp",
+              "sourceUrl": "https://print247.us/custom-printed-3x4x2-mylar-bags",
+              "basePrice": 1.65,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.65
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 0.99
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 0.79
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 2999,
+                  "unitPrice": 0.45
+                },
+                {
+                  "minQty": 3000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.35
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.28
+                }
+              ]
+            },
+            {
+              "label": "3.5×5×2 in",
+              "specs": [
+                {
+                  "name": "Thickness",
+                  "value": "110 micron / 4.331 mil thick"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-printed-3-5x5x2-mylar-bags-0.webp",
+              "sourceUrl": "https://print247.us/custom-printed-3-5x5x2-mylar-bags",
+              "basePrice": 1.7,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.7
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 1.05
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 0.85
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 2999,
+                  "unitPrice": 0.49
+                },
+                {
+                  "minQty": 3000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.42
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.35
+                }
+              ]
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/custom-printed-3x4x2-mylar-bags-0.webp",
+              "alt": "custom-printed-3x4-mylar-bags (3×4×2 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-3x4x2-mylar-bags-1.webp",
+              "alt": "custom-printed-3x4-mylar-bags (3×4×2 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-3-5x5x2-mylar-bags-0.webp",
+              "alt": "custom-printed-3-5x5x2-mylar-bags (3.5×5×2 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-3-5x5x2-mylar-bags-1.webp",
+              "alt": "custom-printed-3-5x5x2-mylar-bags (3.5×5×2 in)",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Custom Printed Beef Jerky Bags 6×9×3 in",
+          "description": "Give your beef jerky maximum protection from moisture contact and air exposure with protective beef jerky bags 6x9x3 from Print247. Custom print them with your branding and artworks for brand-focused and attractive display. Order now. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 3,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12–15 business days after artwork/design approval. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Round Corners, Square Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Mylar bag",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.85,
+          "priceBasis": "per bag (USD)",
+          "sourceUrl": "https://print247.us/custom-printed-beef-jerky-bags-6x9x3",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.85
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.29
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.99
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 2999,
+              "unitPrice": 0.69
+            },
+            {
+              "minQty": 3000,
+              "maxQty": 4999,
+              "unitPrice": 0.48
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.45
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/custom-printed-beef-jerky-bags-6x9x3-0.webp",
+              "alt": "beef-jerky-bags-6x9x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-beef-jerky-bags-6x9x3-1.webp",
+              "alt": "beef-jerky-bags-6x9x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-beef-jerky-bags-6x9x3-2.webp",
+              "alt": "beef-jerky-bags-6x9x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-beef-jerky-bags-6x9x3-3.webp",
+              "alt": "beef-jerky-bags-6x9x3",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Custom Printed Chips Bags",
+          "description": "Stand out with custom printed chip bags. Make your products look professional and influence customers' buying decisions quickly with our custom chip bags. Never miss out on marketing opportunities with our affordable yet impactful Mylar packaging solutions. Available in 3 sizes (4.5×6 in, 6.5×9 in, 8.5×13 in); each size has its own price table — pick a size on this page. Print247 publishes per-bag prices for set quantities of each size (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12–15 business days after artwork/design approval. Free shipping (Print247). Finishes: Matte, Gloss.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Mylar bag",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "FROM",
+          "basePrice": 1.22,
+          "priceBasis": "per bag (USD); price varies by size and quantity",
+          "sourceUrl": "https://print247.us/custom-printed-chips-bags-4-5x6",
+          "quantityBreaks": [],
+          "sizes": [
+            {
+              "label": "4.5×6 in",
+              "specs": [
+                {
+                  "name": "Dimensions",
+                  "value": "4.5 × 6 inches"
+                },
+                {
+                  "name": "Thickness",
+                  "value": "100 Micron / 3.937 Mil"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-printed-chips-bags-4-5x6-0.webp",
+              "sourceUrl": "https://print247.us/custom-printed-chips-bags-4-5x6",
+              "basePrice": 1.22,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.22
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 1.07
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 0.85
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 2999,
+                  "unitPrice": 0.49
+                },
+                {
+                  "minQty": 3000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.38
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.29
+                }
+              ]
+            },
+            {
+              "label": "6.5×9 in",
+              "specs": [
+                {
+                  "name": "Dimensions",
+                  "value": "6.5 × 9 inches"
+                },
+                {
+                  "name": "Thickness",
+                  "value": "110 Micron / 4.331 Mil"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-printed-chips-bags-6-5x9-0.webp",
+              "sourceUrl": "https://print247.us/custom-printed-chips-bags-6-5x9",
+              "basePrice": 1.69,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.69
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 1.11
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 0.95
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 2999,
+                  "unitPrice": 0.56
+                },
+                {
+                  "minQty": 3000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.46
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.38
+                }
+              ]
+            },
+            {
+              "label": "8.5×13 in",
+              "specs": [
+                {
+                  "name": "Dimensions",
+                  "value": "8.5 × 13 inches"
+                },
+                {
+                  "name": "Thickness",
+                  "value": "120 Micron / 4.724 Mil"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-printed-chips-bags-8-5x13-0.webp",
+              "sourceUrl": "https://print247.us/custom-printed-chips-bags-8-5x13",
+              "basePrice": 1.99,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.99
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 1.39
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 1.18
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 2999,
+                  "unitPrice": 0.75
+                },
+                {
+                  "minQty": 3000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.49
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.42
+                }
+              ]
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/custom-printed-chips-bags-4-5x6-0.webp",
+              "alt": "custom-chips-bag-45-x-6 (4.5×6 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-chips-bags-4-5x6-1.webp",
+              "alt": "custom-chips-bag-45-x-6 (4.5×6 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-chips-bags-6-5x9-0.webp",
+              "alt": "custom-chips-bag-65-x-9 (6.5×9 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-chips-bags-6-5x9-1.webp",
+              "alt": "custom-chips-bag-65-x-9 (6.5×9 in)",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Custom Printed Stand-Up Pouches 13×15×5 in",
+          "description": "Every custom printed 13x15\" mylar bag we create here at Print247 keeps the goods safe from environmental factors and promotes your product and brand simultaneously. Customize these pouches as per your printing needs and buy at wholesale prices. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 2,000, 3,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days after artwork approval. Free shipping (Print247). Finishes: Gloss, Matte.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 3.79,
+          "priceBasis": "per pouch (USD)",
+          "sourceUrl": "https://print247.us/custom-printed-stand-up-pouches-13x15x5",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 3.79
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 3.35
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 2.85
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 1999,
+              "unitPrice": 1.85
+            },
+            {
+              "minQty": 2000,
+              "maxQty": 2999,
+              "unitPrice": 1.38
+            },
+            {
+              "minQty": 3000,
+              "maxQty": null,
+              "unitPrice": 1.29
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/custom-printed-stand-up-pouches-13x15x5-0.webp",
+              "alt": "custom-printed-13x15-mylar-bags",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-stand-up-pouches-13x15x5-1.webp",
+              "alt": "custom-printed-13x15-mylar-bags",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-stand-up-pouches-13x15x5-2.webp",
+              "alt": "custom-printed-13x15-mylar-bags",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-stand-up-pouches-13x15x5-3.webp",
+              "alt": "custom-printed-13x15-mylar-bags",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Custom Printed Window Stand-Up Pouches 5×8×3 in",
+          "description": "Give your gummies, spices, candies, supplements, and other products a clear view with Print247's window stand up pouches 5 x 8 x 3. We give you freedom to custom print the pouches with your choice of artworks and designs. Fill in the form below to get yours now. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 3,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12–15 business days after artwork/design approval. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Square Corners, Round Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.45,
+          "priceBasis": "per pouch (USD)",
+          "sourceUrl": "https://print247.us/custom-printed-window-stand-up-pouches-5x8x3",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.45
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.2
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.9
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 2999,
+              "unitPrice": 0.55
+            },
+            {
+              "minQty": 3000,
+              "maxQty": 4999,
+              "unitPrice": 0.46
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.36
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/custom-printed-window-stand-up-pouches-5x8x3-0.webp",
+              "alt": "window-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-window-stand-up-pouches-5x8x3-1.webp",
+              "alt": "window-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-window-stand-up-pouches-5x8x3-2.webp",
+              "alt": "window-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-printed-window-stand-up-pouches-5x8x3-3.webp",
+              "alt": "window-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Custom Stand-Up Mylar Pouches",
+          "description": "Secure your dry goods and snacks with our custom printed mylar bags. Print247 manufactures these durable pouches with eco-friendly inks and full-color graphics to give your retail products total shelf dominance. Available in 2 sizes (4×6 in, 5×8 in); each size has its own price table — pick a size on this page. Print247 publishes per-bag prices for set quantities of each size (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days after artwork approval. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Round Corners, Square Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "FROM",
+          "basePrice": 1.17,
+          "priceBasis": "per pouch (USD); price varies by size and quantity",
+          "sourceUrl": "https://print247.us/custom-stand-up-mylar-pouches-4x6",
+          "quantityBreaks": [],
+          "sizes": [
+            {
+              "label": "4×6 in",
+              "specs": [
+                {
+                  "name": "Dimensions",
+                  "value": "4 in × 6 in × 2 in"
+                },
+                {
+                  "name": "Thickness",
+                  "value": "110 Micron / 4.331 Mil"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-stand-up-mylar-pouches-4x6-0.webp",
+              "sourceUrl": "https://print247.us/custom-stand-up-mylar-pouches-4x6",
+              "basePrice": 1.17,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.17
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 1.03
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 0.79
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 1999,
+                  "unitPrice": 0.49
+                },
+                {
+                  "minQty": 2000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.45
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.35
+                }
+              ]
+            },
+            {
+              "label": "5×8 in",
+              "specs": [
+                {
+                  "name": "Dimensions",
+                  "value": "5 in×8 in×3 in"
+                },
+                {
+                  "name": "Thickness",
+                  "value": "110 Micron / 4.331 Mil"
+                }
+              ],
+              "moq": 200,
+              "moqUnit": "units",
+              "image": "/suppliers/print247/custom-stand-up-mylar-pouches-5x8-0.webp",
+              "sourceUrl": "https://print247.us/custom-stand-up-mylar-pouches-5x8",
+              "basePrice": 1.45,
+              "quantityBreaks": [
+                {
+                  "minQty": 200,
+                  "maxQty": 349,
+                  "unitPrice": 1.45
+                },
+                {
+                  "minQty": 350,
+                  "maxQty": 499,
+                  "unitPrice": 1.2
+                },
+                {
+                  "minQty": 500,
+                  "maxQty": 999,
+                  "unitPrice": 0.9
+                },
+                {
+                  "minQty": 1000,
+                  "maxQty": 2999,
+                  "unitPrice": 0.55
+                },
+                {
+                  "minQty": 3000,
+                  "maxQty": 4999,
+                  "unitPrice": 0.46
+                },
+                {
+                  "minQty": 5000,
+                  "maxQty": null,
+                  "unitPrice": 0.36
+                }
+              ]
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/custom-stand-up-mylar-pouches-4x6-0.webp",
+              "alt": "custom-printed-4x6-mylar-bags (4×6 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-stand-up-mylar-pouches-4x6-1.webp",
+              "alt": "custom-printed-4x6-mylar-bags (4×6 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-stand-up-mylar-pouches-5x8-0.webp",
+              "alt": "custom-printed-5x8-mylar-bags (5×8 in)",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/custom-stand-up-mylar-pouches-5x8-1.webp",
+              "alt": "custom-printed-5x8-mylar-bags (5×8 in)",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Holographic Mylar Bags 4×6×2 in",
+          "description": "Attract customers with holographic Mylar bags 4x6x2\". They are made to provide a strong barrier to maintain the product's freshness and quality. Reach out to us to order custom holographic Mylar bags at wholesale prices. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 2,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days with free shipping. Free shipping (Print247). Corners: Square Corners, Round Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Mylar bag",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.17,
+          "priceBasis": "per bag (USD)",
+          "sourceUrl": "https://print247.us/holographic-mylar-bags-4x6x2",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.17
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.03
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.79
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 1999,
+              "unitPrice": 0.49
+            },
+            {
+              "minQty": 2000,
+              "maxQty": 4999,
+              "unitPrice": 0.45
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.35
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/holographic-mylar-bags-4x6x2-0.webp",
+              "alt": "holographic-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/holographic-mylar-bags-4x6x2-1.webp",
+              "alt": "holographic-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/holographic-mylar-bags-4x6x2-2.webp",
+              "alt": "holographic-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/holographic-mylar-bags-4x6x2-3.webp",
+              "alt": "holographic-mylar-bags-4x6x2",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Kraft Stand-up Pouches 5×8×3 in",
+          "description": "Print247 manufactures Kraft stand-up pouches 5x8x3 inches for coffee, snacks and powders. Give your product packaging a rustic and natural appearance with these pouches. Avail our free design support and standard physical samples so you can check the quality. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 3,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 - 15 Business Days. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Square Corners, Round Corners.",
+          "material": "Kraft outer / VMPET barrier / PE inner",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.45,
+          "priceBasis": "per pouch (USD)",
+          "sourceUrl": "https://print247.us/kraft-stand-up-pouches-5x8x3",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.45
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.2
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.9
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 2999,
+              "unitPrice": 0.55
+            },
+            {
+              "minQty": 3000,
+              "maxQty": 4999,
+              "unitPrice": 0.46
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.36
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/kraft-stand-up-pouches-5x8x3-0.webp",
+              "alt": "kraft-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/kraft-stand-up-pouches-5x8x3-1.webp",
+              "alt": "kraft-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/kraft-stand-up-pouches-5x8x3-2.webp",
+              "alt": "kraft-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/kraft-stand-up-pouches-5x8x3-3.webp",
+              "alt": "kraft-stand-up-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Pet Food and Dog Treat Bags 6×9×3 in",
+          "description": "Deliver high-barrier custom pet food and dog treat bags to your customers that help maintain freshness and preserve flavor. Enjoy free shipping on high-quality dog treat packaging. Improve your product's shelf presence with custom pouches. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 3,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days. Free shipping (Print247). Finishes: Gloss, Matte. Corners: Square Corners, Round Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Mylar bag",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.85,
+          "priceBasis": "per bag (USD)",
+          "sourceUrl": "https://print247.us/pet-food-and-dog-treat-bags-6x9x3",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.85
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.29
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.99
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 2999,
+              "unitPrice": 0.69
+            },
+            {
+              "minQty": 3000,
+              "maxQty": 4999,
+              "unitPrice": 0.48
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.45
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/pet-food-and-dog-treat-bags-6x9x3-0.webp",
+              "alt": "pet-food-and-dog-treat-bags-6x9x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/pet-food-and-dog-treat-bags-6x9x3-1.webp",
+              "alt": "pet-food-and-dog-treat-bags-6x9x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/pet-food-and-dog-treat-bags-6x9x3-2.webp",
+              "alt": "pet-food-and-dog-treat-bags-6x9x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/pet-food-and-dog-treat-bags-6x9x3-3.webp",
+              "alt": "pet-food-and-dog-treat-bags-6x9x3",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Printed Stand-Up Mylar Bags 6×9 in",
+          "description": "Make your products ready to display on shelves by getting custom printed 6x9\" mylar bags from Print247. Custom print these pouches with your choice of artwork or let us create a new one for you. Order now. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 3,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days after artwork approval. Free shipping (Print247). Finishes: Gloss, Matte. Corners: Round Corners, Square Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.85,
+          "priceBasis": "per bag (USD)",
+          "sourceUrl": "https://print247.us/printed-stand-up-mylar-bags-6x9",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.85
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.29
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.99
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 2999,
+              "unitPrice": 0.69
+            },
+            {
+              "minQty": 3000,
+              "maxQty": 4999,
+              "unitPrice": 0.48
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.45
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/printed-stand-up-mylar-bags-6x9-0.webp",
+              "alt": "custom-printed-6x9-mylar-bags",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/printed-stand-up-mylar-bags-6x9-1.webp",
+              "alt": "custom-printed-6x9-mylar-bags",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/printed-stand-up-mylar-bags-6x9-2.webp",
+              "alt": "custom-printed-6x9-mylar-bags",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/printed-stand-up-mylar-bags-6x9-3.webp",
+              "alt": "custom-printed-6x9-mylar-bags",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Spice and Seasoning Pouches 4×6×2 in",
+          "description": "Protect your spices, dry mixes, and seasoning powders from clumping and flavor loss with spice and seasoning pouches 4 x 6 x 2 from Print247. We also give you the option to custom print the pouches to complement your spice powders and make them look chic on shelves. Order yours now. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 2,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12–15 business days after artwork/design approval. Free shipping (Print247). Finishes: Gloss, Matte. Corners: Square Corners, Round Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.17,
+          "priceBasis": "per pouch (USD)",
+          "sourceUrl": "https://print247.us/spice-and-seasoning-pouches-4x6x2",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.17
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.03
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.79
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 1999,
+              "unitPrice": 0.49
+            },
+            {
+              "minQty": 2000,
+              "maxQty": 4999,
+              "unitPrice": 0.45
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.35
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/spice-and-seasoning-pouches-4x6x2-0.webp",
+              "alt": "spice-and-seasoning-pouches-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/spice-and-seasoning-pouches-4x6x2-1.webp",
+              "alt": "spice-and-seasoning-pouches-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/spice-and-seasoning-pouches-4x6x2-2.webp",
+              "alt": "spice-and-seasoning-pouches-4x6x2",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/spice-and-seasoning-pouches-4x6x2-3.webp",
+              "alt": "spice-and-seasoning-pouches-4x6x2",
+              "credit": "Print247 product photo"
+            }
+          ]
+        },
+        {
+          "title": "Tea Pouches 5×8×3 in",
+          "description": "Buy exceptional custom tea pouches 5x8x3\" and attract first-time buyers and repeat consumers. Packaging customized with your brand logo and design elements gets picked up faster on the shelf. Add resealable zippers and customize the corners of your pouches. Print247 publishes per-bag prices for these quantities: 200, 350, 500, 1,000, 3,000, 5,000 (USD, captured 2026-11-13); other quantities on request. MOQ 200 bags per design. Lead time: 12 to 15 business days. Free shipping (Print247). Finishes: Matte, Gloss. Corners: Square Corners, Round Corners.",
+          "material": "Mylar (metallised PET) laminate, full-colour printed",
+          "categorySlug": "pouches-bags",
+          "subcategory": "Stand-up pouch",
+          "priceUnit": null,
+          "moq": 200,
+          "moqUnit": "units",
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceCapturedAt": "2026-11-13",
+          "priceType": "EXACT",
+          "basePrice": 1.45,
+          "priceBasis": "per pouch (USD)",
+          "sourceUrl": "https://print247.us/tea-pouches-5x8x3",
+          "quantityBreaks": [
+            {
+              "minQty": 200,
+              "maxQty": 349,
+              "unitPrice": 1.45
+            },
+            {
+              "minQty": 350,
+              "maxQty": 499,
+              "unitPrice": 1.2
+            },
+            {
+              "minQty": 500,
+              "maxQty": 999,
+              "unitPrice": 0.9
+            },
+            {
+              "minQty": 1000,
+              "maxQty": 2999,
+              "unitPrice": 0.55
+            },
+            {
+              "minQty": 3000,
+              "maxQty": 4999,
+              "unitPrice": 0.46
+            },
+            {
+              "minQty": 5000,
+              "maxQty": null,
+              "unitPrice": 0.36
+            }
+          ],
+          "images": [
+            {
+              "url": "/suppliers/print247/tea-pouches-5x8x3-0.webp",
+              "alt": "tea-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/tea-pouches-5x8x3-1.webp",
+              "alt": "tea-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/tea-pouches-5x8x3-2.webp",
+              "alt": "tea-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            },
+            {
+              "url": "/suppliers/print247/tea-pouches-5x8x3-3.webp",
+              "alt": "tea-pouches-5x8x3",
+              "credit": "Print247 product photo"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

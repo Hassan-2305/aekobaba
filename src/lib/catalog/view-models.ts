@@ -97,6 +97,10 @@ export interface ProductSizeVM {
   moqUnit: string | null;
   imageUrl: string | null;
   sourceUrl: string | null;
+  /** This size's own published price (listing's price basis); null when the size isn't priced separately. */
+  basePrice?: number | null;
+  /** This size's own quantity tiers; empty when the size isn't priced separately. */
+  quantityBreaks?: QuantityBreakVM[];
 }
 
 export interface CategoryVM {
@@ -152,6 +156,8 @@ export interface ProductWithRelations {
     moqUnit: string | null;
     imageUrl: string | null;
     sourceUrl: string | null;
+    basePrice?: { toNumber(): number } | null;
+    quantityBreaks?: unknown;
   }[];
   supplier: {
     slug: string;
@@ -167,6 +173,16 @@ export interface ProductWithRelations {
     certifications: { name: string }[];
   };
   category: { slug: string; name: string };
+}
+
+/** A size's JSON quantity tiers, keeping only well-formed rows. */
+function breakRows(value: unknown): QuantityBreakVM[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((row) =>
+    row && typeof row === "object" && typeof row.minQty === "number" && typeof row.unitPrice === "number"
+      ? [{ minQty: row.minQty, maxQty: typeof row.maxQty === "number" ? row.maxQty : null, unitPrice: row.unitPrice }]
+      : [],
+  );
 }
 
 /** A size's JSON spec rows, keeping only well-formed { name, value } pairs. */
@@ -255,6 +271,8 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
       moqUnit: size.moqUnit,
       imageUrl: size.imageUrl,
       sourceUrl: size.sourceUrl,
+      basePrice: toNumber(size.basePrice ?? null),
+      quantityBreaks: breakRows(size.quantityBreaks),
     })),
     supplier: {
       slug: row.supplier.slug,

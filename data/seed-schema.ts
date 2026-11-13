@@ -122,6 +122,10 @@ export const productSchema = z
             .regex(/^\/(partners|suppliers)\/[a-z0-9-]+\/[A-Za-z0-9._-]+$/, "hosted supplier image path")
             .optional(),
           sourceUrl: sourceUrl.optional(),
+          /** This size's own published price at its smallest quantity, in the listing's priceBasis. */
+          basePrice: z.number().positive().nullable().optional(),
+          /** This size's own quantity tiers (when sizes are priced differently). */
+          quantityBreaks: z.array(quantityBreakSchema).optional(),
         }),
       )
       .optional(),

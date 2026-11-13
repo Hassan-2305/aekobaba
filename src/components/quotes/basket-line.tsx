@@ -1,7 +1,7 @@
 import { formatMoq, formatPerUnit, formatPriceLine, formatPriceRange, shortBasis } from "@/lib/catalog/format";
 import { moqPackSize } from "@/lib/catalog/format";
 import { assessMoq } from "@/lib/quotes/moq";
-import { sizeMoq, sizesOf } from "@/lib/catalog/sizes";
+import { pricedAsSize, sizeMoq, sizesOf } from "@/lib/catalog/sizes";
 import type { BasketItem } from "@/lib/basket/store";
 import { ProductPicture } from "@/components/catalog/product-picture";
 import { QuantityInput } from "@/components/catalog/quantity-input";
@@ -20,9 +20,12 @@ export interface BasketLineProps {
 }
 
 export function BasketLine({ item, onQuantityChange, onRemove, onSizeChange }: BasketLineProps) {
-  const { product, quantity } = item;
-  const sizes = sizesOf(product);
-  const minimum = sizeMoq(product, item.size);
+  const { quantity } = item;
+  const listing = item.product;
+  const sizes = sizesOf(listing);
+  // A listing priced per size shows the chosen size's own price.
+  const product = pricedAsSize(listing, item.size);
+  const minimum = sizeMoq(listing, item.size);
   const moq = assessMoq(quantity, minimum.moq, minimum.moqUnit, moqPackSize(product));
 
   const image = product.primaryImage;

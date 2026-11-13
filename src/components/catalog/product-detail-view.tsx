@@ -11,13 +11,14 @@ import {
   formatCaptureDate,
   formatLeadTime,
   formatMoq,
+  formatUnitMoney,
   NOT_PUBLISHED,
   priceCurrency,
   unitPrice,
 } from "@/lib/catalog/format";
 import type { PartnerFactsVM } from "@/lib/catalog/partner-facts";
 import type { VariantVM } from "@/lib/catalog/related";
-import { sizeSpecColumns, sizesOf } from "@/lib/catalog/sizes";
+import { hasSizePrices, sizeSpecColumns, sizesOf } from "@/lib/catalog/sizes";
 import { isFoodGrade, productTags } from "@/lib/catalog/tags";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -84,6 +85,8 @@ function SizesTable({ product }: { product: ProductVM }) {
   const columns = sizeSpecColumns(sizes).filter((name) => !shared.includes(name));
   const hasSku = sizes.some((size) => size.sku);
   const hasMoq = sizes.some((size) => size.moq !== null);
+  const hasPrice = hasSizePrices(product);
+  const currency = priceCurrency(product.priceBasis);
   const sameMoq = hasMoq && sizes.every((size) => size.moq === sizes[0].moq && size.moqUnit === sizes[0].moqUnit);
   return (
     <div className="mt-8" data-testid="sizes-table">
@@ -108,6 +111,7 @@ function SizesTable({ product }: { product: ProductVM }) {
               {columns.map((name) => (
                 <th key={name} scope="col" className="py-2 pr-4 font-medium">{name}</th>
               ))}
+              {hasPrice ? <th scope="col" className="py-2 pr-4 font-medium">Price from</th> : null}
               {hasMoq && !sameMoq ? <th scope="col" className="py-2 font-medium">Minimum order</th> : null}
             </tr>
           </thead>
@@ -121,6 +125,13 @@ function SizesTable({ product }: { product: ProductVM }) {
                     {size.specs.find((row) => row.name === name)?.value ?? <span className="text-ink-faint">—</span>}
                   </td>
                 ))}
+                {hasPrice ? (
+                  <td className="py-2 pr-4 text-ink">
+                    {size.basePrice != null
+                      ? formatUnitMoney(Math.min(size.basePrice, ...(size.quantityBreaks ?? []).map((b) => b.unitPrice)), currency)
+                      : <span className="text-ink-faint">—</span>}
+                  </td>
+                ) : null}
                 {hasMoq && !sameMoq ? (
                   <td className="py-2 text-ink">
                     {size.moq !== null ? formatMoq(size.moq, size.moqUnit) : <span className="text-ink-faint">{NOT_PUBLISHED}</span>}
@@ -318,7 +329,23 @@ export function ProductDetailView({
             </Row>
           </dl>
           <div className="mt-6">
-            {product.quantityBreaks.length > 0 ? (
+            {hasSizePrices(product) ? (
+              // Priced per size: one tier table per size, in size order.
+              <div className="space-y-6" data-testid="size-price-tiers">
+                {sizesOf(product)
+                  .filter((size) => size.quantityBreaks?.length)
+                  .map((size) => (
+                    <div key={size.label}>
+                      <h3 className="mb-2 text-sm font-medium text-ink">{size.label}</h3>
+                      <QuantityBreakTable
+                        breaks={size.quantityBreaks!}
+                        currency={currency}
+                        packSize={unitPrice(product)?.packSize ?? 1}
+                      />
+                    </div>
+                  ))}
+              </div>
+            ) : product.quantityBreaks.length > 0 ? (
               <QuantityBreakTable
                 breaks={product.quantityBreaks}
                 currency={currency}

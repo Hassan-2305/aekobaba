@@ -47,3 +47,28 @@ export function sizeSpecColumns(sizes: ProductSizeVM[]): string[] {
   for (const size of sizes) for (const row of size.specs) if (!out.includes(row.name)) out.push(row.name);
   return out;
 }
+
+/** True when at least one size carries its own published price. */
+export function hasSizePrices(product: Pick<ProductVM, "sizes">): boolean {
+  return sizesOf(product).some((size) => size.basePrice != null);
+}
+
+/**
+ * The listing priced as one of its sizes: when the size publishes its own
+ * price and tiers, those replace the listing-level figures (which, for a
+ * listing priced per size, are only the lowest "from" price). Unpriced sizes
+ * and single-size listings return the product unchanged.
+ */
+export function pricedAsSize(product: ProductVM, label: string | null | undefined): ProductVM {
+  const size = findSize(product, label);
+  if (!size || size.basePrice == null) return product;
+  return {
+    ...product,
+    priceType: "EXACT",
+    basePrice: size.basePrice,
+    priceMax: null,
+    quantityBreaks: size.quantityBreaks ?? [],
+    moq: size.moq ?? product.moq,
+    moqUnit: size.moq != null ? (size.moqUnit ?? product.moqUnit) : product.moqUnit,
+  };
+}

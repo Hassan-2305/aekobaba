@@ -97,3 +97,40 @@ describe("sizes and sibling variants", () => {
     expect(variantsOf(a, [sized, a, b]).map((v) => v.id)).not.toContain(sized.id);
   });
 });
+
+describe("sizes priced separately", () => {
+  const chips = () => {
+    const product = makeProduct({ priceType: "FROM", basePrice: 1.22, moq: 200 });
+    product.priceBasis = "per bag (USD); price varies by size and quantity";
+    product.sizes = [
+      size("4.5×6 in", { moq: 200, moqUnit: "units", basePrice: 1.22, quantityBreaks: [{ minQty: 200, maxQty: 999, unitPrice: 1.22 }, { minQty: 1000, maxQty: null, unitPrice: 0.49 }] }),
+      size("8.5×13 in", { moq: 200, moqUnit: "units", basePrice: 1.99, quantityBreaks: [{ minQty: 200, maxQty: 999, unitPrice: 1.99 }, { minQty: 1000, maxQty: null, unitPrice: 0.75 }] }),
+    ];
+    return product;
+  };
+
+  it("prices the listing as the chosen size, tiers included", async () => {
+    const { pricedAsSize, hasSizePrices } = await import("./sizes");
+    const { priceAtQuantity } = await import("./related");
+    const product = chips();
+    expect(hasSizePrices(product)).toBe(true);
+    expect(priceAtQuantity(pricedAsSize(product, "8.5×13 in"), 1000)?.perUnit).toBe(0.75);
+    expect(priceAtQuantity(pricedAsSize(product, "4.5×6 in"), 200)?.perUnit).toBe(1.22);
+    // Unpriced or unknown sizes leave the listing as published.
+    expect(pricedAsSize(product, "nope")).toBe(product);
+  });
+
+  it("shows the chosen size's price in the picker and in the basket", () => {
+    const html = renderToStaticMarkup(createElement(ProductConfigurator, { product: chips(), variants: [] }));
+    expect(html).toContain('data-testid="size-price"');
+    expect(html).toContain("$1.22 at 200+");
+    const line = renderToStaticMarkup(
+      createElement(BasketLine, {
+        item: { product: chips(), quantity: 200, size: "8.5×13 in", addedAt: "2026-11-13T00:00:00Z" },
+        onQuantityChange: () => {},
+        onRemove: () => {},
+      }),
+    );
+    expect(line).toContain("$1.99");
+  });
+});

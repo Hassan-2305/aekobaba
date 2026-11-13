@@ -9,6 +9,7 @@ import {
   shortBasis,
   unitPrice,
 } from "@/lib/catalog/format";
+import { hasSizePrices } from "@/lib/catalog/sizes";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
 // Price panel (spec C2): price → basis → per-unit figure. When the supplier
@@ -30,7 +31,7 @@ export function PriceDisplay({
   product,
   size = "md",
 }: {
-  product: Pick<ProductVM, "basePrice" | "priceBasis" | "priceUnit" | "priceType" | "priceMax">;
+  product: Pick<ProductVM, "basePrice" | "priceBasis" | "priceUnit" | "priceType" | "priceMax" | "sizes">;
   size?: "md" | "lg";
 }) {
   const priceClass = `font-semiwide font-medium tracking-tight text-ink tabular-nums ${
@@ -84,15 +85,27 @@ export function PriceDisplay({
   const unit = unitPrice(product);
   const perUnit =
     unit && unit.packSize !== 1 ? formatPerUnit(unit.amount, unit.currency, unit.unit) : null;
+  const sizePriced = hasSizePrices(product);
   return (
     <div data-testid="published-price">
       <p className="tag text-ink-faint">
         {priceLabel(product)}
         {currency !== "USD" ? <span className="ml-2 text-ink-muted">Prices in {currency}</span> : null}
       </p>
-      <p data-testid="price-line" className={`mt-2 ${priceClass}`}>
-        {formatPriceLine(product.basePrice, product.priceBasis)}
-      </p>
+      {sizePriced ? (
+        <>
+          <p data-testid="price-line" className={`mt-2 ${priceClass}`}>
+            From {formatMoney(product.basePrice, currency)} {shortBasis(product.priceBasis) ?? ""}
+          </p>
+          <p data-testid="size-price-note" className="mt-1 text-xs text-ink-muted">
+            Price depends on the size and quantity — choose a size below to see its price table.
+          </p>
+        </>
+      ) : (
+        <p data-testid="price-line" className={`mt-2 ${priceClass}`}>
+          {formatPriceLine(product.basePrice, product.priceBasis)}
+        </p>
+      )}
       {perUnit ? (
         <p data-testid="per-unit" className="mt-1 text-xs text-ink-muted tabular-nums">
           {perUnit}

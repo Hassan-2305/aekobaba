@@ -382,16 +382,11 @@ body {
 }
 
 /* Packshots sit on near-white studio sweeps (231–255). Lift the sweep to pure
-   white, then multiply: the backdrop disappears into whatever well holds it. */
-/* Studio packshots on light wells: lift the backdrop to white, multiply it
-   away, and feather the frame edge so no photo rectangle ever shows. */
+   white, then multiply: the backdrop disappears into whatever well holds it.
+   No edge mask — product photos show in full, never radially faded. */
 @utility packshot {
   mix-blend-mode: multiply;
   filter: brightness(1.07) contrast(1.05);
-  mask-image: radial-gradient(closest-side, #000 80%, transparent 100%);
-  mask-origin: content-box;
-  mask-clip: content-box;
-  mask-repeat: no-repeat;
 }
 
 /* Packaging Stage — blueprint annotations draw in once the hero settles. */

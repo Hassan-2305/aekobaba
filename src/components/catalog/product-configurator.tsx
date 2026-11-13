@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
 import { InquiryDialog, type InquiryDialogHandle } from "./inquiry-dialog";
-import { formatMoney, formatMoqShort, formatUnitMoney, moqInUnits } from "@/lib/catalog/format";
+import { formatMoney, formatMoqShort, formatUnitMoney, moqInUnits, priceCurrency } from "@/lib/catalog/format";
 import { defaultQuantity, priceAtQuantity, type VariantVM } from "@/lib/catalog/related";
 import { useQuoteBasketStore } from "@/lib/basket/store";
-import { findSize, sizeLine, sizeMoq, sizesOf } from "@/lib/catalog/sizes";
+import { findSize, pricedAsSize, sizeLine, sizeMoq, sizesOf } from "@/lib/catalog/sizes";
 import type { ProductVM } from "@/lib/catalog/view-models";
 import { QuantityInput } from "./quantity-input";
 
@@ -57,7 +57,9 @@ export function ProductConfigurator({
   const [added, setAdded] = useState(false);
 
   const groups = useMemo(() => optionGroups(product), [product]);
-  const estimate = priceAtQuantity(product, quantity);
+  // Listings priced per size quote the chosen size's own price and tiers.
+  const priced = pricedAsSize(product, sizeLabel);
+  const estimate = priceAtQuantity(priced, quantity);
   const minimumItems = moqInUnits({ ...product, moq: minimum.moq, moqUnit: minimum.moqUnit });
   const belowMoq = minimumItems !== null && quantity < minimumItems;
   const variant = variants.find((v) => v.active);
@@ -136,6 +138,16 @@ export function ProductConfigurator({
                     <dd className="text-ink tabular-nums">{row.value}</dd>
                   </div>
                 ))}
+                {size.basePrice != null ? (
+                  <>
+                    <dt className="text-ink-faint">Price</dt>
+                    <dd className="text-ink tabular-nums" data-testid="size-price">
+                      {(size.quantityBreaks?.length ? size.quantityBreaks : [{ minQty: minimum.moq ?? 1, maxQty: null, unitPrice: size.basePrice }])
+                        .map((b) => `${formatUnitMoney(b.unitPrice, priceCurrency(product.priceBasis))} at ${b.minQty.toLocaleString("en-US")}+`)
+                        .join(" · ")}
+                    </dd>
+                  </>
+                ) : null}
                 <dt className="text-ink-faint">Minimum order</dt>
                 <dd className={minimum.moq === null ? "text-ink-faint" : "text-ink tabular-nums"}>
                   {minimum.moq === null ? "Not published" : formatMoqShort(minimum.moq, minimum.moqUnit)}
