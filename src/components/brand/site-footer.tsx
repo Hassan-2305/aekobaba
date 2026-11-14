@@ -31,6 +31,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     title: "Suppliers",
     links: [
       { label: "All suppliers", href: "/suppliers" },
+      { label: "Ingredient suppliers", href: "/ingredients" },
       { label: "Partners", href: "/partners" },
       { label: "List your company", href: "/list-your-company" },
       { label: "Fetch products from my site", href: "/list-your-company?type=fetch" },

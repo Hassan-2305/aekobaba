@@ -1,4 +1,4 @@
-import { getAllProducts, getCategories } from "@/lib/catalog/queries";
+import { getPackagingCategories, getPackagingProducts } from "@/lib/catalog/queries";
 
 // GET /api/catalog/menu — live listing counts for the header's mega menu.
 // The header itself is static (it renders on prerendered pages that must
@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const [categories, products] = await Promise.all([getCategories(), getAllProducts()]);
+    const [categories, products] = await Promise.all([getPackagingCategories(), getPackagingProducts()]);
     return Response.json(
       {
         counts: Object.fromEntries(categories.map((c) => [c.slug, c.productCount])),

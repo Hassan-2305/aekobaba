@@ -47,7 +47,7 @@ describe("seed image mapping", () => {
 
   it("maps every seeded product to exactly one primary image", () => {
     const products = seededProducts(seed);
-    expect(products).toHaveLength(750);
+    expect(products).toHaveLength(754);
 
     const rows = mapAllProducts(seed);
     expect(rows).toHaveLength(products.length);
@@ -127,7 +127,7 @@ describe("seed image mapping", () => {
       }
     }
 
-    expect(total).toBe(750);
+    expect(total).toBe(754);
   });
 });
 

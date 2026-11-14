@@ -135,6 +135,15 @@ export const productSchema = z
      * the supplier's own product page, credited). When present these are the
      * product's Image rows and no representative packshot is written for it.
      */
+    /**
+     * Headline specs the supplier publishes for the product (e.g. an
+     * ingredient's protein content or PDCAAS), shown as specification rows.
+     */
+    keySpecs: z
+      .array(z.strictObject({ name: z.string().min(1).max(60), value: z.string().min(1).max(200) }))
+      .optional(),
+    /** Applications the supplier names for the product (ingredients: bakery, beverages, ...). */
+    applications: z.array(z.string().min(1).max(120)).optional(),
     images: z
       .array(
         z.strictObject({
@@ -242,6 +251,8 @@ export const categorySchema = z.strictObject({
   description: z.string().min(1).nullable(),
   /** Parent category slug, when the taxonomy nests this category. */
   parentSlug: slug.nullable(),
+  /** Marketplace section: packaging (default when absent) or ingredients. */
+  section: z.enum(["PACKAGING", "INGREDIENTS"]).optional(),
 });
 export type SeedCategory = z.infer<typeof categorySchema>;
 

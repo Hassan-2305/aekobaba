@@ -24,6 +24,14 @@ interface OptionGroup {
 
 /** Options the listing actually offers, plus requests the buyer can always raise. */
 function optionGroups(product: ProductVM): OptionGroup[] {
+  if (product.section === "INGREDIENTS") {
+    return [
+      {
+        title: "Ask the supplier about",
+        options: ["Technical data sheet", "Sample for R&D", "Volume pricing", "Application support", "Regulatory documents"],
+      },
+    ];
+  }
   const s = product.specs;
   const groups: OptionGroup[] = [];
   const printing = [...new Set([...s.customization, ...s.printing])];
@@ -51,7 +59,9 @@ export function ProductConfigurator({
   const [sizeLabel, setSizeLabel] = useState<string | null>(sizes[0]?.label ?? null);
   const size = findSize(product, sizeLabel);
   const minimum = sizeMoq(product, sizeLabel);
-  const [quantity, setQuantity] = useState(() => minimum.moq ?? defaultQuantity(product));
+  const ingredient = product.section === "INGREDIENTS";
+  // Ingredients are bought by weight; 25 kg (one bag) is only a starting figure the buyer edits.
+  const [quantity, setQuantity] = useState(() => minimum.moq ?? (ingredient ? 25 : defaultQuantity(product)));
   const [chosen, setChosen] = useState<string[]>([]);
   const [notes, setNotes] = useState("");
   const [added, setAdded] = useState(false);
@@ -79,7 +89,7 @@ export function ProductConfigurator({
 
   const open = (kind: "QUOTE" | "SAMPLE") =>
     dialog.current?.open(kind, {
-      quantity: kind === "QUOTE" ? quantity.toLocaleString("en-US") : undefined,
+      quantity: kind === "QUOTE" ? `${quantity.toLocaleString("en-US")}${ingredient ? " kg" : ""}` : undefined,
       format: [sizeLabel, variant?.label, ...chosen.filter((c) => !c.startsWith("Custom printing"))]
         .filter(Boolean)
         .join(", "),
@@ -200,7 +210,7 @@ export function ProductConfigurator({
 
       <div className={`grid gap-4 sm:grid-cols-[minmax(0,180px)_1fr] ${variants.length > 1 ? "mt-6" : ""}`}>
         <label className="block">
-          <span className="tag text-ink-faint">Quantity</span>
+          <span className="tag text-ink-faint">{ingredient ? "Quantity (kg)" : "Quantity"}</span>
           <QuantityInput
             value={quantity}
             onCommit={setQuantity}
@@ -265,7 +275,11 @@ export function ProductConfigurator({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            placeholder="Artwork status, target date, delivery location…"
+            placeholder={
+              ingredient
+                ? "Your application, target volume per year, delivery location…"
+                : "Artwork status, target date, delivery location…"
+            }
             className="mt-1.5 block w-full border border-line bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none"
           />
         </label>

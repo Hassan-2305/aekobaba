@@ -29,10 +29,12 @@ async function headerAccount(): Promise<HeaderAccount | null> {
   }
 }
 
-const NAV = [
+// `wideOnly` links hide below xl so the bar never overflows at laptop widths.
+const NAV: { label: string; href: string; wideOnly?: boolean }[] = [
+  { label: "Ingredients", href: "/ingredients" },
   { label: "Suppliers", href: "/suppliers" },
-  { label: "Partners", href: "/partners" },
-  { label: "How it works", href: "/#how" },
+  { label: "Partners", href: "/partners", wideOnly: true },
+  { label: "How it works", href: "/#how", wideOnly: true },
 ];
 
 export async function SiteHeader() {
@@ -65,7 +67,7 @@ export async function SiteHeader() {
               <Link
                 key={n.href}
                 href={n.href}
-                className="flex h-10 flex-none items-center whitespace-nowrap rounded-md px-3 text-[15px] font-medium text-ink hover:bg-well"
+                className={`${n.wideOnly ? "hidden xl:flex" : "flex"} h-10 flex-none items-center whitespace-nowrap rounded-md px-3 text-[15px] font-medium text-ink hover:bg-well`}
               >
                 {n.label}
               </Link>
@@ -92,7 +94,11 @@ export async function SiteHeader() {
             <BasketButton />
             <AccountMenu account={account} />
             <MobileMenu
-              links={[...NAV, { label: "Browse all products", href: "/results" }, ...mobileAccountLinks]}
+              links={[
+                ...NAV.map(({ label, href }) => ({ label, href })),
+                { label: "Browse all products", href: "/results" },
+                ...mobileAccountLinks,
+              ]}
               signedInEmail={account?.email ?? null}
             />
           </div>
@@ -118,6 +124,11 @@ export async function SiteHeader() {
         </Link>
         <Link href="/results?category=compostables" className="flex-none px-3 text-sm font-medium text-ink hover:text-orange-ink">
           Sustainable
+        </Link>
+        <span aria-hidden className="mx-2 h-[18px] w-px flex-none bg-line-strong" />
+        <Link href="/ingredients" className="flex flex-none items-center gap-2 px-3 text-sm font-medium text-ink hover:text-orange-ink">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#2BB673]" />
+          Ingredients
         </Link>
       </nav>
     </>

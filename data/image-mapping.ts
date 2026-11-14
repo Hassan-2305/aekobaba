@@ -49,6 +49,11 @@ export const CATEGORY_VARIANTS: Record<string, readonly string[]> = {
   "cr-cannabis": ["child-resistant-jar"],
   compostables: ["compostable-pouch"],
   "brand-accessories": ["hang-tag-sticker"],
+  // Ingredients section — every listing carries the supplier's own photos;
+  // these powder-format fallbacks only apply if a listing has none.
+  "plant-proteins": ["sachet-stick"],
+  "egg-replacers-binders": ["sachet-stick"],
+  "greens-nutrient-powders": ["sachet-stick"],
 };
 
 export interface SeedProductImageInput {

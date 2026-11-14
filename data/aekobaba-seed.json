@@ -160,6 +160,27 @@
       "name": "Branding Accessories: Hang Tags, Stickers, Tissue & Tape",
       "description": null,
       "parentSlug": null
+    },
+    {
+      "slug": "plant-proteins",
+      "name": "Plant Proteins & Isolates",
+      "parentSlug": null,
+      "section": "INGREDIENTS",
+      "description": "Protein isolates and concentrates for nutrition and function: beverages, bakery, dairy and meat alternatives, bars."
+    },
+    {
+      "slug": "egg-replacers-binders",
+      "name": "Egg Replacers & Binding Systems",
+      "parentSlug": null,
+      "section": "INGREDIENTS",
+      "description": "Plant-based systems that replace eggs, methylcellulose and other binders in bakery, confectionery and meat alternatives."
+    },
+    {
+      "slug": "greens-nutrient-powders",
+      "name": "Greens & Nutrient Powders",
+      "parentSlug": null,
+      "section": "INGREDIENTS",
+      "description": "Whole-plant green ingredients for protein, fibre and micronutrient fortification."
     }
   ],
   "suppliers": [
@@ -32447,6 +32468,341 @@
               "url": "/suppliers/print247/tea-pouches-5x8x3-3.webp",
               "alt": "tea-pouches-5x8x3",
               "credit": "Print247 product photo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "plantible",
+      "name": "Plantible Foods",
+      "website": "https://www.plantiblefoods.com",
+      "location": "US (Schleicher County, TX)",
+      "legalIdentity": "Plantible Foods, Inc.",
+      "status": "LISTED",
+      "isPartner": false,
+      "sourceUrl": "https://www.plantiblefoods.com/our-story",
+      "sourceCapturedAt": "2026-11-13",
+      "review": null,
+      "certifications": [],
+      "products": [
+        {
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": true,
+          "sourceCapturedAt": "2026-11-13",
+          "quantityBreaks": [],
+          "title": "Rubi Protein™ — Lemna Leaf Protein (RuBisCO)",
+          "categorySlug": "plant-proteins",
+          "subcategory": "RuBisCO protein",
+          "material": "Lemna (duckweed) leaf protein — RuBisCO, gentle aqueous extraction",
+          "sourceUrl": "https://www.plantiblefoods.com/product/rubi-protein",
+          "description": "Rubi Protein is a highly functional protein from Lemna, naturally rich in RuBisCO, the protein plants use for photosynthesis and the most abundant protein on Earth. Plantible grows Lemna year-round in controlled aquafarms in Texas and extracts the protein with a gentle water-based process that keeps its native functionality. It is a complete protein (all nine essential amino acids, PDCAAS 1.0) with neutral taste, colour and aroma, soluble across a broad pH range, and it foams, emulsifies and forms heat-set gels — so it can replace egg white and synthetic binders while adding protein. On the label it reads \"Lemna leaf protein\". In February 2026 the FDA issued a \"no questions\" letter on Plantible's GRAS notice for Rubi Protein. Plantible does not publish prices or minimum orders: pricing depends on volume and application — request a quote, technical data sheet or R&D sample through Aekobaba. Supplied to food & beverage manufacturers (not sold to consumers).",
+          "keySpecs": [
+            {
+              "name": "Protein content",
+              "value": "85%"
+            },
+            {
+              "name": "Protein quality",
+              "value": "PDCAAS 1.0 — complete protein, all nine essential amino acids"
+            },
+            {
+              "name": "Solubility",
+              "value": ">99% at pH 6.5; soluble across a broad pH range"
+            },
+            {
+              "name": "Gel strength",
+              "value": "2× egg white powder (supplier figure)"
+            },
+            {
+              "name": "Foaming",
+              "value": "Whips to stiff peaks in 3 minutes, cold or ambient"
+            },
+            {
+              "name": "Taste & colour",
+              "value": "Neutral taste, colour and aroma"
+            },
+            {
+              "name": "Allergens",
+              "value": "Free from 20 food allergens incl. the FDA top 8 (University of Nebraska study, per Plantible)"
+            },
+            {
+              "name": "US regulatory",
+              "value": "FDA \"no questions\" letter on GRAS notice (Feb 2026)"
+            },
+            {
+              "name": "Label declaration",
+              "value": "Lemna leaf protein / Lemna protein"
+            }
+          ],
+          "applications": [
+            "Bakery — egg replacement & protein enrichment",
+            "RTD protein & greens beverages",
+            "Whipped desserts, mousse & macarons",
+            "Plant-based yogurt, milk & creamers",
+            "Plant-based & hybrid meat",
+            "Protein bars & snacks",
+            "High-protein tofu & curds",
+            "Personal care & cosmetics"
+          ],
+          "images": [
+            {
+              "url": "/suppliers/plantible/rubi-protein-powder.webp",
+              "alt": "Rubi Protein powder being sifted",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-protein-foam.webp",
+              "alt": "Whipped Rubi Protein foam",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-protein-yogurt.webp",
+              "alt": "Plant-based yogurt made with Rubi Protein",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-protein-tofu.webp",
+              "alt": "High-protein tofu made with Rubi Protein",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-protein-lemna-beaker.webp",
+              "alt": "Lemna and extracted protein in a lab flask",
+              "credit": "Plantible Foods photo"
+            }
+          ]
+        },
+        {
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": true,
+          "sourceCapturedAt": "2026-11-13",
+          "quantityBreaks": [],
+          "title": "Rubi Whisk™ — Complete Egg Replacement",
+          "categorySlug": "egg-replacers-binders",
+          "subcategory": "Egg replacement system",
+          "material": "Rubi Protein (Lemna leaf protein) with clean-label, allergen-free co-ingredients",
+          "sourceUrl": "https://www.plantiblefoods.com/product/rubi-whisk",
+          "description": "Rubi Whisk is Plantible's complete egg replacement system, powered by Rubi Protein. It delivers what formulators use eggs for — aeration, emulsification, binding, moisture retention and structure — as a drop-in ingredient, with steady supply and pricing instead of egg-market volatility and avian-flu shortages. It whips to stiff peaks in three minutes and cannot be over-whipped, sets a firm lemon curd, keeps high-oil cakes moist and helps gluten-free breads hold structure. Plantible states one 8 oz package replaces eight dozen eggs, at an estimated 20% saving against free-range eggs. Vegan and free of major allergens. Plantible does not publish prices or minimum orders: pricing depends on volume and application — request a quote, technical data sheet or R&D sample through Aekobaba. Supplied to food & beverage manufacturers (not sold to consumers).",
+          "keySpecs": [
+            {
+              "name": "Egg equivalence",
+              "value": "One 8 oz package replaces 8 dozen eggs (supplier figure)"
+            },
+            {
+              "name": "Cost vs eggs",
+              "value": "≈20% estimated saving vs free-range eggs (supplier estimate)"
+            },
+            {
+              "name": "Functions",
+              "value": "Aeration, emulsification, binding, moisture retention, structure"
+            },
+            {
+              "name": "Whipping",
+              "value": "Stiff peaks in 3 minutes, cold or ambient; cannot be over-whipped"
+            },
+            {
+              "name": "Allergens",
+              "value": "None — allergen-free and vegan"
+            },
+            {
+              "name": "Protein quality",
+              "value": "PDCAAS 1 (Rubi Protein base)"
+            },
+            {
+              "name": "Label",
+              "value": "Blend: Rubi Protein plus other clean-label, allergen-free ingredients"
+            }
+          ],
+          "applications": [
+            "Cakes, muffins & brownies",
+            "Cookies",
+            "Gluten-free & vegan bakery",
+            "Waffles & pancakes",
+            "Macarons & meringues",
+            "Lemon curd, tarts & fillings",
+            "Mousses & whipped desserts",
+            "Protein bars & snacks"
+          ],
+          "images": [
+            {
+              "url": "/suppliers/plantible/rubi-whisk-meringue.webp",
+              "alt": "Meringue whipped with Rubi Whisk",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-whisk-cake.webp",
+              "alt": "Egg-free layer cake made with Rubi Whisk",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-whisk-lemon-tart.webp",
+              "alt": "Lemon tart with meringue made with Rubi Whisk",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-whisk-macaron.webp",
+              "alt": "Macarons made with Rubi Whisk",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-whisk-whipped-cream.webp",
+              "alt": "Whipped dessert topping made with Rubi Whisk",
+              "credit": "Plantible Foods photo"
+            }
+          ]
+        },
+        {
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": true,
+          "sourceCapturedAt": "2026-11-13",
+          "quantityBreaks": [],
+          "title": "Lemna Leaf Greens™ — Whole-Leaf Greens Powder",
+          "categorySlug": "greens-nutrient-powders",
+          "subcategory": "Whole-leaf greens powder",
+          "material": "Whole Lemna leaf (after protein extraction) — single-ingredient green powder",
+          "sourceUrl": "https://www.plantiblefoods.com/product/lemna-leave-greens",
+          "description": "Lemna Leaf Greens is a nutrient-dense green ingredient made from whole Lemna after protein extraction — one listed ingredient carrying plant protein, dietary fibre, vitamins, minerals, carotenoids and highly bioavailable iron. Its natural vibrant green colour and mild flavour (milder than many vegetable and algae powders) suit greens powders, nutrition beverages, bars, bakery, supplements and pet nutrition, in dry mixes and selected wet systems. Grown and processed in the US, with a stable supply chain and competitive cost-in-use. Plantible does not publish prices or minimum orders: pricing depends on volume and application — request a quote, technical data sheet or R&D sample through Aekobaba. Supplied to food & beverage manufacturers (not sold to consumers).",
+          "keySpecs": [
+            {
+              "name": "Protein",
+              "value": "25% — complete, highly digestible plant protein"
+            },
+            {
+              "name": "Dietary fibre",
+              "value": "40%"
+            },
+            {
+              "name": "Iron",
+              "value": "30% of daily value (bioavailable) per 10 g serving"
+            },
+            {
+              "name": "Ingredient list",
+              "value": "1 listed ingredient"
+            },
+            {
+              "name": "Colour & flavour",
+              "value": "Natural vibrant green; mild, balanced green flavour"
+            },
+            {
+              "name": "Supply",
+              "value": "US-grown and processed"
+            }
+          ],
+          "applications": [
+            "Greens powders & wellness blends",
+            "Smoothies & powdered drink mixes",
+            "RTD nutrition beverages",
+            "Protein bars & snacks",
+            "Bakery",
+            "Gummies & supplements",
+            "Pet treats & toppers"
+          ],
+          "images": [
+            {
+              "url": "/suppliers/plantible/lemna-leaf-greens-scoop.webp",
+              "alt": "Lemna Leaf Greens powder in a scoop",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/lemna-leaf-greens-pile.webp",
+              "alt": "Lemna Leaf Greens powder",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/lemna-leaf-greens-drink.webp",
+              "alt": "Green drink made with Lemna Leaf Greens",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/lemna-leaf-greens-nutrition.webp",
+              "alt": "Lemna Leaf Greens in a nutrition application",
+              "credit": "Plantible Foods photo"
+            }
+          ]
+        },
+        {
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": true,
+          "sourceCapturedAt": "2026-11-13",
+          "quantityBreaks": [],
+          "title": "Rubi Prime™ — Methylcellulose Replacement for Meat Alternatives",
+          "categorySlug": "egg-replacers-binders",
+          "subcategory": "Binder for meat alternatives",
+          "material": "Rubi Protein (Lemna leaf protein) binding system — clean-label, free of major allergens",
+          "sourceUrl": "https://www.plantiblefoods.com/applications/rubiprime",
+          "description": "Rubi Prime is a binding system for plant-based and hybrid meats, powered by Rubi Protein. It gives the binding and emulsification of methylcellulose but with thermo-irreversible binding, so products hold together served hot or cold, while locking in fat and flavour for a juicier bite and lower cook loss. Plantible describes it as a one-to-one methylcellulose replacement that works in non-emulsified products — extruded burgers, sausages, chicken-style nuggets and plant-based fish — with emulsified, mycelium and hybrid formats in development. Note: Plantible's current product line (Our Products page) lists Rubi Protein, Rubi Whisk and Lemna Leaf Greens; Rubi Prime is described on its meat-applications page — confirm availability in your quote. Plantible does not publish prices or minimum orders: pricing depends on volume and application — request a quote, technical data sheet or R&D sample through Aekobaba. Supplied to food & beverage manufacturers (not sold to consumers).",
+          "keySpecs": [
+            {
+              "name": "Replaces",
+              "value": "Methylcellulose, one-to-one (supplier claim); also egg white"
+            },
+            {
+              "name": "Binding",
+              "value": "Thermo-irreversible — holds hot or cold"
+            },
+            {
+              "name": "Gelation",
+              "value": "Self-supporting gel at 4× lower concentration than egg white"
+            },
+            {
+              "name": "Works in",
+              "value": "Non-emulsified meat alternatives (burgers, sausages, nuggets, fish)"
+            },
+            {
+              "name": "Allergens",
+              "value": "Free of major allergens; clean label"
+            },
+            {
+              "name": "Protein quality",
+              "value": "PDCAAS 1 (Rubi Protein base)"
+            }
+          ],
+          "applications": [
+            "Plant-based burgers",
+            "Plant-based sausages",
+            "Chicken-style nuggets & tenders",
+            "Plant-based fish",
+            "Whole-muscle, mycelium & hybrid (in development)"
+          ],
+          "images": [
+            {
+              "url": "/suppliers/plantible/rubi-prime-sausage.webp",
+              "alt": "Plant-based sausage made with Rubi Prime",
+              "credit": "Plantible Foods photo"
+            },
+            {
+              "url": "/suppliers/plantible/rubi-prime-nuggets.webp",
+              "alt": "Plant-based nuggets made with Rubi Prime",
+              "credit": "Plantible Foods photo"
             }
           ]
         }

@@ -10,12 +10,15 @@ import { CATEGORY_GROUPS, CATEGORY_MENU, groupedMenu } from "./menu";
 
 const seed = JSON.parse(
   readFileSync(path.join(__dirname, "../../../data/aekobaba-seed.json"), "utf8"),
-) as { categories: { slug: string; name: string }[] };
+) as { categories: { slug: string; name: string; section?: string }[] };
 
 describe("CATEGORY_MENU", () => {
-  it("covers exactly the seeded taxonomy — same slugs, same names, same order", () => {
+  it("covers exactly the seeded packaging taxonomy — same slugs, same names, same order", () => {
+    // Ingredient categories have their own section (/ingredients), not the packaging menu.
     expect(CATEGORY_MENU).toEqual(
-      seed.categories.map((c) => ({ slug: c.slug, name: c.name })),
+      seed.categories
+        .filter((c) => c.section !== "INGREDIENTS")
+        .map((c) => ({ slug: c.slug, name: c.name })),
     );
   });
 

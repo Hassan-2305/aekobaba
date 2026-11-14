@@ -8,6 +8,8 @@ import { ProductCard } from "@/components/catalog/product-card";
 import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
 import { formatCaptureDate } from "@/lib/catalog/format";
 import { partnerProfile, varietyOrder } from "@/lib/catalog/partners";
+import { IngredientSpotlight } from "@/components/catalog/ingredient-spotlight";
+import { ingredientProfile } from "@/lib/catalog/ingredient-suppliers";
 import { ProductPicture, isRepresentativeImage } from "@/components/catalog/product-picture";
 import { formatMoney, formatUnitMoney, priceCurrency, shortBasis, unitPrice } from "@/lib/catalog/format";
 import Link from "next/link";
@@ -45,6 +47,8 @@ export default async function SupplierPage({ params, searchParams }: SupplierPag
   const pageProducts = supplier.products.slice((page - 1) * CATALOG_PAGE_SIZE, page * CATALOG_PAGE_SIZE);
   const pageHref = (n: number) => `/suppliers/${supplier.slug}${n > 1 ? `?page=${n}` : ""}#catalog`;
   const profile = supplier.isPartner ? partnerProfile(supplier.slug) : null;
+  // Ingredient suppliers open with their spotlight (sourced proof points).
+  const ingredientSpotlight = ingredientProfile(supplier.slug);
   // Branded storefront: the partner's best photography, one per product type.
   const showcase = profile
     ? varietyOrder(supplier.products.filter((p) => p.primaryImage)).slice(0, 4)
@@ -285,6 +289,17 @@ export default async function SupplierPage({ params, searchParams }: SupplierPag
             </ul>
           </div>
         </section>
+      ) : null}
+
+      {ingredientSpotlight ? (
+        <div className="mx-auto max-w-[1400px] px-5 pt-10 sm:px-8 lg:px-12">
+          <IngredientSpotlight
+            profile={ingredientSpotlight}
+            name={supplier.name}
+            products={supplier.products}
+            showStorefrontLink={false}
+          />
+        </div>
       ) : null}
 
       <div className="mx-auto max-w-[1400px] px-5 pb-24 sm:px-8 lg:px-12">

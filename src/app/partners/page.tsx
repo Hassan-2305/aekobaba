@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ProductCard } from "@/components/catalog/product-card";
 import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
 import { partnerProfile, varietyOrder } from "@/lib/catalog/partners";
-import { getAllProducts } from "@/lib/catalog/queries";
+import { getPackagingProducts } from "@/lib/catalog/queries";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
 // The partner collection — an invite-only, curated catalog of suppliers who
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PartnersPage() {
-  const products = await getAllProducts();
+  const products = await getPackagingProducts();
   const bySupplier = new Map<string, ProductVM[]>();
   for (const product of products) {
     if (!product.supplier.isPartner) continue;

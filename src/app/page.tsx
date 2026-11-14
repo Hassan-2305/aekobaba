@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { HomeLanding } from "@/components/home/home-landing";
 import { getCurrentUserRole, getServerSessionUser } from "@/lib/auth/session";
 import { LEAD_PARTNER_SLUG, partnerProfile, varietyOrder } from "@/lib/catalog/partners";
-import { getAllProducts, getCategories } from "@/lib/catalog/queries";
+import { getPackagingCategories, getPackagingProducts } from "@/lib/catalog/queries";
 
 // Home page: thin data wrapper. The layout and rendering live in
 // src/components/home/home-landing.tsx (presentational, test-covered); this
@@ -19,7 +19,7 @@ export default async function HomePage() {
   if (session && (await getCurrentUserRole(session.supabaseUserId).catch(() => null)) === "ADMIN") {
     redirect("/admin");
   }
-  const [categories, products] = await Promise.all([getCategories(), getAllProducts()]);
+  const [categories, products] = await Promise.all([getPackagingCategories(), getPackagingProducts()]);
 
   // The lead partner's spotlight (sponsored, labelled), one product per type first.
   const profile = partnerProfile(LEAD_PARTNER_SLUG);

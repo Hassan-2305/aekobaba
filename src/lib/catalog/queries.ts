@@ -54,6 +54,25 @@ export const getAllProducts = cached(async (): Promise<ProductVM[]> => {
   return rows.map((row) => toProductVM(row));
 }, "catalog:all-products");
 
+/** True for listings in the ingredients section (ingredient suppliers). */
+export function isIngredient(product: Pick<ProductVM, "section">): boolean {
+  return product.section === "INGREDIENTS";
+}
+
+/**
+ * The packaging marketplace: every browse surface (home, results, supplier
+ * directory, partners, menu) lists packaging only. Ingredient suppliers live
+ * in their own section (/ingredients).
+ */
+export const getPackagingProducts = cache(async (): Promise<ProductVM[]> =>
+  (await getAllProducts()).filter((p) => !isIngredient(p)),
+);
+
+/** The ingredients section, in seed order (each supplier's strongest products first). */
+export const getIngredientProducts = cache(async (): Promise<ProductVM[]> =>
+  (await getAllProducts()).filter(isIngredient),
+);
+
 /** One product — served from the cached catalog, no extra round-trip. */
 export const getProduct = cache(async (id: string): Promise<ProductVM | null> => {
   const products = await getAllProducts();
@@ -69,9 +88,20 @@ export const getCategories = cached(async (): Promise<CategoryVM[]> => {
     slug: row.slug,
     name: row.name,
     description: row.description,
+    section: row.section,
     productCount: row._count.products,
   }));
 }, "catalog:categories");
+
+/** Packaging categories only — the home grid and the mega menu. */
+export const getPackagingCategories = cache(async (): Promise<CategoryVM[]> =>
+  (await getCategories()).filter((c) => c.section !== "INGREDIENTS"),
+);
+
+/** Ingredient categories only — the ingredients section's filter chips. */
+export const getIngredientCategories = cache(async (): Promise<CategoryVM[]> =>
+  (await getCategories()).filter((c) => c.section === "INGREDIENTS"),
+);
 
 /** Rail size for the home featured section. */
 export const FEATURED_PRODUCT_CAP = 10;

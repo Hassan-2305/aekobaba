@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import {
   createCategoryIndexWalker,
   productImageRows,
@@ -94,6 +94,8 @@ async function upsertProduct(
     samplePolicyVerified: product.samplePolicyVerified,
     sourceUrl: product.sourceUrl,
     sourceCapturedAt: new Date(product.sourceCapturedAt),
+    keySpecs: product.keySpecs?.length ? product.keySpecs : Prisma.DbNull,
+    applications: product.applications ?? [],
   };
 
   const existing = await tx.product.findUnique({
@@ -250,7 +252,12 @@ async function main(): Promise<void> {
   const categoryIds = new Map<string, string>();
   await prisma.$transaction(async (tx) => {
     for (const category of seed.categories) {
-      const values = { slug: category.slug, name: category.name, description: category.description };
+      const values = {
+        slug: category.slug,
+        name: category.name,
+        description: category.description,
+        section: category.section ?? "PACKAGING",
+      };
       const existing = await tx.category.findUnique({ where: { slug: category.slug } });
       const saved = existing
         ? await tx.category.update({ where: { id: existing.id }, data: values })

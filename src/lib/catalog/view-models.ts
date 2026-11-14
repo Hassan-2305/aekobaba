@@ -10,6 +10,8 @@ import { extractSpecs, type ProductSpecs } from "./specs";
 export type SupplierStatusValue = "PENDING" | "LISTED" | "RECOMMENDED" | "QUOTE_ONLY" | "DISABLED";
 export type PriceTypeValue = "EXACT" | "CALCULATOR" | "FROM" | "QUOTE_ONLY" | "ESTIMATE";
 export type StockOrCustomValue = "STOCK" | "CUSTOM";
+/** Marketplace section: packaging and ingredient suppliers are browsed separately. */
+export type CatalogSectionValue = "PACKAGING" | "INGREDIENTS";
 
 export interface SupplierSummaryVM {
   slug: string;
@@ -48,6 +50,8 @@ export interface ProductVM {
   materialFamily: string;
   categorySlug: string;
   categoryName: string;
+  /** The category's marketplace section; absent on basket snapshots saved before sections existed. */
+  section?: CatalogSectionValue;
   subcategory: string | null;
   priceType: PriceTypeValue;
   /** Null = the supplier does not publish it → "Ask the supplier". */
@@ -86,6 +90,10 @@ export interface ProductVM {
    * snapshots saved before sizes existed.
    */
   sizes?: ProductSizeVM[];
+  /** Supplier-published headline specs (ingredients: protein content, PDCAAS, ...). */
+  keySpecs?: { name: string; value: string }[];
+  /** Applications the supplier names for the product. */
+  applications?: string[];
 }
 
 /** One size of a listing, exactly as the supplier publishes it. */
@@ -106,6 +114,8 @@ export interface ProductSizeVM {
 export interface CategoryVM {
   slug: string;
   name: string;
+  /** Marketplace section; absent means packaging. */
+  section?: CatalogSectionValue;
   description: string | null;
   productCount: number;
 }
@@ -172,7 +182,9 @@ export interface ProductWithRelations {
     reviews: { sourcePlatform: string; sourceUrl?: string }[];
     certifications: { name: string }[];
   };
-  category: { slug: string; name: string };
+  category: { slug: string; name: string; section?: string };
+  keySpecs?: unknown;
+  applications?: string[];
 }
 
 /** A size's JSON quantity tiers, keeping only well-formed rows. */
@@ -243,6 +255,7 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
     materialFamily: materialFamily(row.material),
     categorySlug: row.category.slug,
     categoryName: row.category.name,
+    section: row.category.section === "INGREDIENTS" ? "INGREDIENTS" : "PACKAGING",
     subcategory: row.subcategory,
     priceType: row.priceType as PriceTypeValue,
     basePrice: toNumber(row.basePrice),
@@ -288,6 +301,8 @@ export function toProductVM(row: ProductWithRelations): ProductVM {
       isPartner: row.supplier.isPartner ?? false,
     },
     certificationNames: row.supplier.certifications.map((c) => c.name),
+    keySpecs: specRows(row.keySpecs),
+    applications: row.applications ?? [],
     partnerFacts: supplied.facts,
     specs: extractSpecs({
       title: row.title,

@@ -80,6 +80,8 @@ model Category {
   name        String
   description String?
   parentId    String?
+  /// Which marketplace section the category belongs to: packaging (default) or ingredients.
+  section     CatalogSection @default(PACKAGING)
   createdAt   DateTime   @default(now())
   parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
   children    Category[] @relation("CategoryTree")
@@ -118,6 +120,10 @@ model Product {
   quantityBreaks       QuantityBreak[]
   /// Sizes of this one listing (Amazon-style picker); empty for single-size products.
   sizes                ProductSize[]
+  /// Supplier-published headline specs as name/value rows, e.g. protein content for an ingredient.
+  keySpecs             Json?
+  /// Applications the supplier names for the product (ingredients: bakery, beverages, ...).
+  applications         String[]           @default([])
   quoteRequestItems    QuoteRequestItem[]
   sampleRequests       SampleRequest[]
   savedListItems       SavedListItem[]
@@ -563,6 +569,12 @@ enum SupplierStatus {
   RECOMMENDED
   QUOTE_ONLY
   DISABLED
+}
+
+/// Marketplace sections: packaging suppliers and ingredient suppliers are browsed separately.
+enum CatalogSection {
+  PACKAGING
+  INGREDIENTS
 }
 
 enum PriceType {

@@ -22,7 +22,16 @@ const isLightPlate = (url: string) => !isDarkView(url) && !cutoutFor(url);
 const plateFor = (url: string) =>
   isDarkView(url) ? "bg-[#080a0d]" : isLightPlate(url) ? "bg-[#ecebe6]" : "bg-well";
 
-export function ProductGallery({ images, title }: { images: ProductImageVM[]; title: string }) {
+export function ProductGallery({
+  images,
+  title,
+  cover = false,
+}: {
+  images: ProductImageVM[];
+  title: string;
+  /** Full-bleed photography (ingredient listings): fill the stage instead of a packshot plate. */
+  cover?: boolean;
+}) {
   const [index, setIndex] = useState(0);
   const [inspect, setInspect] = useState(false);
   const [origin, setOrigin] = useState("50% 50%");
@@ -37,7 +46,7 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
     setInspect(false);
     setIndex((i) => (i + delta + count) % count);
   };
-  const dark = isDarkView(current.url);
+  const dark = cover || isDarkView(current.url);
 
   return (
     <figure data-testid="product-gallery">
@@ -186,7 +195,7 @@ export function ProductGallery({ images, title }: { images: ProductImageVM[]; ti
                   alt=""
                   fill
                   sizes="96px"
-                  className={isDarkView(image.url) ? "object-cover" : "packshot object-contain"}
+                  className={cover || isDarkView(image.url) ? "object-cover" : "packshot object-contain"}
                 />
               )}
             </button>

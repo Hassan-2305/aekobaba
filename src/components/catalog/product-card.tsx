@@ -37,6 +37,8 @@ const FRESH_DOT = { fresh: "bg-fresh", stale: "bg-stale", old: "bg-old" } as con
 export function ProductCard({ product, now }: { product: ProductVM; now?: Date }) {
   const image = product.primaryImage;
   const cutout = image ? cutoutFor(image.url) : null;
+  // Ingredient listings carry styled food photography: shown full-bleed, not as a packshot.
+  const ingredient = product.section === "INGREDIENTS";
   const unit = unitPrice(product);
   const currency = priceCurrency(product.priceBasis);
   const basis = shortBasis(product.priceBasis);
@@ -62,9 +64,17 @@ export function ProductCard({ product, now }: { product: ProductVM; now?: Date }
         href={`/products/${product.id}`}
         aria-label={`View ${product.title}`}
         tabIndex={-1}
-        className="relative flex aspect-[4/3] items-center justify-center border-b border-line bg-well"
+        className="relative flex aspect-[4/3] items-center justify-center overflow-hidden border-b border-line bg-well"
       >
-        {image ? (
+        {image && ingredient ? (
+          <Image
+            src={image.url}
+            alt={imageAlt}
+            fill
+            sizes="(min-width: 1280px) 320px, (min-width: 640px) 45vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : image ? (
           <span className="relative block h-[78%] w-[64%]">
             <Image
               src={cutout ?? image.url}
@@ -83,7 +93,7 @@ export function ProductCard({ product, now }: { product: ProductVM; now?: Date }
           </span>
         )}
         <span className="absolute left-2.5 top-2.5 rounded-[5px] bg-paper px-2 py-0.5 text-xs font-semibold text-ink">
-          {product.stockOrCustom === "STOCK" ? "Stock item" : "Custom printed"}
+          {ingredient ? "Ingredient" : product.stockOrCustom === "STOCK" ? "Stock item" : "Custom printed"}
         </span>
         {partner ? (
           <span className="absolute right-2.5 top-2.5">

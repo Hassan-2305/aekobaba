@@ -154,6 +154,34 @@ const ARTWORK_GUIDE = [
   "Barcodes, regulatory text and food-contact statements checked before proofing",
 ];
 
+/** Ingredient listings: the applications the supplier names, plus what to ask for. */
+function IngredientApplications({ product }: { product: ProductVM }) {
+  const applications = product.applications ?? [];
+  return (
+    <>
+      {applications.length > 0 ? (
+        <ul className="flex flex-wrap gap-1.5" data-testid="product-applications">
+          {applications.map((a) => (
+            <li key={a} className="tag border border-line px-2 py-1.5 text-ink">
+              {a}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-ink-faint">No applications published — ask the supplier.</p>
+      )}
+      <p className="mt-2 text-xs text-ink-faint">As named by {product.supplier.name} on its own product page.</p>
+      <h3 className="mt-6 text-sm font-medium text-ink">Ask for with your quote</h3>
+      <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-muted">
+        <li>Technical data sheet and specification (CoA, micronutrient panel)</li>
+        <li>Regulatory documents for your market (GRAS status, allergen statement)</li>
+        <li>Pricing by volume, pack size and delivery terms</li>
+        <li>Application support for your formulation</li>
+      </ul>
+    </>
+  );
+}
+
 export function ProductDetailView({
   product,
   variants = [],
@@ -175,6 +203,12 @@ export function ProductDetailView({
     product.leadTimeDays !== null ? formatLeadTime(product.leadTimeDays) : (s.leadNote ?? NOT_PUBLISHED);
   const foodGrade = isFoodGrade(product);
   const hasSizes = sizesOf(product).length > 0;
+  // Ingredient suppliers have their own section: no packaging-only rows, an
+  // applications block instead of artwork, and links back to /ingredients.
+  const ingredient = product.section === "INGREDIENTS";
+  const categoryHref = ingredient
+    ? `/ingredients?category=${encodeURIComponent(product.categorySlug)}`
+    : `/results?category=${encodeURIComponent(product.categorySlug)}`;
 
   return (
     <div className="mx-auto max-w-[1400px] px-5 pb-24 pt-8 sm:px-8 lg:px-12">
@@ -183,7 +217,15 @@ export function ProductDetailView({
           Home
         </Link>
         <span className="mx-2 text-ink/20">/</span>
-        <Link href={`/results?category=${encodeURIComponent(product.categorySlug)}`} className="hover:text-ink">
+        {ingredient ? (
+          <>
+            <Link href="/ingredients" className="hover:text-ink">
+              Ingredients
+            </Link>
+            <span className="mx-2 text-ink/20">/</span>
+          </>
+        ) : null}
+        <Link href={categoryHref} className="hover:text-ink">
           {product.categoryName}
         </Link>
         <span className="mx-2 text-ink/20">/</span>
@@ -192,7 +234,7 @@ export function ProductDetailView({
 
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
         <div className="lg:sticky lg:top-6 lg:self-start">
-          <ProductGallery images={product.images} title={product.title} />
+          <ProductGallery images={product.images} title={product.title} cover={ingredient} />
         </div>
 
         <div>
@@ -266,7 +308,12 @@ export function ProductDetailView({
       <div className="mt-16 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-16">
         <Section title="Specification" id="specification">
           <dl className="border-t border-line text-sm" data-testid="product-specs">
-            <Row label="Material">{product.material}</Row>
+            <Row label={ingredient ? "Source" : "Material"}>{product.material}</Row>
+            {(product.keySpecs ?? []).map((spec) => (
+              <Row key={spec.name} label={spec.name} testId="product-key-spec">
+                {spec.value}
+              </Row>
+            ))}
             {/* With sizes, capacity and dimensions differ per size — the sizes table below has them. */}
             {s.capacity && !hasSizes ? <Row label="Capacity">{s.capacity.label}</Row> : null}
             {s.dimensions && !hasSizes ? <Row label="Dimensions">{s.dimensions.label}</Row> : null}
@@ -277,11 +324,17 @@ export function ProductDetailView({
             {s.wall ? <Row label="Wall / flute">{s.wall}</Row> : null}
             {s.strength ? <Row label="Board strength">{s.strength}</Row> : null}
             <Row label="Type">
-              {product.stockOrCustom === "STOCK" ? "Stock item" : "Custom manufacture"}
+              {ingredient
+                ? "Food ingredient — supplied to food & beverage manufacturers"
+                : product.stockOrCustom === "STOCK"
+                  ? "Stock item"
+                  : "Custom manufacture"}
             </Row>
-            <Row label="Food contact" muted={!foodGrade}>
-              {foodGrade ? "Food grade / food contact (supplier's wording)" : NOT_PUBLISHED}
-            </Row>
+            {ingredient ? null : (
+              <Row label="Food contact" muted={!foodGrade}>
+                {foodGrade ? "Food grade / food contact (supplier's wording)" : NOT_PUBLISHED}
+              </Row>
+            )}
             {product.certificationNames.length > 0 ? (
               <Row label="Certifications" testId="product-certifications">
                 {product.certificationNames.join(", ")}
@@ -308,9 +361,11 @@ export function ProductDetailView({
                 <SuppliedBy facts={product.partnerFacts} />
               </Row>
             ) : null}
-            <Row label="Setup / tooling" muted={!s.setupNote} testId="product-setup">
-              {s.setupNote ?? NOT_PUBLISHED}
-            </Row>
+            {ingredient ? null : (
+              <Row label="Setup / tooling" muted={!s.setupNote} testId="product-setup">
+                {s.setupNote ?? NOT_PUBLISHED}
+              </Row>
+            )}
             <Row
               label="Production lead time"
               muted={leadValue === NOT_PUBLISHED}
@@ -359,8 +414,10 @@ export function ProductDetailView({
           </div>
         </Section>
 
-        <Section title="Customization & artwork" id="customization">
-          {customization.length > 0 ? (
+        <Section title={ingredient ? "Applications" : "Customization & artwork"} id="customization">
+          {ingredient ? (
+            <IngredientApplications product={product} />
+          ) : customization.length > 0 ? (
             <ul className="flex flex-wrap gap-1.5" data-testid="product-customization">
               {customization.map((c) => (
                 <li key={c} className="tag border border-line px-2 py-1.5 text-ink">
@@ -374,16 +431,20 @@ export function ProductDetailView({
               above to ask.
             </p>
           )}
-          <h3 className="mt-6 text-sm font-medium text-ink">Typical artwork requirements</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-muted">
-            {ARTWORK_GUIDE.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-          <p className="mt-2 text-xs text-ink-faint">
-            General guidance from Aekobaba — {product.supplier.name} confirms its own requirements
-            and die lines with your quote.
-          </p>
+          {ingredient ? null : (
+            <>
+              <h3 className="mt-6 text-sm font-medium text-ink">Typical artwork requirements</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-muted">
+                {ARTWORK_GUIDE.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-ink-faint">
+                General guidance from Aekobaba — {product.supplier.name} confirms its own requirements
+                and die lines with your quote.
+              </p>
+            </>
+          )}
           <h3 className="mt-6 text-sm font-medium text-ink">Downloads</h3>
           <ul className="mt-2 space-y-1.5 text-sm" data-testid="product-downloads">
             <li>
@@ -484,7 +545,7 @@ export function ProductDetailView({
               Similar products from other suppliers
             </h2>
             <Link
-              href={`/results?category=${encodeURIComponent(product.categorySlug)}`}
+              href={categoryHref}
               className="text-sm text-ink underline decoration-ink/20 underline-offset-4 hover:decoration-orange"
             >
               Compare all {product.categoryName}
