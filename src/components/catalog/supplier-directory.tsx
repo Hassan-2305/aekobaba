@@ -4,7 +4,7 @@ import { ProductPicture } from "./product-picture";
 import { ReviewScore } from "./review-score";
 import { PartnerBadge, PartnerRibbon, SponsoredTag, TierBadge } from "./tier-badge";
 import { STATUS_RANK } from "@/lib/catalog/featured";
-import type { PartnerProfile } from "@/lib/catalog/partners";
+import { partnerRank, type PartnerProfile } from "@/lib/catalog/partners";
 import type { ProductVM, SupplierSummaryVM } from "@/lib/catalog/view-models";
 
 // Supplier directory — every supplier with at least one listing, ranked by
@@ -35,6 +35,7 @@ export function buildDirectory(products: ProductVM[]): DirectoryEntry[] {
   return [...bySlug.values()].sort(
     (a, b) =>
       Number(b.supplier.isPartner) - Number(a.supplier.isPartner) ||
+      (a.supplier.isPartner ? partnerRank(a.supplier.slug) - partnerRank(b.supplier.slug) : 0) ||
       STATUS_RANK[a.supplier.status] - STATUS_RANK[b.supplier.status] ||
       b.productCount - a.productCount ||
       a.supplier.name.localeCompare(b.supplier.name),

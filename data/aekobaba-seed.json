@@ -31198,7 +31198,7 @@
       "location": "US (Rosenberg, TX)",
       "legalIdentity": null,
       "status": "LISTED",
-      "isPartner": false,
+      "isPartner": true,
       "sourceUrl": "https://print247.us/contact-us",
       "sourceCapturedAt": "2026-11-13",
       "review": {

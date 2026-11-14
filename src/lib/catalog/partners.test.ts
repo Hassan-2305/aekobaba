@@ -37,3 +37,25 @@ describe("varietyOrder", () => {
     ]);
   });
 });
+
+describe("featured partners", () => {
+  it("features Berlin, Daehung and Print247, in that order", async () => {
+    const { partnerRank } = await import("./partners");
+    expect(Object.keys(PARTNER_PROFILES)).toEqual(["berlin-packaging", "daehung-pack", "print247"]);
+    expect(partnerRank("berlin-packaging")).toBeLessThan(partnerRank("daehung-pack"));
+    expect(partnerRank("daehung-pack")).toBeLessThan(partnerRank("print247"));
+    expect(partnerRank("someone-else")).toBeGreaterThan(partnerRank("print247"));
+  });
+
+  it("marks every profiled partner as a partner in the seed, with its logo on disk", async () => {
+    const { readFileSync, existsSync } = await import("node:fs");
+    const path = await import("node:path");
+    const seed = JSON.parse(readFileSync(path.join(process.cwd(), "data/aekobaba-seed.json"), "utf8")) as {
+      suppliers: { slug: string; isPartner: boolean }[];
+    };
+    for (const profile of Object.values(PARTNER_PROFILES)) {
+      expect(seed.suppliers.find((s) => s.slug === profile.slug)?.isPartner, profile.slug).toBe(true);
+      expect(existsSync(path.join(process.cwd(), "public", profile.logoUrl)), profile.logoUrl).toBe(true);
+    }
+  });
+});

@@ -134,10 +134,71 @@ export const PARTNER_PROFILES: Record<string, PartnerProfile> = {
     // Mingda red, from the company logo in their presentation.
     brandColor: "#D7262D",
   },
+  // Facts from print247.us product pages and its Trustpilot page, 14 Nov 2026.
+  print247: {
+    slug: "print247",
+    name: "Print247",
+    tagline: "Custom printed boxes, Mylar bags, labels and stickers — Rosenberg, Texas",
+    summary:
+      "Full-colour custom packaging for food, supplement, cosmetic and cannabis brands: printed Mylar bags and stand-up pouches with published per-bag prices, plus folding cartons, rigid boxes, labels and stickers quoted to your size and finish.",
+    facts: [
+      {
+        value: "4.8★",
+        label: "supplier rating, Trustpilot (88 reviews)",
+        sourceUrl: "https://www.trustpilot.com/review/print247.us",
+        sourceName: "Trustpilot",
+      },
+      {
+        value: "200",
+        label: "bags minimum order, printed Mylar",
+        sourceUrl: "https://print247.us/candy-mylar-bags-4x6x2",
+        sourceName: "Print247 product page",
+      },
+      {
+        value: "12–15",
+        label: "business days after artwork approval",
+        sourceUrl: "https://print247.us/candy-mylar-bags-4x6x2",
+        sourceName: "Print247 product page",
+      },
+    ],
+    services: [
+      {
+        title: "Free design support",
+        body: "Print247's design team prepares and adjusts artwork for your pouch, box or label at no charge before production.",
+        sourceUrl: "https://print247.us/candy-mylar-bags-4x6x2",
+      },
+      {
+        title: "Boxes, pouches, labels and stickers",
+        body: "Folding cartons, rigid and display boxes, printed Mylar bags and pouches, product labels and stickers — one supplier for the whole pack.",
+        sourceUrl: "https://print247.us",
+      },
+    ],
+    perks: [
+      { text: "Free shipping on printed pouches", sourceUrl: "https://print247.us/candy-mylar-bags-4x6x2" },
+      {
+        text: "No setup or plate charges on custom stand-up pouches",
+        sourceUrl: "https://print247.us/custom-printed-stand-up-pouches-13x15x5",
+      },
+    ],
+    capturedAt: "2026-11-14",
+    logoUrl: "/partners/print247/logo.png",
+    // Print247 magenta, from its logo.
+    brandColor: "#EC008C",
+  },
 };
 
 /** The partner whose profile leads the home page (first signed-up partner). */
 export const LEAD_PARTNER_SLUG = "berlin-packaging";
+
+/**
+ * Display order among featured partners: the order of PARTNER_PROFILES
+ * (Berlin, Daehung, Print247), so a partner with a bigger catalog never
+ * jumps the queue. Partners without a profile sort after them.
+ */
+export function partnerRank(slug: string): number {
+  const i = Object.keys(PARTNER_PROFILES).indexOf(slug);
+  return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+}
 
 export function partnerProfile(slug: string): PartnerProfile | null {
   return PARTNER_PROFILES[slug] ?? null;

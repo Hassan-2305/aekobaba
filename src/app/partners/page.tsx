@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { ProductCard } from "@/components/catalog/product-card";
 import { PartnerBadge, PARTNER_DISCLOSURE, TierBadge } from "@/components/catalog/tier-badge";
-import { partnerProfile, varietyOrder } from "@/lib/catalog/partners";
+import { partnerProfile, partnerRank, varietyOrder } from "@/lib/catalog/partners";
 import { getPackagingProducts } from "@/lib/catalog/queries";
 import type { ProductVM } from "@/lib/catalog/view-models";
 
@@ -26,10 +26,10 @@ export default async function PartnersPage() {
     if (!product.supplier.isPartner) continue;
     bySupplier.set(product.supplier.slug, [...(bySupplier.get(product.supplier.slug) ?? []), product]);
   }
-  // Partners with a full profile (storefront) lead; then by listing count.
+  // Partners with a full profile (storefront) lead, in their fixed order; then by listing count.
   const partners = [...bySupplier.entries()]
     .map(([slug, list]) => ({ slug, list, profile: partnerProfile(slug) }))
-    .sort((a, b) => Number(!!b.profile) - Number(!!a.profile) || b.list.length - a.list.length);
+    .sort((a, b) => partnerRank(a.slug) - partnerRank(b.slug) || b.list.length - a.list.length);
 
   return (
     <div>
