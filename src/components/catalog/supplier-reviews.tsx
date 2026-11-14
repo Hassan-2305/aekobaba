@@ -4,6 +4,7 @@ import {
   reviewInsights,
   type ReviewInsights,
 } from "@/lib/catalog/review-insights";
+import { formatSeconds, supplierVideos, type SupplierVideoSet } from "@/lib/catalog/supplier-videos";
 import type { SupplierSummaryVM } from "@/lib/catalog/view-models";
 import { getLiveSupplierReviews, type LivePlatformReviews } from "@/lib/reviews/live";
 
@@ -51,18 +52,22 @@ export function SupplierReviewsView({
   supplier,
   insights,
   live,
+  videos,
 }: {
   supplier: Pick<SupplierSummaryVM, "name" | "slug" | "reviewScore" | "reviewCount" | "reviewPlatform" | "reviewUrl">;
   insights: ReviewInsights | null;
   live: LivePlatformReviews[];
+  /** Supplier-provided video reviews; defaults to the ones on file for this supplier. */
+  videos?: SupplierVideoSet | null;
 }) {
+  const videoSet = videos === undefined ? supplierVideos(supplier.slug) : videos;
   const overview = insights?.overviews[0] ?? null;
   const score = overview?.score ?? supplier.reviewScore;
   const count = overview?.reviewCount ?? supplier.reviewCount;
   const platform = overview?.platform ?? supplier.reviewPlatform;
   const platformUrl = overview?.sourceUrl ?? supplier.reviewUrl;
   const cards = live.flatMap((p) => p.reviews).slice(0, 6);
-  const hasAnything = score !== null || cards.length > 0;
+  const hasAnything = score !== null || cards.length > 0 || (videoSet?.videos.length ?? 0) > 0;
 
   return (
     <section className="mt-20 scroll-mt-6" id="reviews" data-testid="supplier-reviews">
@@ -242,7 +247,52 @@ export function SupplierReviewsView({
           </div>
         </div>
       )}
+
+      {videoSet && videoSet.videos.length > 0 ? <VideoReviews name={supplier.name} set={videoSet} /> : null}
     </section>
+  );
+}
+
+/** Supplier-provided video reviews: vertical clips, played inline, labelled as from the supplier. */
+function VideoReviews({ name, set }: { name: string; set: SupplierVideoSet }) {
+  return (
+    <div className="mt-12" data-testid="video-reviews">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-medium text-ink">Customer videos</h3>
+          <p className="mt-1 text-sm text-ink-muted">
+            Testimonials and product showcases from {name}&rsquo;s customers and trade-show stand.
+          </p>
+        </div>
+        <span className="tag text-ink-faint">{set.videos.length} videos</span>
+      </div>
+      <ul className="-mx-5 mt-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-3 sm:mx-0 sm:px-0">
+        {set.videos.map((video) => (
+          <li key={video.src} className="w-[220px] flex-none snap-start sm:w-[240px]">
+            <div className="relative overflow-hidden rounded-xl border border-line bg-[#0b0e12]">
+              <video
+                controls
+                playsInline
+                preload="none"
+                poster={video.poster}
+                className="block aspect-[9/16] w-full object-cover"
+                aria-label={video.title}
+              >
+                <source src={video.src} type="video/mp4" />
+              </video>
+              <span className="pointer-events-none absolute right-2 top-2 rounded bg-black/60 px-1.5 py-0.5 text-[11px] font-medium text-white tabular-nums">
+                {formatSeconds(video.seconds)}
+              </span>
+            </div>
+            <p className="tag mt-2 text-ink-faint">{video.kind}</p>
+            <p className="mt-1 text-sm leading-snug text-ink">{video.title}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-2 text-[11px] text-ink-faint">
+        {set.source}. These videos come from the supplier, not from an independent review platform.
+      </p>
+    </div>
   );
 }
 

@@ -45,14 +45,35 @@ const cached = <A extends unknown[], R>(fn: (...args: A) => Promise<R>, key: str
 /** Listings of suppliers removed from the catalog (status DISABLED) never show. */
 const LIVE_SUPPLIER = { supplier: { status: { not: "DISABLED" as const } } };
 
-export const getAllProducts = cached(async (): Promise<ProductVM[]> => {
+// The Next data cache refuses entries over 2 MB, and the full catalog is
+// larger than that. It is cached in fixed-size chunks instead (each well under
+// the limit) and stitched back together per request. Stable order: creation
+// time, then id, so chunk boundaries never shift between requests.
+const CATALOG_CHUNK = 250;
+
+const countLiveProducts = cached(
+  async (): Promise<number> => db.product.count({ where: LIVE_SUPPLIER }),
+  "catalog:product-count",
+);
+
+const productChunk = cached(async (index: number): Promise<ProductVM[]> => {
   const rows = await db.product.findMany({
     where: LIVE_SUPPLIER,
     include: productInclude,
-    orderBy: { createdAt: "asc" },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    skip: index * CATALOG_CHUNK,
+    take: CATALOG_CHUNK,
   });
   return rows.map((row) => toProductVM(row));
-}, "catalog:all-products");
+}, "catalog:product-chunk");
+
+export const getAllProducts = cache(async (): Promise<ProductVM[]> => {
+  const total = await countLiveProducts();
+  const chunks = await Promise.all(
+    Array.from({ length: Math.ceil(total / CATALOG_CHUNK) }, (_, i) => productChunk(i)),
+  );
+  return chunks.flat();
+});
 
 /** True for listings in the ingredients section (ingredient suppliers). */
 export function isIngredient(product: Pick<ProductVM, "section">): boolean {

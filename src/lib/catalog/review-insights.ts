@@ -140,6 +140,20 @@ export const REVIEW_INSIGHTS: Record<string, ReviewInsights> = {
   ),
   // One review is not a pattern: count shown, no summary.
   boxup: insights(TP("boxup.com", 3.7, 1, null, null), [], []),
+  // Captured 14 Nov 2026 from trustpilot.com/review/print247.us.
+  print247: insights(
+    {
+      ...TP("print247.us", 4.8, 88, { 5: 95, 4: 1, 3: 2, 2: 0, 1: 2 }, "Replies to 100% of negative reviews, typically within 24 hours"),
+      capturedAt: "2026-11-14",
+    },
+    [
+      "Responsive account managers who guide each order",
+      "Clean printing and strong colours",
+      "Fast turnaround, including rush orders",
+      "Fair pricing for custom work",
+    ],
+    ["A missed deadline on a time-critical order", "Online order checkout can be confusing"],
+  ),
 };
 
 export function reviewInsights(slug: string): ReviewInsights | null {

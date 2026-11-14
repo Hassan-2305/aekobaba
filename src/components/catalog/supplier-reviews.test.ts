@@ -80,3 +80,42 @@ describe("review data", () => {
     expect(trustpilotDomain(null, "https://www.bottlestore.com")).toBe("www.bottlestore.com");
   });
 });
+
+describe("supplier video reviews", () => {
+  const print247 = {
+    name: "Print247",
+    slug: "print247",
+    reviewScore: 4.8,
+    reviewCount: 88,
+    reviewPlatform: "Trustpilot",
+    reviewUrl: "https://www.trustpilot.com/review/print247.us",
+  };
+
+  it("shows Print247's Trustpilot rating and its supplied videos, labelled as from the supplier", () => {
+    const html = render(createElement(SupplierReviewsView, { supplier: print247, insights: REVIEW_INSIGHTS.print247, live: [] }));
+    expect(html).toContain("4.8");
+    expect(html).toContain("88 reviews on Trustpilot");
+    expect(html).toContain('data-testid="video-reviews"');
+    expect(html.match(/<video/g)).toHaveLength(7);
+    expect(html).toContain('preload="none"');
+    expect(html).toContain("/suppliers/print247/videos/review-1.mp4");
+    expect(html).toContain("not from an independent review platform");
+  });
+
+  it("shows no video strip for suppliers without videos", () => {
+    const html = render(createElement(SupplierReviewsView, { supplier: berlin, insights: REVIEW_INSIGHTS["berlin-packaging"], live: [] }));
+    expect(html).not.toContain('data-testid="video-reviews"');
+  });
+
+  it("only references video files that exist", async () => {
+    const { existsSync } = await import("node:fs");
+    const path = await import("node:path");
+    const { SUPPLIER_VIDEOS } = await import("@/lib/catalog/supplier-videos");
+    for (const set of Object.values(SUPPLIER_VIDEOS)) {
+      for (const v of set.videos) {
+        expect(existsSync(path.join(process.cwd(), "public", v.src))).toBe(true);
+        expect(existsSync(path.join(process.cwd(), "public", v.poster))).toBe(true);
+      }
+    }
+  });
+});
