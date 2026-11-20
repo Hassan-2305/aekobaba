@@ -57764,6 +57764,895 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "pax-solutions",
+      "name": "PAX Solutions",
+      "website": "https://pax.solutions",
+      "location": "US (Osseo, MN)",
+      "legalIdentity": null,
+      "status": "LISTED",
+      "isPartner": false,
+      "sourceUrl": "https://pax-solutions-landing-page.pages.dev/",
+      "sourceCapturedAt": "2026-11-17",
+      "review": null,
+      "certifications": [],
+      "products": [
+        {
+          "title": "Custom Regular Slotted Container (RSC) Shipping Boxes",
+          "description": "The workhorse shipping and storage box: outer flaps meet at the centre and close with tape or staples. No cutting die is needed, which keeps cost down. Board grade and flute are engineered to your product so it survives the freight network. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "Regular slotted container (RSC)",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/corrugated-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Regular Slotted Container (RSC) — most common"
+            },
+            {
+              "name": "Cutting die",
+              "value": "Not required"
+            },
+            {
+              "name": "Sizes",
+              "value": "Any size, board grade and flute to suit the product"
+            },
+            {
+              "name": "Printing",
+              "value": "Direct print (economical, simpler art, bulk runs) or litho label laminated to the box (premium, high-resolution)"
+            }
+          ]
+        },
+        {
+          "title": "Custom Full Overlap Container (FOL) Boxes",
+          "description": "Flaps fully overlap to cover the box opening, adding strength at the ends, top, bottom or both — and easing assembly on smaller shippers. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "Full overlap container (FOL)",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/corrugated-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Full Overlap Container (FOL) — extra strength"
+            },
+            {
+              "name": "Sizes",
+              "value": "Any size, board grade and flute to suit the product"
+            },
+            {
+              "name": "Printing",
+              "value": "Direct print (economical, simpler art, bulk runs) or litho label laminated to the box (premium, high-resolution)"
+            }
+          ]
+        },
+        {
+          "title": "Custom Die-Cut Front Tuck Shipper Boxes",
+          "description": "A custom-die-cut corrugated box that protects and presents: it takes graphics and inserts well, so it suits e-commerce and retail-ready shipping where presentation matters as much as protection. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "Die-cut shipper",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/corrugated-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Die-cut front tuck shipper — retail-ready"
+            },
+            {
+              "name": "Cutting die",
+              "value": "One-time custom die, included in the quote"
+            },
+            {
+              "name": "Printing",
+              "value": "Direct print (economical, simpler art, bulk runs) or litho label laminated to the box (premium, high-resolution)"
+            }
+          ]
+        },
+        {
+          "title": "Custom One Piece Folder (OPF) Boxes",
+          "description": "A single flat sheet that folds into a flat-bottom box — made for books, marketing kits and other shallow, flat items. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "One piece folder (OPF)",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/corrugated-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "One Piece Folder (OPF)"
+            },
+            {
+              "name": "Best for",
+              "value": "Books, marketing kits, flat media"
+            },
+            {
+              "name": "Printing",
+              "value": "Direct print (economical, simpler art, bulk runs) or litho label laminated to the box (premium, high-resolution)"
+            }
+          ]
+        },
+        {
+          "title": "Custom Full Telescope Design (FTD) Boxes",
+          "description": "A separate top and bottom that telescope together, the cover sliding fully over the body for extra side strength — suited to high stacking of fragile items. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "Full telescope design (FTD)",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/corrugated-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Full Telescope Design (FTD) — high stacking strength"
+            },
+            {
+              "name": "Construction",
+              "value": "Separate top and bottom"
+            },
+            {
+              "name": "Printing",
+              "value": "Direct print (economical, simpler art, bulk runs) or litho label laminated to the box (premium, high-resolution)"
+            }
+          ]
+        },
+        {
+          "title": "Custom Corrugated Partitions & Dividers",
+          "description": "Partitions, dividers and die-cut inserts that separate and hold items inside a shipper, engineered to your product and combined with the box and fill as one protection system. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "Partitions & dividers",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/protective-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Includes",
+              "value": "Partitions, dividers, die-cut inserts"
+            },
+            {
+              "name": "Sizes",
+              "value": "Engineered to your product and shipper"
+            }
+          ]
+        },
+        {
+          "title": "Custom Bulk Gaylord Boxes",
+          "description": "Heavy-duty corrugated bulk containers for storing and shipping volume, part of PAX's custom protective packaging range alongside crating and shipping supplies. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Heavy-duty corrugated board",
+          "categorySlug": "corrugated",
+          "subcategory": "Bulk gaylord",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/protective-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Type",
+              "value": "Bulk gaylord / heavy-duty corrugated"
+            },
+            {
+              "name": "Sizes",
+              "value": "Custom"
+            }
+          ]
+        },
+        {
+          "title": "Custom Straight Tuck End (STE) Folding Cartons",
+          "description": "Both ends fold and lock on the same side, keeping the tucks at the back for a clean, distraction-free front face. A fifth panel can add a hang hole or extra graphics space. Food-grade boards and coatings are available. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Straight tuck end (STE)",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/folding-cartons",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Straight Tuck End (STE) — best presentation"
+            },
+            {
+              "name": "Option",
+              "value": "Fifth panel for a hang hole or extra graphics"
+            },
+            {
+              "name": "Printing",
+              "value": "Digital, offset or flexographic"
+            },
+            {
+              "name": "Finishes",
+              "value": "Matte, gloss, UV coating, foil stamping"
+            },
+            {
+              "name": "Lead time",
+              "value": "Generally a few weeks to a couple of months, confirmed with the quote"
+            }
+          ]
+        },
+        {
+          "title": "Custom Reverse Tuck End (RTE) Folding Cartons",
+          "description": "Built like the straight tuck end but with the tucks locking on opposite sides — it prints more efficiently on a press sheet, trading a little frontal polish for a lower unit price. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Reverse tuck end (RTE)",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/folding-cartons",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Reverse Tuck End (RTE) — lowest unit cost"
+            },
+            {
+              "name": "Printing",
+              "value": "Digital, offset or flexographic"
+            },
+            {
+              "name": "Finishes",
+              "value": "Matte, gloss, UV coating, foil stamping"
+            },
+            {
+              "name": "Lead time",
+              "value": "Generally a few weeks to a couple of months, confirmed with the quote"
+            }
+          ]
+        },
+        {
+          "title": "Custom Tuck Top Auto Bottom (TTAB) Cartons",
+          "description": "The bottom forms automatically as the carton is erected, so it assembles and loads quickly by hand — popular for cosmetics, nutraceuticals, electronics and retail. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Tuck top auto bottom",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/folding-cartons",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Tuck Top Auto Bottom (TTAB) — fast to load"
+            },
+            {
+              "name": "Printing",
+              "value": "Digital, offset or flexographic"
+            },
+            {
+              "name": "Finishes",
+              "value": "Matte, gloss, UV coating, foil stamping"
+            },
+            {
+              "name": "Lead time",
+              "value": "Generally a few weeks to a couple of months, confirmed with the quote"
+            }
+          ]
+        },
+        {
+          "title": "Custom Tuck Top Snap Lock Bottom (TTSLB) Cartons",
+          "description": "A \"1-2-3\" snap-lock bottom that is stronger than an auto bottom and cheaper to make, at the cost of slightly longer assembly — good for heavier contents. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Snap lock bottom",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/folding-cartons",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Tuck Top Snap Lock Bottom (1-2-3 bottom)"
+            },
+            {
+              "name": "Best for",
+              "value": "Heavier contents"
+            },
+            {
+              "name": "Printing",
+              "value": "Digital, offset or flexographic"
+            },
+            {
+              "name": "Finishes",
+              "value": "Matte, gloss, UV coating, foil stamping"
+            },
+            {
+              "name": "Lead time",
+              "value": "Generally a few weeks to a couple of months, confirmed with the quote"
+            }
+          ]
+        },
+        {
+          "title": "Custom Rolled End Tuck Top (RETT) Cartons",
+          "description": "Rolled side edges create three layers of board for added strength; a front panel can fold inward to form product cavities or extra marketing space. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paperboard",
+          "categorySlug": "folding-cartons",
+          "subcategory": "Rolled end tuck top",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/folding-cartons",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Style",
+              "value": "Rolled End Tuck Top (RETT)"
+            },
+            {
+              "name": "Strength",
+              "value": "Three layers of board at the rolled edges"
+            },
+            {
+              "name": "Printing",
+              "value": "Digital, offset or flexographic"
+            },
+            {
+              "name": "Finishes",
+              "value": "Matte, gloss, UV coating, foil stamping"
+            },
+            {
+              "name": "Lead time",
+              "value": "Generally a few weeks to a couple of months, confirmed with the quote"
+            }
+          ]
+        },
+        {
+          "title": "Custom Rigid Setup Gift Boxes",
+          "description": "Premium rigid setup boxes for gift and unboxing presentation, engineered to look premium the moment they reach the shelf or the customer — part of PAX's retail packaging range alongside printed cartons and inserts. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Rigid board, wrapped",
+          "categorySlug": "setup-boxes",
+          "subcategory": "Rigid setup box",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Type",
+              "value": "Rigid setup box"
+            },
+            {
+              "name": "Use",
+              "value": "Gift, premium retail and unboxing presentation"
+            }
+          ]
+        },
+        {
+          "title": "Custom Polyurethane (PU) Foam Inserts",
+          "description": "Spongy open-cell foam for shock absorption and cushioning. Its non-abrasive surface is safe against most finishes; available in several densities matched to product weight and size. Water-cut to your exact layout for boxes, cases (Pelican and similar), endcaps and shippers. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Polyurethane (PU) foam, open-cell",
+          "categorySlug": "corrugated",
+          "subcategory": "Foam insert",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/foam-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Material",
+              "value": "Polyurethane (PU), open-cell"
+            },
+            {
+              "name": "Surface",
+              "value": "Soft, non-abrasive"
+            },
+            {
+              "name": "Colours",
+              "value": "Typically white or grey"
+            },
+            {
+              "name": "Cutting",
+              "value": "Water-cut precision"
+            }
+          ]
+        },
+        {
+          "title": "Custom Polyethylene (PE) Foam Inserts",
+          "description": "Durable closed-cell foam for shock absorption, insulation and vibration dampening. The textured surface can scratch delicate finishes, so it suits rugged items. Densities matched to product weight. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Polyethylene (PE) foam, closed-cell",
+          "categorySlug": "corrugated",
+          "subcategory": "Foam insert",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/foam-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Material",
+              "value": "Polyethylene (PE), closed-cell"
+            },
+            {
+              "name": "Best for",
+              "value": "Rugged items"
+            },
+            {
+              "name": "Colours",
+              "value": "Usually white or black"
+            },
+            {
+              "name": "Cutting",
+              "value": "Water-cut precision"
+            }
+          ]
+        },
+        {
+          "title": "Custom Crosslink (XLPE) Foam Inserts",
+          "description": "A premium, very dense closed-cell foam with a smooth, clean look — excellent protection and presentation. Ozone-resistant, safe for Class-A surfaces and common in medical applications. Many colours. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Crosslinked polyethylene (XLPE) foam",
+          "categorySlug": "corrugated",
+          "subcategory": "Foam insert",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/foam-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Material",
+              "value": "Crosslink foam (XLPE), closed-cell"
+            },
+            {
+              "name": "Grade",
+              "value": "Premium; Class-A surface safe; ozone-resistant"
+            },
+            {
+              "name": "Colours",
+              "value": "Many colours"
+            },
+            {
+              "name": "Cutting",
+              "value": "Water-cut precision"
+            }
+          ]
+        },
+        {
+          "title": "Custom Expanded Polyethylene (EPE) Foam Inserts",
+          "description": "Lightweight closed-cell beaded foam that performs as well as or better than standard PE with less material — safe for Class-A surfaces such as powder-coated metal that scratches easily. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Expanded polyethylene (EPE) foam",
+          "categorySlug": "corrugated",
+          "subcategory": "Foam insert",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/foam-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Material",
+              "value": "Expanded polyethylene (EPE), beaded closed-cell"
+            },
+            {
+              "name": "Grade",
+              "value": "Class-A surface safe"
+            },
+            {
+              "name": "Colours",
+              "value": "Usually white or black"
+            }
+          ]
+        },
+        {
+          "title": "Custom Convoluted (Eggcrate) Foam",
+          "description": "Peak-and-valley foam, usually PU or PE, that gives more cushion and airflow while filling space with less material — a cost-efficient way to protect lighter items. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Convoluted PU or PE foam",
+          "categorySlug": "corrugated",
+          "subcategory": "Foam insert",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/foam-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Material",
+              "value": "Convoluted (eggcrate) PU or PE"
+            },
+            {
+              "name": "Best for",
+              "value": "Lighter items, cost-efficient cushioning"
+            }
+          ]
+        },
+        {
+          "title": "Custom ESD Anti-Static Foam Inserts",
+          "description": "Conductive, static-dissipative and anti-static foam in open or closed cell for sensitive electronics; the product's ESD requirement sets the grade. Often pink, other colours available. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "ESD foam (conductive, static-dissipative or anti-static)",
+          "categorySlug": "corrugated",
+          "subcategory": "Foam insert",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/foam-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Material",
+              "value": "ESD foam — conductive, static-dissipative or anti-static"
+            },
+            {
+              "name": "Cell",
+              "value": "Open or closed cell"
+            },
+            {
+              "name": "Best for",
+              "value": "Sensitive electronics"
+            }
+          ]
+        },
+        {
+          "title": "Custom Thermoformed Trays",
+          "description": "Custom-molded trays with product-shaped cavities that hold each item in place in transit and on packing lines. Tooling is designed to your product, not a stock mold, and the unit price drops low at volume. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "PVC, PETG, PS, HIPS, PP or ABS",
+          "categorySlug": "thermoforms",
+          "subcategory": "Thermoformed tray",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/thermoform-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Materials",
+              "value": "PVC, PETG, PS, HIPS, PP (sterilizable), ABS"
+            },
+            {
+              "name": "Tooling",
+              "value": "Custom mold — break-even shown with the quote"
+            },
+            {
+              "name": "Grades",
+              "value": "Food and medical grades available"
+            },
+            {
+              "name": "Features",
+              "value": "Custom cavities, snap closures, perforations"
+            }
+          ]
+        },
+        {
+          "title": "Custom Thermoformed Clamshells",
+          "description": "Hinged clamshells molded to the product that protect and display it with a clean, professional finish — for retail merchandising and protective shipping. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "PETG, PVC, HIPS or PP",
+          "categorySlug": "thermoforms",
+          "subcategory": "Clamshell",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/thermoform-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Materials",
+              "value": "PETG (high clarity), PVC, HIPS, PP"
+            },
+            {
+              "name": "Tooling",
+              "value": "Custom mold"
+            },
+            {
+              "name": "Features",
+              "value": "Snap closures, perforations for easy opening"
+            }
+          ]
+        },
+        {
+          "title": "Custom Retail Blister Packs",
+          "description": "Retail blister packs with custom-fit cavities that make products look intentional on the shelf — one of the lowest unit costs in protective packaging at volume. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "PVC or PETG",
+          "categorySlug": "thermoforms",
+          "subcategory": "Blister pack",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/thermoform-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Materials",
+              "value": "PVC (most economical), PETG (clarity)"
+            },
+            {
+              "name": "Tooling",
+              "value": "Custom mold"
+            }
+          ]
+        },
+        {
+          "title": "Food-Grade & Medical Thermoform Trays",
+          "description": "Food-grade trays and containers that provide an airtight environment to extend shelf life, and sterilizable polypropylene trays that withstand autoclaving for medical and dental use. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Polypropylene (PP), PETG or HIPS — food or medical grade",
+          "categorySlug": "thermoforms",
+          "subcategory": "Thermoformed tray",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "CUSTOM",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/thermoform-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Materials",
+              "value": "PP (autoclave-sterilizable), PETG, HIPS"
+            },
+            {
+              "name": "Grades",
+              "value": "Food-grade and medical"
+            },
+            {
+              "name": "Use",
+              "value": "Food containers, medical and dental trays"
+            }
+          ]
+        },
+        {
+          "title": "Air Pillows & Bubble-on-Demand Void Fill",
+          "description": "Air pillows and bubble on demand that adapt to any void in the shipper, cushioning items and stopping movement — supplied as part of a box, insert and fill system. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Air-filled film",
+          "categorySlug": "corrugated",
+          "subcategory": "Void fill",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/protective-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Type",
+              "value": "Air pillows, bubble on demand"
+            },
+            {
+              "name": "Use",
+              "value": "Void fill and cushioning"
+            }
+          ]
+        },
+        {
+          "title": "Paper Void Fill (Paper on Demand)",
+          "description": "Paper-based void fill dispensed on demand — a recyclable way to cushion items and fill empty space in shippers. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paper",
+          "categorySlug": "corrugated",
+          "subcategory": "Void fill",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/protective-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Type",
+              "value": "Paper on demand"
+            },
+            {
+              "name": "Sustainability",
+              "value": "Paper-based, recyclable"
+            }
+          ]
+        },
+        {
+          "title": "Shipping Supplies: Mailers & Packing Tape",
+          "description": "Mailers, tapes and flexible packaging for fast pack-out and lasting protection, supplied alongside PAX's boxes, inserts and void fill so one partner covers the whole shipping system. PAX Solutions does not publish prices or a fixed minimum: it sizes each run to your demand (\"flexible minimums\") and quotes after a short discovery call, with structural design support included. USA-based (Osseo, MN), shipping nationwide.",
+          "material": "Paper and film mailers; packing tape",
+          "categorySlug": "mailers",
+          "subcategory": "Shipping supplies",
+          "priceType": "QUOTE_ONLY",
+          "basePrice": null,
+          "priceBasis": null,
+          "priceUnit": null,
+          "moq": null,
+          "moqUnit": null,
+          "leadTimeDays": null,
+          "stockOrCustom": "STOCK",
+          "samplePolicyVerified": false,
+          "sourceUrl": "https://pax-solutions-landing-page.pages.dev/protective-packaging",
+          "sourceCapturedAt": "2026-11-17",
+          "quantityBreaks": [],
+          "keySpecs": [
+            {
+              "name": "Includes",
+              "value": "Mailers, packing tape, flexible packaging"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
