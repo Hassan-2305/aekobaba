@@ -315,7 +315,10 @@ export function ProductDetailView({
               </Row>
             ))}
             {/* With sizes, capacity and dimensions differ per size — the sizes table below has them. */}
-            {s.capacity && !hasSizes ? <Row label="Capacity">{s.capacity.label}</Row> : null}
+            {/* A supplier-stated capacity (key specs) beats our reading of the title. */}
+            {s.capacity && !hasSizes && !(product.keySpecs ?? []).some((k) => /capacit/i.test(k.name)) ? (
+              <Row label="Capacity">{s.capacity.label}</Row>
+            ) : null}
             {s.dimensions && !hasSizes ? <Row label="Dimensions">{s.dimensions.label}</Row> : null}
             {s.thickness ? <Row label="Thickness">{s.thickness.label}</Row> : null}
             {s.neckFinish ? <Row label="Neck finish">{s.neckFinish}</Row> : null}
