@@ -142,22 +142,26 @@ export interface SupplierWithCatalog extends SupplierDetailVM {
   products: ProductVM[];
 }
 
-export const getSupplier = cached(loadSupplier, "catalog:supplier");
+/**
+ * One supplier with its catalog. The supplier's own facts are cached on their
+ * own (small); its products come from the chunked catalog cache — a large
+ * catalog (1,000+ listings) would not fit one 2 MB cache entry.
+ */
+export const getSupplier = cache(async (slug: string): Promise<SupplierWithCatalog | null> => {
+  const detail = await supplierDetail(slug);
+  if (!detail) return null;
+  const products = (await getAllProducts()).filter((p) => p.supplier.slug === slug);
+  return { ...detail, products };
+});
 
-async function loadSupplier(slug: string): Promise<SupplierWithCatalog | null> {
+const supplierDetail = cached(loadSupplier, "catalog:supplier-detail");
+
+async function loadSupplier(slug: string): Promise<SupplierDetailVM | null> {
   const row = await db.supplier.findUnique({
     where: { slug },
     include: {
       reviews: { orderBy: { reviewedAt: "desc" } },
       certifications: { orderBy: { name: "asc" } },
-      products: {
-        include: {
-          category: true,
-          quantityBreaks: { orderBy: { minQty: "asc" } },
-          images: { orderBy: { sortOrder: "asc" } },
-        },
-        orderBy: { createdAt: "asc" },
-      },
     },
   });
   if (!row || row.status === "DISABLED") return null;
@@ -171,21 +175,7 @@ async function loadSupplier(slug: string): Promise<SupplierWithCatalog | null> {
     summary: r.summary,
   }));
 
-  const supplierSummary = {
-    slug: row.slug,
-    name: row.name,
-    website: row.website,
-    location: row.location,
-    status: row.status,
-    reviewScore: row.reviewScore,
-    reviewCount: row.reviewCount,
-    legalIdentity: row.legalIdentity,
-    isPartner: row.isPartner,
-    reviews: row.reviews.map((r) => ({ sourcePlatform: r.sourcePlatform, sourceUrl: r.sourceUrl })),
-    certifications: row.certifications.map((c) => ({ name: c.name })),
-  };
-
-  const detail: SupplierWithCatalog = {
+  const detail: SupplierDetailVM = {
     slug: row.slug,
     name: row.name,
     website: row.website,
@@ -204,7 +194,6 @@ async function loadSupplier(slug: string): Promise<SupplierWithCatalog | null> {
       sourceUrl: c.sourceUrl,
       sourceCapturedAt: c.sourceCapturedAt.toISOString(),
     })),
-    products: row.products.map((p) => toProductVM({ ...p, supplier: supplierSummary })),
   };
   return detail;
 }

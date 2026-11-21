@@ -54,6 +54,13 @@ export const CATEGORY_VARIANTS: Record<string, readonly string[]> = {
   "plant-proteins": ["sachet-stick"],
   "egg-replacers-binders": ["sachet-stick"],
   "greens-nutrient-powders": ["sachet-stick"],
+  "botanical-extracts": ["sachet-stick"],
+  "mushroom-ingredients": ["sachet-stick"],
+  "herb-spice-powders": ["sachet-stick"],
+  "fruit-vegetable-powders": ["sachet-stick"],
+  "food-additives": ["sachet-stick"],
+  "nutraceutical-actives": ["sachet-stick"],
+  "cosmetic-ingredients": ["sachet-stick"],
 };
 
 export interface SeedProductImageInput {

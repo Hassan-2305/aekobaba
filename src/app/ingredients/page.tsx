@@ -24,14 +24,42 @@ interface IngredientsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
+/** Cards per page — the section lists thousands of ingredients. */
+const PAGE_SIZE = 48;
+
+const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+
 export default async function IngredientsPage({ searchParams }: IngredientsPageProps) {
   const params = await searchParams;
-  const rawCategory = Array.isArray(params.category) ? params.category[0] : params.category;
+  const rawCategory = one(params.category);
+  const q = (one(params.q) ?? "").trim().slice(0, 80);
   const [all, categories] = await Promise.all([getIngredientProducts(), getIngredientCategories()]);
   const withProducts = categories.filter((c) => c.productCount > 0);
   const active = withProducts.find((c) => c.slug === rawCategory) ?? null;
   const ranked = rankIngredients(all);
-  const shown = active ? ranked.filter((p) => p.categorySlug === active.slug) : ranked;
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const shown = ranked.filter(
+    (p) =>
+      (!active || p.categorySlug === active.slug) &&
+      words.every((w) =>
+        `${p.title} ${p.subcategory ?? ""} ${p.material} ${p.supplier.name} ${(p.applications ?? []).join(" ")}`
+          .toLowerCase()
+          .includes(w),
+      ),
+  );
+  const pageCount = Math.max(1, Math.ceil(shown.length / PAGE_SIZE));
+  const page = Math.min(pageCount, Math.max(1, Math.floor(Number(one(params.page))) || 1));
+  const pageItems = shown.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const href = (over: { category?: string | null; page?: number; q?: string }) => {
+    const qs = new URLSearchParams();
+    const cat = over.category === undefined ? active?.slug : over.category;
+    const query = over.q === undefined ? q : over.q;
+    if (cat) qs.set("category", cat);
+    if (query) qs.set("q", query);
+    if (over.page && over.page > 1) qs.set("page", String(over.page));
+    const s = qs.toString();
+    return s ? `/ingredients?${s}` : "/ingredients";
+  };
   const supplierCount = new Set(all.map((p) => p.supplier.slug)).size;
 
   const spotlights = INGREDIENT_SUPPLIERS.flatMap((profile) => {
@@ -57,8 +85,8 @@ export default async function IngredientsPage({ searchParams }: IngredientsPageP
             </span>
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-on-dark-muted">
-            What goes inside the pack: functional proteins, egg replacers and nutrient powders for food and
-            beverage brands. Every listing comes from the supplier&rsquo;s own website, with sources and dates —
+            What goes inside the pack: functional proteins, egg replacers, botanical and mushroom extracts,
+            fruit and vegetable powders, additives and actives for food, beverage, supplement and cosmetic brands. Every listing comes from the supplier&rsquo;s own website, with sources and dates —
             request a quote, technical data sheet or R&amp;D sample in one step.
           </p>
           <p className="mt-5 text-sm">
@@ -70,7 +98,7 @@ export default async function IngredientsPage({ searchParams }: IngredientsPageP
       </section>
 
       <div className="mx-auto max-w-[1400px] px-5 pb-24 pt-10 sm:px-8 lg:px-12">
-        {!active && spotlights.length > 0 ? (
+        {!active && !q && page === 1 && spotlights.length > 0 ? (
           <section aria-label="Supplier spotlight" className="mb-14 space-y-6">
             {spotlights.map(({ profile, products, name }) => (
               <IngredientSpotlight key={profile.slug} profile={profile} name={name} products={products} />
@@ -80,23 +108,43 @@ export default async function IngredientsPage({ searchParams }: IngredientsPageP
 
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-semiwide text-2xl font-light tracking-[-0.02em] text-ink sm:text-3xl">
-            {active ? active.name : "All ingredients"}
+            {q ? `Results for “${q}”` : active ? active.name : "All ingredients"}
           </h2>
-          <p className="text-sm text-ink-muted tabular-nums">{shown.length} listed</p>
+          <form action="/ingredients" role="search" className="flex w-full max-w-sm items-center gap-2 sm:w-auto">
+            {active ? <input type="hidden" name="category" value={active.slug} /> : null}
+            <label htmlFor="ingredient-search" className="sr-only">
+              Search ingredients
+            </label>
+            <input
+              id="ingredient-search"
+              type="search"
+              name="q"
+              defaultValue={q}
+              placeholder="Search ingredients, e.g. reishi, matcha"
+              className="h-10 min-w-0 flex-1 rounded-md border border-line-strong bg-paper px-3 text-sm text-ink placeholder:text-ink-muted focus:border-ink focus:outline-none sm:w-72"
+            />
+            <button type="submit" className="h-10 rounded-md bg-ink px-4 text-sm font-medium text-paper hover:bg-ink/90">
+              Search
+            </button>
+          </form>
         </div>
+        <p className="mt-2 text-sm text-ink-muted tabular-nums">
+          {shown.length.toLocaleString("en-US")} listed
+          {pageCount > 1 ? ` · page ${page} of ${pageCount}` : ""}
+        </p>
         {active?.description ? <p className="mt-2 max-w-2xl text-sm text-ink-muted">{active.description}</p> : null}
 
         <nav aria-label="Ingredient categories" className="-mx-5 mt-5 overflow-x-auto px-5 pb-1 sm:mx-0 sm:px-0">
           <ul className="flex gap-2">
             <li>
-              <Link href="/ingredients" className={chip(!active)} aria-current={!active ? "page" : undefined}>
+              <Link href={href({ category: null })} className={chip(!active)} aria-current={!active ? "page" : undefined}>
                 All <span className="tabular-nums opacity-70">{all.length}</span>
               </Link>
             </li>
             {withProducts.map((c) => (
               <li key={c.slug}>
                 <Link
-                  href={`/ingredients?category=${encodeURIComponent(c.slug)}`}
+                  href={href({ category: c.slug })}
                   className={chip(active?.slug === c.slug)}
                   aria-current={active?.slug === c.slug ? "page" : undefined}
                 >
@@ -107,17 +155,50 @@ export default async function IngredientsPage({ searchParams }: IngredientsPageP
           </ul>
         </nav>
 
-        {shown.length > 0 ? (
+        {pageItems.length > 0 ? (
           <ul data-testid="ingredient-grid" className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {shown.map((product) => (
+            {pageItems.map((product) => (
               <li key={product.id}>
                 <ProductCard product={product} />
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-8 text-sm text-ink-muted">No ingredients listed in this category yet.</p>
+          <p className="mt-8 text-sm text-ink-muted">
+            {q ? "No ingredients match that search." : "No ingredients listed in this category yet."}
+          </p>
         )}
+
+        {pageCount > 1 ? (
+          <nav aria-label="Pages" data-testid="ingredient-pagination" className="mt-10 flex flex-wrap items-center justify-center gap-2 text-sm">
+            {page > 1 ? (
+              <Link href={href({ page: page - 1 })} className="inline-flex h-10 items-center rounded-md border border-line-strong px-4 text-ink hover:border-ink">
+                ← Previous
+              </Link>
+            ) : null}
+            {Array.from({ length: pageCount }, (_, i) => i + 1)
+              .filter((n) => n === 1 || n === pageCount || Math.abs(n - page) <= 2)
+              .map((n, i, arr) => (
+                <span key={n} className="inline-flex items-center gap-2">
+                  {i > 0 && n - arr[i - 1] > 1 ? <span className="text-ink-faint">…</span> : null}
+                  <Link
+                    href={href({ page: n })}
+                    aria-current={n === page ? "page" : undefined}
+                    className={`inline-flex h-10 min-w-10 items-center justify-center rounded-md border px-3 tabular-nums ${
+                      n === page ? "border-ink bg-ink text-paper" : "border-line-strong text-ink hover:border-ink"
+                    }`}
+                  >
+                    {n}
+                  </Link>
+                </span>
+              ))}
+            {page < pageCount ? (
+              <Link href={href({ page: page + 1 })} className="inline-flex h-10 items-center rounded-md border border-line-strong px-4 text-ink hover:border-ink">
+                Next →
+              </Link>
+            ) : null}
+          </nav>
+        ) : null}
 
         <section className="mt-16 grid gap-6 rounded-xl border border-line bg-well p-6 sm:p-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-center">
           <div>

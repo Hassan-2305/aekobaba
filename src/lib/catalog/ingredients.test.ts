@@ -37,7 +37,18 @@ describe("ingredients in the seed", () => {
   const ingredientSlugs = new Set(seed.categories.filter((c) => c.section === "INGREDIENTS").map((c) => c.slug));
 
   it("keeps ingredient categories in their own section", () => {
-    expect([...ingredientSlugs].sort()).toEqual(["egg-replacers-binders", "greens-nutrient-powders", "plant-proteins"]);
+    expect([...ingredientSlugs].sort()).toEqual([
+      "botanical-extracts",
+      "cosmetic-ingredients",
+      "egg-replacers-binders",
+      "food-additives",
+      "fruit-vegetable-powders",
+      "greens-nutrient-powders",
+      "herb-spice-powders",
+      "mushroom-ingredients",
+      "nutraceutical-actives",
+      "plant-proteins",
+    ]);
   });
 
   it("lists Plantible only in ingredient categories, flagship first, quote-only, with specs and photos", () => {
@@ -58,7 +69,8 @@ describe("ingredients in the seed", () => {
   });
 
   it("never puts packaging suppliers' products in ingredient categories", () => {
-    for (const s of seed.suppliers.filter((x) => x.slug !== "plantible")) {
+    const ingredientSuppliers = new Set(["plantible", "underherb"]);
+    for (const s of seed.suppliers.filter((x) => !ingredientSuppliers.has(x.slug))) {
       for (const p of s.products) expect(ingredientSlugs.has(p.categorySlug)).toBe(false);
     }
   });
@@ -105,5 +117,28 @@ describe("ingredient rendering", () => {
     expect(html).toContain("Typical artwork requirements");
     expect(html).toContain("Food contact");
     expect(html).not.toContain('href="/ingredients"');
+  });
+});
+
+describe("Underherb listings", () => {
+  const underherb = seed.suppliers.find((s) => s.slug === "underherb")!;
+
+  it("lists every product once, quote-only, in ingredient categories", () => {
+    const ingredientSlugs = new Set(seed.categories.filter((c) => c.section === "INGREDIENTS").map((c) => c.slug));
+    expect(underherb.products.length).toBeGreaterThan(1500);
+    const titles = underherb.products.map((p) => p.title.toLowerCase());
+    expect(new Set(titles).size).toBe(titles.length);
+    for (const p of underherb.products) {
+      expect(ingredientSlugs.has(p.categorySlug), p.title).toBe(true);
+      expect(p.priceType).toBe("QUOTE_ONLY");
+    }
+  });
+
+  it("never carries health or disease claims", () => {
+    const claim = /\b(cancer|tumou?r|diabet\w*|cures?|treats?|disease|depression|insomnia|immun\w*|cholesterol|weight loss)\b/i;
+    for (const p of underherb.products) {
+      const text = [p.title, p.description ?? "", ...(p.keySpecs ?? []).map((k) => k.value), ...(p.applications ?? [])].join(" ");
+      expect(text, p.title).not.toMatch(claim);
+    }
   });
 });
